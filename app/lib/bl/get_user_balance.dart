@@ -8,7 +8,8 @@ final userBalanceNotifierProvider =
   () => UserBalanceNotifier(),
 );
 
-class UserBalanceNotifier extends FamilyAsyncNotifier<List<UserBalance>, String> {
+class UserBalanceNotifier
+    extends FamilyAsyncNotifier<List<UserBalance>, String> {
   @override
   Future<List<UserBalance>> build(String address) async {
     if (address.isEmpty) {

@@ -42,14 +42,13 @@ Future<Stats?> getStats() async {
       (DateTime.now().toUtc().millisecondsSinceEpoch / 1000).toInt();
 
   for (var vault in vaultsPda) {
-    vaultsData[vault.mint]?.tvl = vault.currentLiquidity /
-        pow(10, vaultsData[vault.mint]!.decimals);
+    vaultsData[vault.mint]?.tvl =
+        vault.currentLiquidity / pow(10, vaultsData[vault.mint]!.decimals);
 
     const secondsInYear = 31536000;
 
     final cumulativeYieldUnscaled = vault.cumulativeYield / 1e11;
-    final totalYieldAmount =
-        cumulativeYieldUnscaled * vault.initialLiquidity;
+    final totalYieldAmount = cumulativeYieldUnscaled * vault.initialLiquidity;
 
     final totalYieldPercent = vault.initialLiquidity == 0
         ? 0
