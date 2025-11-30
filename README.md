@@ -117,6 +117,6 @@ pub struct StakingInstructionAccounts<'info> {
 
 ## Learn More
 
-- [Whitepaper](https://xjx4fw67d3oyxf3nghsgyus2thdtexb26qrqpegmu5cbmxkkf7qa.arweave.net/um_C298e3YuXbTHkbFJamccyXDr0IweQzKdEFl1KL-A)
+- [Whitepaper](/content/oxedium-whitepaper.pdf)
 - [Twitter](https://x.com/tyrbine)
 - [Telegram](https://t.me/oxedium_protocol)
