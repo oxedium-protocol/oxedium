@@ -1,4 +1,4 @@
-const String whitepaperLink = "https://github.com/oxedium-protocol/oxedium/blob/main/content/oxedium-whitepaper.pdf";
+const String whitepaperLink = "https://4dac7oaqhkztsapbsfnjdxiau4yhvykfizpgwajvw2h7xr2bz3qq.arweave.net/4MAvuBA6szkB4ZFakd0ApzB64UVGXmsBNbaP-8dBzuE";
 
 const String twitterLink = "https://x.com/tyrbine";
 const String telegramLink = "https://t.me/oxedium_protocol";
