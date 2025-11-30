@@ -19,7 +19,7 @@ import 'package:oxedium_website/utils/extensions.dart';
 import 'package:oxedium_website/widgets/stars_progress_indicator.dart';
 import 'package:oxedium_website/widgets/custom_inkwell.dart';
 import 'package:oxedium_website/widgets/stakes_list.dart';
-import 'package:oxedium_website/widgets/max_button.dart';
+import 'package:oxedium_website/widgets/mini_button.dart';
 import 'dart:js' as js;
 
 class HomeMobScreen extends ConsumerStatefulWidget {

@@ -15,7 +15,7 @@ import 'package:oxedium_website/models/user_balance.dart';
 import 'package:oxedium_website/presentation/bars/top_web_bar.dart';
 import 'package:oxedium_website/presentation/basement/basement_web_widget.dart';
 import 'package:oxedium_website/utils/extensions.dart';
-import 'package:oxedium_website/widgets/max_button.dart';
+import 'package:oxedium_website/widgets/mini_button.dart';
 import 'package:oxedium_website/widgets/stars_progress_indicator.dart';
 import 'package:oxedium_website/widgets/custom_inkwell.dart';
 import 'package:oxedium_website/widgets/stakes_list.dart';
@@ -476,7 +476,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                               focusColor: Colors
                                                                   .transparent,
                                                               fontFamily:
-                                                                  "Roobert",
+                                                                  "Aeonik",
                                                             ),
                                                             child:
                                                                 PopupMenuButton<

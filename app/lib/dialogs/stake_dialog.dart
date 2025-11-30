@@ -10,7 +10,7 @@ import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/presentation/screens/home_mob_screen.dart';
 import 'package:oxedium_website/presentation/screens/home_web_screen.dart';
 import 'package:oxedium_website/widgets/custom_inkwell.dart';
-import 'package:oxedium_website/widgets/max_button.dart';
+import 'package:oxedium_website/widgets/mini_button.dart';
 import 'package:oxedium_website/widgets/staked_earned_bar.dart';
 import 'package:oxedium_website/widgets/toggle_button.dart';
 

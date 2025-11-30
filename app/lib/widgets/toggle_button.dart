@@ -52,7 +52,6 @@ class _ToggleButtonState extends State<ToggleButton> {
           widget.text,
           style: TextStyle(
             color: widget.isActive ? widget.activeColor : Colors.grey.shade700,
-            fontWeight: widget.fontWeight,
           ),
         ),
       ),
