@@ -9,4 +9,6 @@ class SolanaConfig {
   static String wss = "wss://devnet.helius-rpc.com/?api-key=$HELIUS_API";
 }
 
-final SolanaClient solanaClient = SolanaClient(rpcUrl: Uri.parse(SolanaConfig.rpc), websocketUrl: Uri.parse(SolanaConfig.wss));
+final SolanaClient solanaClient = SolanaClient(
+    rpcUrl: Uri.parse(SolanaConfig.rpc),
+    websocketUrl: Uri.parse(SolanaConfig.wss));
