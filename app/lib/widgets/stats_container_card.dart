@@ -78,7 +78,7 @@ class StatsContainerCardState extends State<StatsContainerCard> {
                   ),
                 ],
               ),
-              SvgPicture.asset("assets/icons/tyrb_abstr.svg", height: 50.0, width: 50.0)
+              SvgPicture.asset("assets/icons/treasury.svg", height: 60.0, width: 60.0)
             ],
           ),
         ],

@@ -41,7 +41,7 @@ class _TopMobBarState extends ConsumerState<TopMobBar> {
           children: [
             Row(
               children: [
-                SvgPicture.asset('assets/logos/tyr_logo.svg',
+                SvgPicture.asset('assets/logos/oxe_logo.svg',
                     height: 25.0, width: 25.0),
                 const SizedBox(width: 16.0),
                 const Text('Tyrbine', style: TextStyle(fontSize: 18.0)),

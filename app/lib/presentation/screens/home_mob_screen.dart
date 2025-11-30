@@ -241,9 +241,9 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                                                 ],
                                               ),
                                               SvgPicture.asset(
-                                                  'assets/icons/tyrb_abstr.svg',
-                                                  height: 50.0,
-                                                  width: 50.0)
+                                                  'assets/icons/treasury.svg',
+                                                  height: 60.0,
+                                                  width: 60.0)
                                             ],
                                           ),
                                         ],
@@ -632,7 +632,7 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
         highlightColor: Colors.transparent,
         hoverColor: Colors.grey.withOpacity(0.03),
         focusColor: Colors.transparent,
-        fontFamily: "Roobert",
+        fontFamily: "Aeonik",
       ),
       child: PopupMenuButton<String>(
         color: Theme.of(context).scaffoldBackgroundColor,
