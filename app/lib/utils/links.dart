@@ -1,8 +1,8 @@
-const String whitepaperLink = "https://xjx4fw67d3oyxf3nghsgyus2thdtexb26qrqpegmu5cbmxkkf7qa.arweave.net/um_C298e3YuXbTHkbFJamccyXDr0IweQzKdEFl1KL-A";
+const String whitepaperLink = "https://github.com/oxedium-protocol/oxedium/blob/main/content/oxedium-whitepaper.pdf";
 
 const String twitterLink = "https://x.com/tyrbine";
-const String telegramLink = "https://t.me/tyrbine";
-const String telegramChatLink = "https://t.me/tyrbine_portal";
-const String repGithubLink = "https://github.com/tyrbine-protocol";
-const String webGithubLink = "https://github.com/tyrbine-protocol/tyrbine-website";
+const String telegramLink = "https://t.me/oxedium_protocol";
+const String telegramChatLink = "https://t.me/oxedium_portal";
+const String repGithubLink = "https://github.com/oxedium-protocol";
+const String webGithubLink = "https://github.com/oxedium-protocol/oxedium";
 
