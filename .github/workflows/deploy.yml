@@ -1,4 +1,4 @@
-name: Deploy Flutter Web via FTP
+name: Deploy Flutter Web via SFTP
 
 on:
   workflow_dispatch: 
@@ -37,5 +37,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 22
           source: app/build/web/
-          target: /var/www/html/
+          target: "app/build/web/*"
           rm: true
