@@ -32,13 +32,10 @@ jobs:
       - name: Deploy via SFTP
         uses: appleboy/scp-action@master
         with:
-          server: ${{ secrets.SERVER_IP }}
+          host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: app/build/web/
-          server-dir: /var/www/html/
-          exclude: |
-            **/.git*
-            **/.github*
-            **/node_modules/**
-            **/README.md
+          port: 22
+          source: app/build/web/
+          target: /var/www/html/
+          rm: true
