@@ -36,6 +36,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 22
-          source: app/build/web/
-          target: "app/build/web/*"
+          source: "app/build/web/*"
+          target: /var/www/html/
           rm: true
