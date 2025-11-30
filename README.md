@@ -95,7 +95,7 @@ pub struct StakingInstructionAccounts<'info> {
     )]
     pub staker_pda: Account<'info, Staker>,
 
-    #[account(mut, seeds = [TYRBINE_SEED.as_bytes(), TREASURY_SEED.as_bytes()], bump)]
+    #[account(mut, seeds = [OXEDIUM_SEED.as_bytes(), TREASURY_SEED.as_bytes()], bump)]
     pub treasury_pda: Account<'info, Treasury>,
 
     #[account(
