@@ -54,19 +54,6 @@ void main() async {
 
   runApp(ProviderScope(
     child: MaterialApp.router(
-          // localizationsDelegates: const [
-          //   AppLocalizations.delegate,
-          //   GlobalMaterialLocalizations.delegate,
-          //   GlobalWidgetsLocalizations.delegate,
-          //   GlobalCupertinoLocalizations.delegate,
-          // ],
-          // supportedLocales: const [
-          //   Locale('en'),
-          //   // Locale('ru'),
-          //   // Locale('hi'),
-          //   // Locale('tr'),
-          //   // Locale('ar'),
-          // ],
           title: 'Oxedium',
           scrollBehavior: NoThumbScrollBehavior().copyWith(scrollbars: false),
           debugShowCheckedModeBanner: false,

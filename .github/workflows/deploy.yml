@@ -29,8 +29,8 @@ jobs:
         working-directory: app
         run: dart run ./lib/tools/build_web.dart
 
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy via SFTP
+        uses: atymic/sftp-deploy@v1.1.3
         with:
           server: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.FTP_USERNAME }}
