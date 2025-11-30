@@ -111,9 +111,9 @@ pub struct StakingInstructionAccounts<'info> {
     pub system_program: Program<'info, System>,
 }
 ```
-2. **Unstaking** – withdraw from a vault - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/tyrbine-program/src/instructions/staker/unstaking.rs#L54)
+2. **Unstaking** – withdraw from a vault - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/staker/unstaking.rs#L54)
 3. **Claim** – claim earned fees - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/staker/claim.rs#L43)
-4. **Swap** – swap between vaults - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/trader/swap.rs#L130)
+4. **Swap** – swap between vaults - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/trader/swap.rs#L131)
 
 ## Learn More
 
