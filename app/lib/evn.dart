@@ -1,3 +1,5 @@
+// ignore: constant_identifier_names
 const String HELIUS_API = "7f2a3c15-9d37-4850-a525-2aab028411bf";
 
+// ignore: constant_identifier_names
 const String TYRBINE_PROGRAM_ID = "FuK4PRqyDJUjLhKQaWVUTwa7XdaUoiKxAdDdKRN6ePhg";
