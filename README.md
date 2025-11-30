@@ -5,17 +5,17 @@
 ![GitHub stars](https://img.shields.io/github/stars/oxedium-protocol/oxedium?style=social)
 
 
-# Tyrbine
+# Oxedium
 Single-sided liquidity protocol on Solana
 
-Earn trading fees **without impermanent loss** by depositing a single asset into Tyrbine vaults.
+Earn trading fees **without impermanent loss** by depositing a single asset into Oxedium vaults.
 
 ---
 
-## Why Tyrbine?
+## Why Oxedium?
 
 Traditional AMMs require providing liquidity in pairs and expose users to impermanent loss.  
-Tyrbine allows you to earn from the growing Solana ecosystem **with a single asset**, making liquidity provision simpler, safer, and more profitable.
+Oxedium allows you to earn from the growing Solana ecosystem **with a single asset**, making liquidity provision simpler, safer, and more profitable.
 
 ---
 
@@ -41,7 +41,7 @@ Tyrbine allows you to earn from the growing Solana ecosystem **with a single ass
 
 ## Getting Started
 
-1. Go to [tyrbine.com](https://tyrbine.com)
+1. Go to [oxedium.com](https://oxedium.com)
 2. Connect your Solana wallet.
 3. Select a vault.
 4. Deposit your token and start earning fees.
@@ -50,7 +50,7 @@ Tyrbine allows you to earn from the growing Solana ecosystem **with a single ass
 
 ## 🛠 Developer Integration
 
-Tyrbine Protocol exposes **4 Solana instructions** that can be called to interact with vaults and manage liquidity.  
+Oxedium Protocol exposes **4 Solana instructions** that can be called to interact with vaults and manage liquidity.  
 
 ### Available Instructions
 
@@ -111,12 +111,12 @@ pub struct StakingInstructionAccounts<'info> {
     pub system_program: Program<'info, System>,
 }
 ```
-2. **Unstaking** – withdraw from a vault - [How to call it?](https://github.com/tyrbine-protocol/tyrbine-program/blob/main/programs/tyrbine-program/src/instructions/staker/unstaking.rs#L54)
-3. **Claim** – claim earned fees - [How to call it?](https://github.com/tyrbine-protocol/tyrbine-program/blob/main/programs/tyrbine-program/src/instructions/staker/claim.rs#L43)
-4. **Swap** – swap between vaults - [How to call it?](https://github.com/tyrbine-protocol/tyrbine-program/blob/main/programs/tyrbine-program/src/instructions/trader/swap.rs#L130)
+2. **Unstaking** – withdraw from a vault - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/tyrbine-program/src/instructions/staker/unstaking.rs#L54)
+3. **Claim** – claim earned fees - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/staker/claim.rs#L43)
+4. **Swap** – swap between vaults - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/trader/swap.rs#L130)
 
 ## Learn More
 
 - [Whitepaper](https://xjx4fw67d3oyxf3nghsgyus2thdtexb26qrqpegmu5cbmxkkf7qa.arweave.net/um_C298e3YuXbTHkbFJamccyXDr0IweQzKdEFl1KL-A)
 - [Twitter](https://x.com/tyrbine)
-- [Telegram](https://t.me/tyrbine)
+- [Telegram](https://t.me/oxedium_protocol)
