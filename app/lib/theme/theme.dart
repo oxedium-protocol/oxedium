@@ -63,6 +63,6 @@ final darkTheme = ThemeData(
   ),
   textSelectionTheme: TextSelectionThemeData(
     cursorColor: Colors.grey.withOpacity(0.3),
-    selectionColor: const Color(0xFF80EEFB).withOpacity(0.3),
+    selectionColor: const Color(0xFFA3ADD0).withOpacity(0.3),
   ),
 );
