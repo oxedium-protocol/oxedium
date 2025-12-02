@@ -11,7 +11,7 @@ class BasementWebWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40.0,
+      height: 35.0,
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.symmetric(horizontal: 280.0),
       decoration: BoxDecoration(

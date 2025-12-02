@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/service/config.dart';
 import 'package:oxedium_website/utils/extensions.dart';
@@ -55,7 +54,7 @@ class StatsContainerCardState extends State<StatsContainerCard> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
-                            border: Border.all(color: Colors.grey.withOpacity(0.2))
+                            border: Border.all(color: Colors.grey, width: 0.5)
                           ),
                           child: Image.asset("assets/icons/orb.png", height: 10.0, width: 10.0)),
                       )
