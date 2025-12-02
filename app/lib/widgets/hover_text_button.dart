@@ -25,7 +25,7 @@ class HoverTextButtonState extends State<HoverTextButton> {
           duration: const Duration(milliseconds: 250),
           style: TextStyle(
             fontSize: 12.0,
-            color: _isHovered ? Colors.white : Colors.grey.shade800,
+            color: _isHovered ? Colors.black : Colors.grey.shade600,
             fontFamily: 'Aeonik'
           ),
           child: Row(

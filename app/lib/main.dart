@@ -57,7 +57,7 @@ void main() async {
           title: 'Oxedium',
           scrollBehavior: NoThumbScrollBehavior().copyWith(scrollbars: false),
           debugShowCheckedModeBanner: false,
-          theme: darkTheme,
+          theme: lightTheme,
           routerConfig: _router,
         ),
       ),

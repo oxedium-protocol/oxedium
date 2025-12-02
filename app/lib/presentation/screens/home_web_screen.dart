@@ -164,7 +164,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
                                 border: Border.all(
-                                    color: Colors.grey.shade600, width: 0.15),
+                                    color: Colors.grey, width: 0.5),
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.only(
@@ -187,8 +187,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                       height: 100.0,
                                       padding: const EdgeInsets.all(8.0),
                                       decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                            255, 12, 12, 12),
+                                        color: Colors.grey.withOpacity(0.1),
                                         borderRadius:
                                             BorderRadius.circular(10.0),
                                       ),
@@ -242,12 +241,11 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                         children: [
                                                           Row(
                                                             children: [
-                                                              Icon(
+                                                              const Icon(
                                                                   Icons
                                                                       .account_balance_wallet_outlined,
                                                                   color: Colors
-                                                                      .grey
-                                                                      .shade800,
+                                                                      .grey,
                                                                   size: 16.0),
                                                               const SizedBox(
                                                                   width: 8.0),
@@ -311,15 +309,13 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                       hint: Text('0.00',
                                                           style: TextStyle(
                                                               fontSize: 26.0,
-                                                              color: Color(
-                                                                  0xFF252525))),
+                                                              color: Colors.grey)),
                                                       border: InputBorder.none,
                                                       isCollapsed: true,
                                                       contentPadding:
                                                           EdgeInsets.zero,
                                                     ),
                                                     style: const TextStyle(
-                                                      color: Colors.white,
                                                       fontSize: 26.0,
                                                     ),
                                                   ),
@@ -334,11 +330,9 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                       .symmetric(
                                                       horizontal: 8.0),
                                                   decoration: BoxDecoration(
-                                                    color:
-                                                        const Color(0xFF030303),
+                                                    color: Theme.of(context).scaffoldBackgroundColor,
                                                     border: Border.all(
-                                                        color: const Color(
-                                                            0xFF202020)),
+                                                        color: Colors.grey),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             6.0),
@@ -397,9 +391,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                       horizontal: 8.0),
                                                   decoration: BoxDecoration(
                                                       border: Border.all(
-                                                          color: Colors.grey
-                                                              .withOpacity(
-                                                                  0.1)),
+                                                          color: Colors.grey, width: 0.5),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               10.0)),
@@ -422,9 +414,9 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                       ),
                                                       Text(
                                                         '+${vault.apr}%',
-                                                        style: const TextStyle(
+                                                        style: TextStyle(
                                                           color: Colors
-                                                              .greenAccent,
+                                                              .greenAccent.shade700,
                                                           fontSize: 18.0,
                                                         ),
                                                       ),
@@ -441,7 +433,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                       const EdgeInsets.all(8.0),
                                                   decoration: BoxDecoration(
                                                     color:
-                                                        const Color(0xFF090909),
+                                                         Colors.grey.withOpacity(0.1),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10.0),
@@ -478,15 +470,12 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                               fontFamily:
                                                                   "Aeonik",
                                                             ),
-                                                            child:
-                                                                PopupMenuButton<
-                                                                    String>(
+                                                            child: PopupMenuButton<String>(
                                                               color: Theme.of(context).scaffoldBackgroundColor,
                                                               elevation:
                                                                   0,
                                                               surfaceTintColor:
                                                                   Colors.black,
-
                                                               shadowColor: Colors
                                                                   .transparent,
                                                               padding:
@@ -495,11 +484,10 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                               tooltip: "",
                                                               shape:
                                                                   RoundedRectangleBorder(
-                                                                side: BorderSide(
+                                                                side: const BorderSide(
                                                                     color: Colors
-                                                                        .grey
-                                                                        .shade900,
-                                                                    width: 1.0),
+                                                                        .grey,
+                                                                    width: 0.5),
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
@@ -524,7 +512,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                                               value: p,
                                                                               child: Text(
                                                                                 p,
-                                                                                style: const TextStyle(color: Colors.white, fontSize: 16.0),
+                                                                                style: const TextStyle(fontSize: 16.0),
                                                                               ),
                                                                             ),
                                                                           )
@@ -541,10 +529,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                                         8.0),
                                                                 decoration:
                                                                     BoxDecoration(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .withOpacity(
-                                                                          0.05),
+                                                                  color: Theme.of(context).scaffoldBackgroundColor,
                                                                   borderRadius:
                                                                       BorderRadius
                                                                           .circular(
@@ -552,19 +537,12 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                                   border: Border
                                                                       .all(
                                                                     color: Colors
-                                                                        .grey
-                                                                        .shade900,
-                                                                    width: 1.0,
+                                                                        .grey,
                                                                   ),
                                                                 ),
                                                                 child: Row(
                                                                   children: [
-                                                                    Text(
-                                                                      selectedPeriod,
-                                                                      style: const TextStyle(
-                                                                          color:
-                                                                              Colors.grey),
-                                                                    ),
+                                                                    Text(selectedPeriod),
                                                                     const Icon(
                                                                       Icons
                                                                           .keyboard_arrow_down_rounded,
@@ -627,18 +605,17 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                           ? const Color(
                                                               0xFF7637EC)
                                                           : Colors
-                                                              .grey.shade900,
+                                                              .grey.withOpacity(0.5),
                                                     ),
-                                                    child: const Row(
+                                                    child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
                                                       children: [
-                                                        Icon(Icons.add,
-                                                            color: Colors.white,
-                                                            size: 18.0),
-                                                        SizedBox(width: 8.0),
-                                                        Text('Stake'),
+                                                        Icon(Icons.add, color: isConnected ? Colors.white : null,
+                                                            size: 18.0, ),
+                                                        const SizedBox(width: 8.0),
+                                                        Text('Stake', style: TextStyle(color: isConnected ? Colors.white : null)),
                                                       ],
                                                     ),
                                                   ),

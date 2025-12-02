@@ -37,7 +37,7 @@ class _DisconnectWalletButtonState extends State<DisconnectWalletButton> {
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
         decoration: BoxDecoration(
           border: Border.all(
-            color: isHover ? Colors.redAccent.withOpacity(0.3) : Colors.grey.withOpacity(0.2),
+            color: isHover ? Colors.redAccent.withOpacity(0.5) : Colors.grey.withOpacity(0.5),
           ),
           borderRadius: BorderRadius.circular(5.0),
           color: Colors.transparent,

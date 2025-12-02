@@ -1,68 +1,70 @@
 import 'package:flutter/material.dart';
 
-final darkTheme = ThemeData(
-  appBarTheme: AppBarTheme(
-    surfaceTintColor: Colors.white,
-    titleTextStyle: const TextStyle(
+final lightTheme = ThemeData(
+  brightness: Brightness.light,
+  fontFamily: "Aeonik",
+
+  // --- APP BAR ---
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.white,
+    elevation: 0,
+    surfaceTintColor: Colors.transparent,
+    titleTextStyle: TextStyle(
       fontSize: 18.0,
-      color: Colors.white,
+      color: Colors.black,
       fontFamily: "Aeonik",
+      fontWeight: FontWeight.w600,
     ),
     iconTheme: IconThemeData(
-      color: Colors.blueGrey.shade300,
+      color: Colors.black54,
     ),
   ),
+
+  // --- TEXT ---
   textTheme: const TextTheme(
-    bodySmall: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    bodyMedium: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    bodyLarge: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    displaySmall: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    displayLarge: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    displayMedium: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    labelLarge: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    labelMedium: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    labelSmall: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    titleLarge: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    titleMedium: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    titleSmall: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    headlineLarge: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    headlineMedium: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
-    headlineSmall: TextStyle(
-        color: Colors.white, fontWeight: FontWeight.normal, fontSize: 16.0),
+    bodySmall: TextStyle(color: Colors.black87, fontSize: 16),
+    bodyMedium: TextStyle(color: Colors.black87, fontSize: 16),
+    bodyLarge: TextStyle(color: Colors.black87, fontSize: 16),
+
+    displaySmall: TextStyle(color: Colors.black87, fontSize: 16),
+    displayMedium: TextStyle(color: Colors.black87, fontSize: 16),
+    displayLarge: TextStyle(color: Colors.black87, fontSize: 16),
+
+    labelSmall: TextStyle(color: Colors.black87, fontSize: 16),
+    labelMedium: TextStyle(color: Colors.black87, fontSize: 16),
+    labelLarge: TextStyle(color: Colors.black87, fontSize: 16),
+
+    titleSmall: TextStyle(color: Colors.black87, fontSize: 16),
+    titleMedium: TextStyle(color: Colors.black87, fontSize: 16),
+    titleLarge: TextStyle(color: Colors.black87, fontSize: 16),
+
+    headlineSmall: TextStyle(color: Colors.black87, fontSize: 16),
+    headlineMedium: TextStyle(color: Colors.black87, fontSize: 16),
+    headlineLarge: TextStyle(color: Colors.black87, fontSize: 16),
   ),
+
+  // --- COLORS ---
+  scaffoldBackgroundColor: const Color(0xFFEFF3FB), // оставил как просили
   dialogBackgroundColor: Colors.white,
-  fontFamily: "Aeonik",
-  cardColor: const Color(0xFF252525),
+  cardColor: Colors.white,
   canvasColor: Colors.white,
-  scaffoldBackgroundColor: const Color(0xFF030303),
-  primaryColor: const Color.fromARGB(255, 0, 0, 0),
+  primaryColor: Colors.black,
   hintColor: Colors.grey.withOpacity(0.3),
-  iconTheme: IconThemeData(
-    color: Colors.blueGrey.shade300,
-  ),
+
+  iconTheme: const IconThemeData(color: Colors.black54),
+
+  // --- COLOR SCHEME ---
   colorScheme: ColorScheme.fromSwatch().copyWith(
-    onPrimary: const Color(0xFFA3ADD0),
-    primary: Colors.white,
     brightness: Brightness.light,
+    primary: Colors.black,
+    onPrimary: Colors.white,
+    secondary: Colors.grey.shade300,
     primaryContainer: Colors.white,
-    secondary: Colors.grey.withOpacity(0.3),
   ),
+
+  // --- SELECT TEXT ---
   textSelectionTheme: TextSelectionThemeData(
-    cursorColor: Colors.grey.withOpacity(0.3),
-    selectionColor: const Color(0xFFA3ADD0).withOpacity(0.3),
+    cursorColor: Colors.black.withOpacity(0.6),
+    selectionColor: Colors.black.withOpacity(0.2),
   ),
 );

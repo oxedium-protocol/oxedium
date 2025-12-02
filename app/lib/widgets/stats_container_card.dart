@@ -28,7 +28,7 @@ class StatsContainerCardState extends State<StatsContainerCard> {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: Colors.grey.shade600, width: 0.15),
+        border: Border.all(color: Colors.grey, width: 0.5),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -69,16 +69,13 @@ class StatsContainerCardState extends State<StatsContainerCard> {
                       Text('\$$whole',
                           style: const TextStyle(fontSize: 26.0)),
                         const SizedBox(width: 2.0),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 3.0),
-                          child: Text('.$decimals',
-                            style: TextStyle(fontSize: 22.0, color: Colors.grey.shade800)),
-                        ),
+                        Text('.$decimals',
+                          style: const TextStyle(fontSize: 22.0, color: Colors.grey)),
                     ],
                   ),
                 ],
               ),
-              SvgPicture.asset("assets/icons/treasury.svg", height: 60.0, width: 60.0)
+              //SvgPicture.asset("assets/icons/treasury.svg", height: 60.0, width: 60.0)
             ],
           ),
         ],

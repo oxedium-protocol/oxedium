@@ -25,6 +25,7 @@ class _StakesListState extends ConsumerState<StakesList> {
     return Column(
       children: widget.stakes.map((stake) {
         return Card(
+          shadowColor: Colors.transparent,
           color: Colors.transparent,
           elevation: 3,
           shape: RoundedRectangleBorder(
@@ -37,7 +38,7 @@ class _StakesListState extends ConsumerState<StakesList> {
                 maxWidth: 400,
               ),
               decoration: BoxDecoration(
-                color: const Color(0xFF090909),
+                color: Colors.grey.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10.0)
               ),
               child: Row(

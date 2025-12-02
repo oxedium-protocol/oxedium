@@ -39,7 +39,7 @@ void showWalletDialog(BuildContext context, WidgetRef ref) {
                   Container(
                     height: 1.0,
                     width: MediaQuery.of(context).size.width,
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withOpacity(0.2),
                   ),
                   Wrap(
                     runSpacing: -8.0,
@@ -76,14 +76,14 @@ void showWalletDialog(BuildContext context, WidgetRef ref) {
                                   const SizedBox(width: 16.0),
                                   Text(wallet.name),
                                   wallet.name == "Phantom"
-                                      ? const Row(
+                                      ? Row(
                                           children: [
-                                            SizedBox(width: 16.0),
+                                            const SizedBox(width: 16.0),
                                             Text(
                                               "⋅ recommend",
                                               style: TextStyle(
                                                 fontFamily: "",
-                                                color: Colors.greenAccent,
+                                                color: Colors.greenAccent.shade700,
                                                 fontSize: 12.0,
                                               ),
                                             )
@@ -113,7 +113,7 @@ void showWalletDialog(BuildContext context, WidgetRef ref) {
                                       "By connecting the wallet, you confirm that you agree to the ",
                                   style: TextStyle(
                                       fontSize: 12.0,
-                                      color: Colors.grey.withOpacity(0.4))),
+                                      color: Colors.grey.withOpacity(0.5))),
                               const TextSpan(
                                   text: "terms of use.",
                                   style: TextStyle(

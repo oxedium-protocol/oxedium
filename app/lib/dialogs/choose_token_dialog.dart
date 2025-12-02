@@ -19,10 +19,6 @@ void chooseTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, 
               width: 384.0,
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                border: Border.all(
-                  color: Colors.grey.shade900,
-                  width: 1.0,
-                ),
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Column(
@@ -65,7 +61,7 @@ void chooseTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, 
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5.0),
-                                border: Border.all(color: Colors.grey.withOpacity(0.1))
+                                border: Border.all(color: Colors.grey.withOpacity(0.5))
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,7 +75,7 @@ void chooseTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, 
                                         children: [
                                           Image.network(vaults[index].logoUrl, height: 21.0, width: 21.0),
                                           const SizedBox(width: 8.0),
-                                          Text(vaults[index].symbol, style: const TextStyle(color: Colors.white)),
+                                          Text(vaults[index].symbol),
                                         ],
                                       ),
                                       Row(
@@ -93,7 +89,7 @@ void chooseTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, 
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text('${vaults[index].apr}%', style: const TextStyle(color: Colors.greenAccent)),
+                                      Text('${vaults[index].apr}%', style: TextStyle(color: Colors.greenAccent.shade700)),
                                       const Text('APR', style: TextStyle(color: Colors.grey, fontSize: 12.0))
                                     ],
                                   )
