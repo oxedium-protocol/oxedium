@@ -126,7 +126,7 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                               width: 400.0,
                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
                               decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.05),
+                                color: Colors.grey.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Row(
@@ -154,7 +154,7 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                                     value.status,
                                     style: TextStyle(
                                       color: value.status == 'Success'
-                                          ? Colors.greenAccent
+                                          ? Colors.greenAccent.shade700
                                           : (value.status == 'Rejected' ||
                                                   value.status == 'Error'
                                               ? Colors.red
@@ -184,7 +184,7 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                                       width: 400 * progress,
                                       decoration: BoxDecoration(
                                         color: value.status == 'Success'
-                                            ? Colors.greenAccent
+                                            ? Colors.greenAccent.shade700
                                             : (value.status == 'Rejected' ||
                                                     value.status == 'Error'
                                                 ? Colors.red
