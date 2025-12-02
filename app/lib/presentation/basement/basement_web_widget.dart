@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:oxedium_website/theme/theme_provider.dart';
 import 'package:oxedium_website/utils/links.dart';
 import 'package:oxedium_website/widgets/hover_text_button.dart';
 import 'package:oxedium_website/widgets/social_icon_button.dart';
 import 'dart:js' as js;
 import '../../build_version.dart';
 
-class BasementWebWidget extends ConsumerWidget {
+class BasementWebWidget extends StatelessWidget {
   const BasementWebWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Container(
       height: 40.0,
       width: MediaQuery.of(context).size.width,
@@ -32,25 +30,10 @@ class BasementWebWidget extends ConsumerWidget {
           Container(
             width: 120.0,
             alignment: Alignment.centerLeft,
-            child: Row(
-              children: [
-                // IconButton(
-                //     hoverColor: Colors.transparent,
-                //     splashColor: Colors.transparent,
-                //     focusColor: Colors.transparent,
-                //     highlightColor: Colors.transparent,
-                //     icon: Icon(ref.watch(themeIconProvider), size: 18.0),
-                //     onPressed: () {
-                //       final current = ref.read(themeModeProvider);
-                //       ref.read(themeModeProvider.notifier).state = !current;
-                //     },
-                //   ),
-                HoverTextButton(
-                  text: '⩎ How it works?', 
-                  onTap: () => js.context.callMethod('open', [whitepaperLink])
-                  ),
-              ],
-            ),
+            child: HoverTextButton(
+              text: '⩎ How it works?', 
+              onTap: () => js.context.callMethod('open', [whitepaperLink])
+              ),
           ),
           const Row(
                 mainAxisAlignment: MainAxisAlignment.end,
