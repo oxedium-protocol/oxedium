@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:oxedium_website/metadata/vaults.dart';
 import 'package:oxedium_website/presentation/screens/home_mob_screen.dart';
 import 'package:oxedium_website/presentation/screens/home_web_screen.dart';
-import 'package:oxedium_website/theme/theme.dart';
+import 'package:oxedium_website/theme/theme_provider.dart';
 import 'package:oxedium_website/widgets/no_thumb_scroll_behavior.dart';
 
 final GoRouter _router = GoRouter(
@@ -49,17 +49,31 @@ final GoRouter _router = GoRouter(
 
 void main() async {
   usePathUrlStrategy();
-  
   WidgetsFlutterBinding.ensureInitialized();
+  runApp(const ProviderScope(child: Landing()));
+}
 
-  runApp(ProviderScope(
-    child: MaterialApp.router(
+class Landing extends ConsumerWidget {
+  const Landing({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeProvider);
+
+    if (theme == null) {
+      return const MaterialApp(
+        home: Scaffold(
+          backgroundColor: Colors.black,
+        ),
+      );
+    }
+
+    return MaterialApp.router(
           title: 'Oxedium',
           scrollBehavior: NoThumbScrollBehavior().copyWith(scrollbars: false),
           debugShowCheckedModeBanner: false,
-          theme: lightTheme,
+          theme: theme,
           routerConfig: _router,
-        ),
-      ),
-  );
+        );
+  }
 }
