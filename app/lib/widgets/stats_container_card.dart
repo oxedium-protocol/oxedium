@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/service/config.dart';
 import 'package:oxedium_website/utils/extensions.dart';
@@ -74,7 +75,7 @@ class StatsContainerCardState extends State<StatsContainerCard> {
                   ),
                 ],
               ),
-              //SvgPicture.asset("assets/icons/treasury.svg", height: 60.0, width: 60.0)
+              SvgPicture.asset("assets/icons/treasury.svg", height: 60.0, width: 60.0)
             ],
           ),
         ],
