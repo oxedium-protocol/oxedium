@@ -43,7 +43,7 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
   bool _showVaultSection = false;
   num estimatedDailyAmount = 0;
 
-  // NEW: period selector state
+  // period selector state (matches web logic)
   String selectedPeriod = "365D";
   final List<String> periods = ["24H", "7D", "30D", "365D"];
 
@@ -80,7 +80,6 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
     }
   }
 
-  // NEW: unified calculation for selectedPeriod (matches web logic)
   void calculatingYield(String value, num apr) {
     if (value.isEmpty) {
       setState(() {
@@ -349,8 +348,7 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                 child: AnimatedOpacity(
                   duration: const Duration(milliseconds: 200),
                   opacity: _isAtTop ? 0.0 : 0.5,
-                  child:
-                      const Divider(height: 0.5, color: Color(0xFF2B2B2B)),
+                  child: Divider(height: 0.5, color: Colors.grey.shade400),
                 ),
               ),
             ],
@@ -389,7 +387,7 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
               height: 120.0,
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 12, 12, 12),
+                color: Colors.grey.withOpacity(0.1), // web-like background
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Column(
@@ -402,49 +400,48 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                       const Text('Stake amount',
                           style: TextStyle(color: Color(0xFF5F5B5B))),
                       Consumer(builder: (context, ref, _) {
-                    final walletLocal = ref.watch(walletProvider);
-                    final isConnectedLocal = walletLocal?.pubkey != null;
-                    if (!isConnectedLocal) return const SizedBox.shrink();
+                        final walletLocal = ref.watch(walletProvider);
+                        final isConnectedLocal = walletLocal?.pubkey != null;
+                        if (!isConnectedLocal) return const SizedBox.shrink();
 
-                    final userBalancesAsync = ref.watch(
-                        userBalanceNotifierProvider(walletLocal!.pubkey!));
+                        final userBalancesAsync = ref.watch(
+                            userBalanceNotifierProvider(walletLocal!.pubkey!));
 
-                    return userBalancesAsync.when(
-                      data: (balances) {
-                        final vaultBalance = balances.firstWhere(
-                          (b) => b.mint == vault.mint,
-                          orElse: () => UserBalance(mint: vault.mint, amount: 0),
-                        ).amount;
+                        return userBalancesAsync.when(
+                          data: (balances) {
+                            final vaultBalance = balances.firstWhere(
+                              (b) => b.mint == vault.mint,
+                              orElse: () => UserBalance(mint: vault.mint, amount: 0),
+                            ).amount;
 
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.account_balance_wallet_outlined,
-                                color: Colors.grey.shade800, size: 16.0),
-                            const SizedBox(width: 8.0),
-                            Text(
-                              "${vaultBalance.formatBalance()} ${vault.symbol}",
-                              style: TextStyle(
-                                  fontSize: 14.0, color: Colors.grey.shade800),
-                            ),
-                            const SizedBox(width: 8.0),
-                            MiniButton(
-                              text: "max",
-                              onTap: () {
-                                _stakeAmountController.text = vaultBalance.toString();
-                                calculatingYield(vaultBalance.toString(), vault.apr);
-                              },
-                            ),
-                          ],
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(Icons.account_balance_wallet_outlined,
+                                    color: Colors.grey.shade800, size: 16.0),
+                                const SizedBox(width: 8.0),
+                                Text(
+                                  "${vaultBalance.formatBalance()} ${vault.symbol}",
+                                  style: TextStyle(
+                                      fontSize: 14.0, color: Colors.grey.shade800),
+                                ),
+                                const SizedBox(width: 8.0),
+                                MiniButton(
+                                  text: "max",
+                                  onTap: () {
+                                    _stakeAmountController.text = vaultBalance.toString();
+                                    calculatingYield(vaultBalance.toString(), vault.apr);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                          loading: () => const SizedBox(),
+                          error: (e, _) => Text('Error loading balance: $e'),
                         );
-                      },
-                      loading: () => const SizedBox(),
-                      error: (e, _) => Text('Error loading balance: $e'),
-                    );
-                  }),
+                      }),
                     ],
                   ),
-
 
                   // Amount input
                   Row(
@@ -461,11 +458,10 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                           decoration: const InputDecoration(
                             hint: Text('0.00',
                                 style: TextStyle(
-                                    fontSize: 26.0, color: Color(0xFF252525))),
+                                    fontSize: 26.0, color: Colors.grey)), // match web hint
                             border: InputBorder.none,
                           ),
-                          style:
-                              const TextStyle(color: Colors.white, fontSize: 26.0),
+                          style: const TextStyle(fontSize: 26.0), // match web (no forced white)
                         ),
                       ),
                       CustomInkWell(
@@ -476,8 +472,8 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                           padding:
                               const EdgeInsets.symmetric(horizontal: 8.0),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF030303),
-                            border: Border.all(color: const Color(0xFF202020)),
+                            color: Theme.of(context).scaffoldBackgroundColor, // match web
+                            border: Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(6.0),
                           ),
                           child: Row(
@@ -534,8 +530,8 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                               ),
                               Text(
                                 '+${vault.apr}%',
-                                style: const TextStyle(
-                                    color: Colors.greenAccent,
+                                style: TextStyle(
+                                    color: Colors.greenAccent.shade700,
                                     fontSize: 18.0),
                               ),
                             ],
@@ -546,7 +542,7 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                           height: 80.0,
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF090909),
+                            color: Colors.grey.withOpacity(0.1), // match web estimated-yield bg
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Column(
@@ -560,7 +556,7 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                                   const Text('Estimated yield',
                                       style: TextStyle(
                                           color: Color(0xFF5F5B5B))),
-                                  // NEW: interactive period selector
+                                  // interactive period selector
                                   buildPeriodSelector(vault),
                                 ],
                               ),
@@ -598,7 +594,7 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                               borderRadius: BorderRadius.circular(100.0),
                               color: isConnected
                                   ? const Color(0xFF7637EC)
-                                  : Colors.grey.shade900,
+                                  : Colors.grey.withOpacity(0.5), // match web disabled
                             ),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,

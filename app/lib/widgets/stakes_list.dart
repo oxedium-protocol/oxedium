@@ -24,92 +24,87 @@ class _StakesListState extends ConsumerState<StakesList> {
     final wallet = ref.watch(walletProvider);
     return Column(
       children: widget.stakes.map((stake) {
-        return Card(
-          shadowColor: Colors.transparent,
-          color: Colors.transparent,
-          elevation: 3,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 8.0),
-            child: Container(
-              padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0, bottom: 8.0),
-              constraints: const BoxConstraints(
-                maxWidth: 400,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10.0)
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 12.0),
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey.withOpacity(0.05)
+        return CustomInkWell(
+          onTap: () => showStakeDialog(context, ref, stake, widget.vaultsData, status: widget.transactionStatus!, wallet!),
+          child: Card(
+            shadowColor: Colors.transparent,
+            color: Colors.transparent,
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 14.0, right: 14.0, bottom: 8.0),
+              child: Container(
+                padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0, bottom: 8.0),
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10.0)
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 12.0),
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey.withOpacity(0.05)
+                            ),
+                            child: Image.network(
+                                        stake.logoUrl,
+                                        width: 22.0,
+                                        height: 22.0,
+                                        errorBuilder: (context, error, stackTrace) =>
+                                            const Icon(Icons.error),
+                                      ),
                           ),
-                          child: Image.network(
-                                      stake.logoUrl,
-                                      width: 22.0,
-                                      height: 22.0,
-                                      errorBuilder: (context, error, stackTrace) =>
-                                          const Icon(Icons.error),
-                                    ),
                         ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                            'Staked',
-                            style: TextStyle(color: Colors.grey.shade700, fontSize: 15.0),
-                          ),
-                              const SizedBox(width: 8.0),
-                              Text(stake.uiAmount, style: const TextStyle(fontSize: 15.0)),
-                              const SizedBox(width: 8.0),
-                              Text(stake.symbol, style: const TextStyle(fontSize: 15.0)),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                            'Earned',
-                            style: TextStyle(color: Colors.grey.shade700, fontSize: 15.0),
-                          ),
-                              const SizedBox(width: 8.0),
-                              Text(stake.earned.toString(), style: const TextStyle(fontSize: 15.0)),
-                              const SizedBox(width: 8.0),
-                              Text(stake.symbol, style: const TextStyle(fontSize: 15.0)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  CustomInkWell(
-                    onTap: () => showStakeDialog(context, ref, stake, widget.vaultsData, status: widget.transactionStatus!, wallet!),
-                    child: Container(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                              'Staked',
+                              style: TextStyle(color: Colors.grey.shade700, fontSize: 15.0),
+                            ),
+                                const SizedBox(width: 8.0),
+                                Text(stake.uiAmount, style: const TextStyle(fontSize: 15.0)),
+                                const SizedBox(width: 8.0),
+                                Text(stake.symbol, style: const TextStyle(fontSize: 15.0)),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                              'Earned',
+                              style: TextStyle(color: Colors.grey.shade700, fontSize: 15.0),
+                            ),
+                                const SizedBox(width: 8.0),
+                                Text(stake.earned.toString(), style: const TextStyle(fontSize: 15.0)),
+                                const SizedBox(width: 8.0),
+                                Text(stake.symbol, style: const TextStyle(fontSize: 15.0)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
                       height: 35.0,
                       width: 35.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey.withOpacity(0.05)
-                      ),
-                      child: Icon(Icons.more_vert, color: Colors.grey.shade800),
-                    ),
-                  ),
-                ],
+                      child: Icon(Icons.zoom_out_map_rounded, size: 18.0, color: Colors.grey.shade400)),
+                  ],
+                ),
               ),
             ),
           ),
