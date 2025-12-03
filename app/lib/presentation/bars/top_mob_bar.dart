@@ -44,7 +44,7 @@ class _TopMobBarState extends ConsumerState<TopMobBar> {
                 SvgPicture.asset('assets/logos/oxe_logo.svg',
                     height: 25.0, width: 25.0),
                 const SizedBox(width: 16.0),
-                const Text('Tyrbine', style: TextStyle(fontSize: 18.0)),
+                const Text('Oxedium', style: TextStyle(fontSize: 18.0)),
               ],
             ),
             isConnected
