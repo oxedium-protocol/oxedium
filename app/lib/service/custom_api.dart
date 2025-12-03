@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart';
+import 'package:oxedium_website/evn.dart';
 import 'package:solana/dto.dart';
 import 'package:solana/solana.dart';
 import 'package:oxedium_website/models/user_balance.dart';
@@ -54,7 +55,9 @@ class CustomApi {
       'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
     );
 
-    final response = await get(Uri.parse("https://lite-api.jup.ag/price/v3v3?ids=$mints"));
+    final response = await get(Uri.parse("https://api.jup.ag/price/v3?ids=$mints"), headers: {
+      'x-api-key': JUPITER_API,
+    });
     final Map<String, dynamic> jsonDecode = json.decode(response.body);
     return jsonDecode;
   }
