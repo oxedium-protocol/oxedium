@@ -45,13 +45,13 @@ class _ToggleButtonState extends State<ToggleButton> {
         decoration: BoxDecoration(
           color: widget.isActive
               ? widget.activeColor.withOpacity(0.15)
-              : isHover ? Colors.grey.withOpacity(0.1) : Colors.grey.withOpacity(0.05),
+              : isHover ? widget.activeColor : Colors.grey.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Text(
           widget.text,
           style: TextStyle(
-            color: widget.isActive ? widget.activeColor : Colors.grey.shade700,
+            color: isHover ? Colors.white : widget.isActive ? widget.activeColor : Colors.grey.shade700,
           ),
         ),
       ),

@@ -88,37 +88,37 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
 
         return Column(
           children: [
-            CustomInkWell(
-              onTap: () async => await js.context.callMethod('open', [value.signature!]),
-              child: Container(
-                height: 60.0,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 280.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // LOGO
-                      SizedBox(
-                        width: 160.0,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SvgPicture.asset('assets/logos/oxe_logo.svg',
-                                height: 26.0, width: 26.0),
-                            const SizedBox(width: 16.0),
-                            const Text('Oxedium', style: TextStyle(fontSize: 18.0)),
-                          ],
-                        ),
+            Container(
+              height: 60.0,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 280.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // LOGO
+                    SizedBox(
+                      width: 160.0,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset('assets/logos/oxe_logo.svg',
+                              height: 26.0, width: 26.0),
+                          const SizedBox(width: 16.0),
+                          const Text('Oxedium', style: TextStyle(fontSize: 18.0)),
+                        ],
                       ),
-              
-                      // TRANSACTION STATUS
-                      if (value.status.isNotEmpty)
-                        Stack(
+                    ),
+            
+                    // TRANSACTION STATUS
+                    if (value.status.isNotEmpty)
+                      CustomInkWell(
+                        onTap: () async => await js.context.callMethod('open', [value.signature!]),
+                        child: Stack(
                           alignment: Alignment.bottomRight,
                           children: [
                             Container(
@@ -168,7 +168,7 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                                 ],
                               ),
                             ),
-              
+                                    
                             // PROGRESS INDICATOR (only when needed)
                             if (showIndicator)
                               Positioned(
@@ -200,13 +200,13 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                               ),
                           ],
                         ),
-              
-                      // WALLET
-                      isConnected
-                          ? DisconnectWalletButton(wallet: wallet!, onTap: () => walletNotifier.disconnect())
-                          : ConnectWalletButton(onTap: () => showWalletDialog(context, ref)),
-                    ],
-                  ),
+                      ),
+            
+                    // WALLET
+                    isConnected
+                        ? DisconnectWalletButton(wallet: wallet!, onTap: () => walletNotifier.disconnect())
+                        : ConnectWalletButton(onTap: () => showWalletDialog(context, ref)),
+                  ],
                 ),
               ),
             ),
