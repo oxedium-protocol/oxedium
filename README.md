@@ -34,7 +34,7 @@ Oxedium allows you to earn from the growing Solana ecosystem **with a single ass
 1. Deposit a single asset into a vault.
 2. Traders rebalance vaults using the balancer mechanism.
 3. Earn trading fees without worrying about impermanent loss.
-
+4. Dynamic Unstake Fee: When withdrawing LP tokens, a 2% fee may be applied if the vault’s current liquidity drops below 50% of its initial liquidity. The fee is sent to the treasury to protect vault stability and safeguard remaining users’ funds.
 > Join the existing flow of liquidity on Solana and extract yield from it effortlessly.
 
 ---
