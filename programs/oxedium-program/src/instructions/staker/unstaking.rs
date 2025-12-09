@@ -1,19 +1,37 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, token::{self, burn, Burn, Mint, Token, TokenAccount, Transfer}};
-use crate::{components::{calculate_staker_yield, check_stoptap}, states::{Staker, Treasury, Vault}, utils::*};
+use crate::{components::{calculate_fee_amount, calculate_staker_yield, check_stoptap}, states::{Staker, Treasury, Vault}, utils::*};
 
 #[inline(never)]
 pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Result<()> {
 
     check_stoptap(&ctx.accounts.vault_pda, &ctx.accounts.treasury_pda)?;
 
-    let cumulative_yield: u128 = ctx.accounts.vault_pda.cumulative_yield_per_lp;
+    let vault = &mut ctx.accounts.vault_pda;
+
+    let cumulative_yield: u128 = vault.cumulative_yield_per_lp;
     let staker_lp: u64 = ctx.accounts.signer_lp_ata.amount;
     let last_cumulative_yield: u128 = ctx.accounts.staker_pda.last_cumulative_yield;
 
+    // Update pending yield for the staker
     ctx.accounts.staker_pda.pending_claim += calculate_staker_yield(cumulative_yield, staker_lp, last_cumulative_yield);
     ctx.accounts.staker_pda.last_cumulative_yield = cumulative_yield;
-    
+
+    // --- Dynamic Fee Logic ---
+    let mut unstake_amount = amount;
+    let liquidity_ratio = (vault.current_liquidity as u128 * 100) / vault.initial_liquidity as u128; // in %
+    let mut extra_fee_bps: u64 = 0;
+
+    // Apply extra fee if current liquidity < 50%
+    if liquidity_ratio < 50 {
+        extra_fee_bps = 200; // 2% extra fee if liquidity too low
+    }
+
+    if extra_fee_bps > 0 {
+        unstake_amount -= calculate_fee_amount(unstake_amount, extra_fee_bps, 0, 0)?.0;
+    }
+
+    // Burn LP tokens
     let cpi_accounts = Burn {
         mint: ctx.accounts.lp_mint.to_account_info(),
         from: ctx.accounts.signer_lp_ata.to_account_info(),
@@ -23,9 +41,9 @@ pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Res
         ctx.accounts.token_program.to_account_info(),
         cpi_accounts,
     );
-    
     burn(cpi_ctx, amount)?;
 
+    // Transfer unstake amount from treasury to staker
     let seeds = &[OXEDIUM_SEED.as_bytes(), TREASURY_SEED.as_bytes(), &[ctx.bumps.treasury_pda]];
     let signer_seeds = &[&seeds[..]];
 
@@ -40,12 +58,13 @@ pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Res
             ctx.accounts.token_program.to_account_info(), 
             cpi_accounts, 
             signer_seeds), 
-        amount)?;
+        unstake_amount)?;
 
-    ctx.accounts.vault_pda.initial_liquidity -= amount;
-    ctx.accounts.vault_pda.current_liquidity -= amount;
+    // Update vault liquidity
+    vault.initial_liquidity -= amount;
+    vault.current_liquidity -= unstake_amount;
 
-    msg!("Unstaking {{staker: {}, mint: {}, amount: {}}}", ctx.accounts.signer.key(), ctx.accounts.vault_pda.token_mint.key(), amount);
+    msg!("Unstaking {{staker: {}, mint: {}, amount: {}, extra_fee_bps: {}}}", ctx.accounts.signer.key(), vault.token_mint.key(), unstake_amount, extra_fee_bps);
 
     Ok(())
 }

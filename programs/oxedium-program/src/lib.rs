@@ -16,7 +16,7 @@ pub mod events;
 declare_id!("B561qYVBnYrjM6tn3piLQ6E5fajxit1fCWoPPpMVtwmP");
 
 #[program]
-pub mod tyrbine_program {
+pub mod oxedium_program {
     use super::*;
 
     pub fn init_treasury(ctx: Context<InitTreasuryInstructionAccounts>, proto_fee: u64) -> Result<()> {
