@@ -72,9 +72,9 @@ class _StarsProgressIndicatorState extends State<StarsProgressIndicator>
 
   @override
   void dispose() {
-    _centerController.dispose();
-    _leftController.dispose();
-    _rightController.dispose();
+    // _centerController.dispose();
+    // _leftController.dispose();
+    // _rightController.dispose();
     super.dispose();
   }
 

@@ -1,13 +1,15 @@
 @JS('walletModule')
 library wallet_module;
 
+import 'dart:js_interop';
+
 import 'package:js/js.dart';
 
 @JS('isInstalled')
 external bool isInstalled(wallet);
 
 @JS('connect')
-external Future<void> connect(wallet);
+external JSPromise connect(wallet);
 
 @JS('address')
 external String address();
@@ -16,4 +18,4 @@ external String address();
 external void disconnect(wallet);
 
 @JS('sendTransaction')
-external Future<dynamic> sendTransaction(wallet, tx);
+external JSPromise<JSString> sendTransaction(wallet, tx);

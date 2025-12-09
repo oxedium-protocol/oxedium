@@ -1,5 +1,5 @@
+import 'dart:js_interop';
 import 'dart:typed_data';
-import 'package:js/js_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:oxedium_website/adapter/wallet_module.dart' as wallet_module;
 import 'package:url_launcher/url_launcher.dart';
@@ -44,8 +44,8 @@ class Adapter {
       await launchUrl(Uri.parse(website));
       return false;
     }
-
-    await promiseToFuture(wallet_module.connect(name.toLowerCase()));
+    
+    await wallet_module.connect(name.toLowerCase()).toDart;
 
     if (wallet_module.address().isEmpty) {
       return false;
@@ -65,8 +65,7 @@ class Adapter {
   }
 
   Future<String> signAndSendTransaction(Uint8List transaction) async {
-    var signature = await promiseToFuture(
-        wallet_module.sendTransaction(name.toLowerCase(), transaction));
-    return signature;
+    var signature = await wallet_module.sendTransaction(name.toLowerCase(), transaction).toDart;
+    return signature.toDart;
   }
 }

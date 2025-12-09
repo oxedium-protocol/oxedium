@@ -9,9 +9,11 @@ function isInstalled(wallet) {
 async function connect(wallet) {
     const provider = window[wallet]?.solana || window[wallet];
     const resp = await provider?.connect();
-    pubKey = resp?.publicKey?.toString() || provider.publicKey?.toString();
-}
 
+    pubKey = resp?.publicKey?.toString() || provider.publicKey?.toString();
+
+    return pubKey;
+}
 
 function address() {
     return pubKey;
