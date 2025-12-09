@@ -15,7 +15,7 @@ final statsProvider = FutureProvider<Stats?>((ref) async {
 Future<Stats?> getStats() async {
   final programFuture = Ed25519HDPublicKey.findProgramAddress(
     seeds: [
-      "tyrbine-seed".codeUnits,
+      "oxedium-seed".codeUnits,
       "treasury-seed".codeUnits,
     ],
     programId: Ed25519HDPublicKey.fromBase58(TyrbineProgram.programId),
