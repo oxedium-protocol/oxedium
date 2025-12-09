@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
 
-use crate::{components::{calculate_yield, check_stoptap}, states::{Staker, Treasury, Vault}, utils::{MINT_SEED, STAKER_SEED, TREASURY_SEED, OXEDIUM_SEED, VAULT_SEED}};
+use crate::{components::{calculate_staker_yield, check_stoptap}, states::{Staker, Treasury, Vault}, utils::{MINT_SEED, STAKER_SEED, TREASURY_SEED, OXEDIUM_SEED, VAULT_SEED}};
 
 
 pub fn claim(ctx: Context<ClaimInstructionAccounts>) -> Result<()> {
@@ -12,7 +12,7 @@ pub fn claim(ctx: Context<ClaimInstructionAccounts>) -> Result<()> {
     let staker_last_cumulative_yield = ctx.accounts.staker_pda.last_cumulative_yield;
     let staker_pending_claim = ctx.accounts.staker_pda.pending_claim;
 
-    let staker_yield = calculate_yield(cumulative_yield_per_lp, staker_lp, staker_last_cumulative_yield);
+    let staker_yield = calculate_staker_yield(cumulative_yield_per_lp, staker_lp, staker_last_cumulative_yield);
     let amount = staker_yield + staker_pending_claim;
 
     let seeds = &[OXEDIUM_SEED.as_bytes(), TREASURY_SEED.as_bytes(), &[ctx.bumps.treasury_pda]];

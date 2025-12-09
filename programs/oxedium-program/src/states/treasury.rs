@@ -4,5 +4,5 @@ use anchor_lang::prelude::*;
 pub struct Treasury {
     pub stoptap: bool,
     pub admin: Pubkey,
-    pub proto_fee: u64
+    pub proto_fee_bps: u64
 }

@@ -7,7 +7,7 @@ use crate::{components::{calculate_fee_amount, check_stoptap, fees_setting, raw_
 pub fn swap(
     ctx: Context<SwapInstructionAccounts>,
     amount_in: u64,
-    partner_fee: u64,
+    partner_fee_bps: u64,
 ) -> Result<()> {
 
     check_stoptap(&ctx.accounts.vault_pda_in, &ctx.accounts.treasury_pda)?;
@@ -48,11 +48,10 @@ pub fn swap(
 
     let token_raw_amount_out: u64 = raw_amount_out(amount_in, token_in_decimals, token_out_decimals, price_in, price_out)?;
 
-    let fee: (u64, u64) = fees_setting(&vault_in, &vault_out, ctx.accounts.treasury_pda.proto_fee);
-    let swap_fee_bps = fee.0;
-    let protocol_fee_bps = fee.1;
+    let swap_fee_bps = fees_setting(&vault_in, &vault_out);
+    let protocol_fee_bps = ctx.accounts.treasury_pda.proto_fee_bps;
     
-    let (after_fee, lp_fee, protocol_fee, partner_fee) = calculate_fee_amount(token_raw_amount_out, swap_fee_bps, protocol_fee_bps, partner_fee)?;
+    let (after_fee, lp_fee, protocol_fee, partner_fee) = calculate_fee_amount(token_raw_amount_out, swap_fee_bps, protocol_fee_bps, partner_fee_bps)?;
     
     if vault_out.current_liquidity < (after_fee + lp_fee + protocol_fee + partner_fee) {
         return Err(TyrbineError::InsufficientLiquidity.into());

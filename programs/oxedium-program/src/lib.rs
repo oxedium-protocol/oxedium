@@ -13,7 +13,7 @@ pub mod utils;
 pub mod events;
 
 
-declare_id!("FuK4PRqyDJUjLhKQaWVUTwa7XdaUoiKxAdDdKRN6ePhg");
+declare_id!("B561qYVBnYrjM6tn3piLQ6E5fajxit1fCWoPPpMVtwmP");
 
 #[program]
 pub mod tyrbine_program {

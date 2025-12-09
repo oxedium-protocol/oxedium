@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, token::{self, burn, Burn, Mint, Token, TokenAccount, Transfer}};
-use crate::{components::{calculate_yield, check_stoptap}, states::{Staker, Treasury, Vault}, utils::*};
+use crate::{components::{calculate_staker_yield, check_stoptap}, states::{Staker, Treasury, Vault}, utils::*};
 
 #[inline(never)]
 pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Result<()> {
@@ -11,7 +11,7 @@ pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Res
     let staker_lp = ctx.accounts.signer_lp_ata.amount;
     let last_cumulative_yield = ctx.accounts.staker_pda.last_cumulative_yield;
 
-    ctx.accounts.staker_pda.pending_claim += calculate_yield(cumulative_yield, staker_lp, last_cumulative_yield);
+    ctx.accounts.staker_pda.pending_claim += calculate_staker_yield(cumulative_yield, staker_lp, last_cumulative_yield);
     ctx.accounts.staker_pda.last_cumulative_yield = cumulative_yield;
     
     let cpi_accounts = Burn {
