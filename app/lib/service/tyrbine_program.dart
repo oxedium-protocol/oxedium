@@ -13,7 +13,7 @@ class TyrbineProgram {
 
   static Future<String> getTreasuryAddress() async {
     var treasury = await Ed25519HDPublicKey.findProgramAddress(seeds: [
-      "tyrbine-seed".codeUnits,
+      "oxedium-seed".codeUnits,
       "treasury-seed".codeUnits,
     ], programId: Ed25519HDPublicKey.fromBase58(programId));
     return treasury.toBase58();
@@ -56,7 +56,7 @@ class TyrbineProgram {
     ], programId: Ed25519HDPublicKey.fromBase58(programId));
 
     var treasury = await Ed25519HDPublicKey.findProgramAddress(seeds: [
-      "tyrbine-seed".codeUnits,
+      "oxedium-seed".codeUnits,
       "treasury-seed".codeUnits,
     ], programId: Ed25519HDPublicKey.fromBase58(programId));
 
@@ -166,7 +166,7 @@ class TyrbineProgram {
     ], programId: Ed25519HDPublicKey.fromBase58(programId));
 
     var treasury = await Ed25519HDPublicKey.findProgramAddress(seeds: [
-      "tyrbine-seed".codeUnits,
+      "oxedium-seed".codeUnits,
       "treasury-seed".codeUnits,
     ], programId: Ed25519HDPublicKey.fromBase58(programId));
 
@@ -259,7 +259,7 @@ class TyrbineProgram {
     ], programId: Ed25519HDPublicKey.fromBase58(programId));
 
     var treasuryPDA = await Ed25519HDPublicKey.findProgramAddress(seeds: [
-      "tyrbine-seed".codeUnits,
+      "oxedium-seed".codeUnits,
       "treasury-seed".codeUnits,
     ], programId: Ed25519HDPublicKey.fromBase58(programId));
 
