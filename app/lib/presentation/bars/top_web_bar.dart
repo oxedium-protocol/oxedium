@@ -205,7 +205,13 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                               padding: 10.0,
                               onTap: () => js.context.callMethod('open', [twitterLink]),
                             ),
-                            const SizedBox(width: 16.0),
+                            const SizedBox(width: 4.0),
+                            CircleButton(
+                              assetUrl: "assets/icons/doc_icon.svg",
+                              padding: 10.0,
+                              onTap: () => js.context.callMethod('open', [litepaperLink]),
+                            ),
+                            const SizedBox(width: 4.0),
                             CircleButton(
                               assetUrl: "assets/icons/github_icon.svg",
                               padding: 8.0,
