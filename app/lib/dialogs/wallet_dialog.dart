@@ -76,14 +76,14 @@ void showWalletDialog(BuildContext context, WidgetRef ref) {
                                   const SizedBox(width: 16.0),
                                   Text(wallet.name),
                                   wallet.name == "Phantom"
-                                      ? Row(
+                                      ? const Row(
                                           children: [
-                                            const SizedBox(width: 16.0),
+                                            SizedBox(width: 16.0),
                                             Text(
                                               "⋅ recommend",
                                               style: TextStyle(
                                                 fontFamily: "",
-                                                color: Colors.greenAccent.shade700,
+                                                color: Colors.greenAccent,
                                                 fontSize: 12.0,
                                               ),
                                             )
