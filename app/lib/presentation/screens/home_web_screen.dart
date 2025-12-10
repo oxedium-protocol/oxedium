@@ -671,7 +671,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                 child: AnimatedOpacity(
                   duration: const Duration(milliseconds: 200),
                   opacity: !_showTopDivider ? 0.0 : 0.5,
-                  child: Divider(height: 0.05, color: Colors.grey.shade400),
+                  child: Divider(height: 0.05, color: Colors.grey.shade900),
                 ),
               ),
             ],

@@ -102,7 +102,7 @@ class _StakesListState extends ConsumerState<StakesList> {
                     SizedBox(
                       height: 35.0,
                       width: 35.0,
-                      child: Icon(Icons.zoom_out_map_rounded, size: 18.0, color: Colors.grey.shade400)),
+                      child: Icon(Icons.zoom_out_map_rounded, size: 18.0, color: Colors.grey.shade800)),
                   ],
                 ),
               ),

@@ -45,7 +45,7 @@ class _ToggleButtonState extends State<ToggleButton> {
         decoration: BoxDecoration(
           color: widget.isActive
               ? widget.activeColor.withOpacity(0.15)
-              : isHover ? widget.activeColor : Colors.grey.withOpacity(0.1),
+              : isHover ? Colors.grey.withOpacity(0.4) : Colors.grey.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Text(
