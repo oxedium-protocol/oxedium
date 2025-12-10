@@ -23,13 +23,13 @@ class _ConnectWalletButtonState extends State<ConnectWalletButton> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        height: 32.0,
-        width: 160.0,
+        height: 35.0,
+        width: 150.0,
         decoration: BoxDecoration(
             color: isHover ? const Color(0xFF9971FF) : const Color(0xFF7637EC),
-            borderRadius: BorderRadius.circular(5.0)),
+            borderRadius: BorderRadius.circular(500.0)),
         child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text('Connect', style: TextStyle(color: Colors.white)),

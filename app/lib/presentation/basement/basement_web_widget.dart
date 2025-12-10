@@ -44,19 +44,19 @@ class BasementWebWidget extends StatelessWidget {
                     url: twitterLink,
                     height: 12.0,
                   ),
-                  SizedBox(width: 24.0),
+                  SizedBox(width: 16.0),
                   SocialIconButton(
                     assetPath: "assets/icons/telegram_icon.svg",
                     url: telegramLink,
                     height: 12.0,
                   ),
-                  SizedBox(width: 24.0),
+                  SizedBox(width: 16.0),
                   SocialIconButton(
                     assetPath: "assets/icons/chat.svg",
                     url: telegramChatLink,
                     height: 12.0,
                   ),
-                  SizedBox(width: 24.0),
+                  SizedBox(width: 16.0),
                   SocialIconButton(
                     assetPath: "assets/icons/github_icon.svg",
                     url: repGithubLink,

@@ -31,15 +31,15 @@ class _DisconnectWalletButtonState extends State<DisconnectWalletButton> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        height: 32.0,
-        width: 160.0,
+        height: 35.0,
+        width: 150.0,
         alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
           border: Border.all(
             color: isHover ? Colors.redAccent.withOpacity(0.5) : Colors.grey.withOpacity(0.5),
           ),
-          borderRadius: BorderRadius.circular(5.0),
+          borderRadius: BorderRadius.circular(500.0),
           color: Colors.transparent,
         ),
         child: Row(
