@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:oxedium_website/adapter/adapter.dart';
 import 'package:oxedium_website/adapter/wallet_notifier.dart';
 import 'package:oxedium_website/adapter/wallets/wallets.dart';
+import 'package:oxedium_website/build_version.dart';
 import 'package:oxedium_website/dialogs/wallet_dialog.dart';
 import 'package:oxedium_website/models/tx_status.dart';
 import 'package:oxedium_website/utils/links.dart';
@@ -192,13 +193,18 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // LOGO
-                        const SizedBox(
-                          width: 150.0,
-                          child: Text('Oxedium', style: TextStyle(fontSize: 18.0, fontFamily: "Audiowide")),
+                        const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Oxedium', style: TextStyle(fontSize: 18.0, fontFamily: "Audiowide")),
+                            Text("• Solana Devnet v. ${buildVersion}", style: TextStyle(color: Colors.deepOrange, fontSize: 11.0))
+                          ],
                         ),
                                 
                         // SOCIALS MEDIA & WALLET
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             CircleButton(
                               assetUrl: "assets/icons/x_icon.svg",
