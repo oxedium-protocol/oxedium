@@ -13,16 +13,24 @@ class CircleButton extends StatefulWidget {
 }
 
 class _CircleButtonState extends State<CircleButton> {
+
+  bool isHover = false;
+
   @override
   Widget build(BuildContext context) {
     return CustomInkWell(
       onTap: widget.onTap,
-      child: Container(
+      onHover: (value) {
+        isHover = value;
+        setState(() {});
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
         height: 35.0,
         width: 35.0,
         alignment: Alignment.center,
         padding: EdgeInsets.all(widget.padding),
-        decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.black),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, border: Border.all(color: isHover ? Colors.grey.shade900 : Colors.transparent)),
         child: SvgPicture.asset(widget.assetUrl),
       ),
     );

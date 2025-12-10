@@ -202,7 +202,7 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                           children: [
                             CircleButton(
                               assetUrl: "assets/icons/x_icon.svg",
-                              padding: 11.0,
+                              padding: 10.0,
                               onTap: () => js.context.callMethod('open', [twitterLink]),
                             ),
                             const SizedBox(width: 16.0),
