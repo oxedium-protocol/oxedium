@@ -16,6 +16,7 @@ class _ConnectWalletButtonState extends State<ConnectWalletButton>
   late AnimationController _controller;
   late Animation<double> _positionAnimation;
   late Animation<double> _opacityAnimation;
+  late Animation<double> _jumpAnimation;
 
   final double buttonHeight = 35.0;
 
@@ -24,13 +25,13 @@ class _ConnectWalletButtonState extends State<ConnectWalletButton>
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
 
     _positionAnimation = Tween<double>(
-      begin: buttonHeight - 16, 
-      end: 0,          
+      begin: buttonHeight - 16,
+      end: 0,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeOut,
@@ -45,6 +46,13 @@ class _ConnectWalletButtonState extends State<ConnectWalletButton>
         tween: Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeOut)),
         weight: 60,
       ),
+    ]).animate(_controller);
+
+    // подпрыгивание в конце
+    _jumpAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: ConstantTween(0.0), weight: 80),
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -12.0).chain(CurveTween(curve: Curves.easeOut)), weight: 10),
+      TweenSequenceItem(tween: Tween(begin: -12.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn)), weight: 10),
     ]).animate(_controller);
 
     _controller.addStatusListener((status) {
@@ -103,7 +111,7 @@ class _ConnectWalletButtonState extends State<ConnectWalletButton>
                 if (!isHover) return const SizedBox();
                 return Positioned(
                   left: 8,
-                  top: _positionAnimation.value,
+                  top: _positionAnimation.value + _jumpAnimation.value,
                   child: Opacity(
                     opacity: _opacityAnimation.value,
                     child: const Icon(
