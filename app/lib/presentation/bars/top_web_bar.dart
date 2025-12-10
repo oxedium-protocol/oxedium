@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:oxedium_website/adapter/adapter.dart';
 import 'package:oxedium_website/adapter/wallet_notifier.dart';
 import 'package:oxedium_website/adapter/wallets/wallets.dart';
 import 'package:oxedium_website/dialogs/wallet_dialog.dart';
 import 'package:oxedium_website/models/tx_status.dart';
+import 'package:oxedium_website/utils/links.dart';
+import 'package:oxedium_website/widgets/circle_button.dart';
 import 'package:oxedium_website/widgets/connect_wallet_button.dart';
 import 'package:oxedium_website/widgets/custom_inkwell.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -95,25 +96,10 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                 color: Theme.of(context).scaffoldBackgroundColor,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 280.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    // LOGO
-                    SizedBox(
-                      width: 160.0,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset('assets/logos/oxe_logo.svg',
-                              height: 26.0, width: 26.0),
-                          const SizedBox(width: 16.0),
-                          const Text('Oxedium', style: TextStyle(fontSize: 18.0)),
-                        ],
-                      ),
-                    ),
-            
                     // TRANSACTION STATUS
                     if (value.status.isNotEmpty)
                       CustomInkWell(
@@ -154,7 +140,7 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                                     value.status,
                                     style: TextStyle(
                                       color: value.status == 'Success'
-                                          ? Colors.greenAccent.shade700
+                                          ? Colors.greenAccent
                                           : (value.status == 'Rejected' ||
                                                   value.status == 'Error'
                                               ? Colors.red
@@ -184,7 +170,7 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                                       width: 400 * progress,
                                       decoration: BoxDecoration(
                                         color: value.status == 'Success'
-                                            ? Colors.greenAccent.shade700
+                                            ? Colors.greenAccent
                                             : (value.status == 'Rejected' ||
                                                     value.status == 'Error'
                                                 ? Colors.red
@@ -201,11 +187,38 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                           ],
                         ),
                       ),
-            
-                    // WALLET
-                    isConnected
-                        ? DisconnectWalletButton(wallet: wallet!, onTap: () => walletNotifier.disconnect())
-                        : ConnectWalletButton(onTap: () => showWalletDialog(context, ref)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // LOGO
+                        const SizedBox(
+                          width: 150.0,
+                          child: Text('Oxedium', style: TextStyle(fontSize: 18.0, fontFamily: "Audiowide")),
+                        ),
+                                
+                        // SOCIALS MEDIA & WALLET
+                        Row(
+                          children: [
+                            CircleButton(
+                              assetUrl: "assets/icons/x_icon.svg",
+                              padding: 11.0,
+                              onTap: () => js.context.callMethod('open', [twitterLink]),
+                            ),
+                            const SizedBox(width: 16.0),
+                            CircleButton(
+                              assetUrl: "assets/icons/github_icon.svg",
+                              padding: 8.0,
+                              onTap: () => js.context.callMethod('open', [repGithubLink]),
+                            ),
+                            const SizedBox(width: 16.0),
+                            isConnected
+                            ? DisconnectWalletButton(wallet: wallet!, onTap: () => walletNotifier.disconnect())
+                            : ConnectWalletButton(onTap: () => showWalletDialog(context, ref)),
+                          ],
+                        )
+                      ],
+                    ),
                   ],
                 ),
               ),

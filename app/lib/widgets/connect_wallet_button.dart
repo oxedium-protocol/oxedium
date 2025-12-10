@@ -24,18 +24,15 @@ class _ConnectWalletButtonState extends State<ConnectWalletButton> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         height: 35.0,
-        width: 150.0,
+        width: 140.0,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: isHover ? const Color(0xFF9971FF) : const Color(0xFF7637EC),
+            color: isHover ? const Color(0xFF7637EC) : Colors.white,
             borderRadius: BorderRadius.circular(500.0)),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('Connect', style: TextStyle(color: Colors.white)),
-            Icon(Icons.power, color: Colors.white, size: 21.0)
-          ],
-        ),
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 250),
+          style: TextStyle(color: isHover ? Colors.white : Colors.black, fontFamily: 'Aeonik', fontSize: 17.0),
+          child: const Text('Connect')),
       ),
     );
   }

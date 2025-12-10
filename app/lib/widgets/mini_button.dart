@@ -29,11 +29,11 @@ class _MiniButtonState extends State<MiniButton> {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            border: Border.all(color: isHover ? Colors.deepPurpleAccent : Colors.grey),
+            border: Border.all(color: isHover ? Colors.deepPurpleAccent : Colors.grey.withOpacity(0.2)),
             borderRadius: BorderRadius.circular(5.0),
-            color: Colors.grey.withOpacity(0.1)),
+            color: Theme.of(context).hintColor.withOpacity(0.1)),
         child: Text(widget.text,
-            style: TextStyle(fontSize: 14.0, color: isHover ? Colors.deepPurpleAccent : Colors.grey)),
+            style: TextStyle(fontSize: 14.0, color: isHover ? Colors.deepPurpleAccent : Theme.of(context).hintColor)),
       ),
     );
   }

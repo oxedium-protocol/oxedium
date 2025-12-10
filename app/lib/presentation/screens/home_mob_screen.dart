@@ -13,7 +13,6 @@ import 'package:oxedium_website/models/tx_status.dart';
 import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/models/user_balance.dart';
 import 'package:oxedium_website/presentation/bars/top_mob_bar.dart';
-import 'package:oxedium_website/presentation/basement/basement_mob_widget.dart';
 import 'package:oxedium_website/service/config.dart';
 import 'package:oxedium_website/utils/extensions.dart';
 import 'package:oxedium_website/widgets/stars_progress_indicator.dart';
@@ -321,11 +320,6 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                                       ),
                                   ],
                                 ),
-                              ),
-                              const Spacer(),
-                              const Padding(
-                                padding: EdgeInsets.only(top: 16.0),
-                                child: BasementMobWidget(),
                               ),
                             ],
                           ),

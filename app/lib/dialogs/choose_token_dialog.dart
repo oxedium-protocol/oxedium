@@ -18,7 +18,7 @@ void chooseTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, 
               height: 450.0,
               width: 384.0,
               decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Column(

@@ -34,7 +34,7 @@ void showStakeDialog(BuildContext context, WidgetRef ref, Staked stake,
                 width: 384.0,
                 height: showUnstakeField ? 380.0 : 252.0,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10.0),
                   border: Border.all(color: Colors.grey.withOpacity(0.2)),
                 ),

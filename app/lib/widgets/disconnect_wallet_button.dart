@@ -32,7 +32,7 @@ class _DisconnectWalletButtonState extends State<DisconnectWalletButton> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         height: 35.0,
-        width: 150.0,
+        width: 140.0,
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
