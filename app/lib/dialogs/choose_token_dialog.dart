@@ -61,7 +61,7 @@ void chooseTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, 
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5.0),
-                                border: Border.all(color: Colors.grey.withOpacity(0.5))
+                                border: Border.all(color: Colors.grey.withOpacity(0.2))
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,7 +90,7 @@ void chooseTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, 
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text('${vaults[index].apr}%', style: const TextStyle(color: Colors.greenAccent)),
-                                      Text('APR', style: TextStyle(color: Colors.grey.withOpacity(0.3), fontSize: 12.0))
+                                      const Text('APR', style: TextStyle(color: Colors.grey, fontSize: 12.0))
                                     ],
                                   )
                                 ],
