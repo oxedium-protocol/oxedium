@@ -30,7 +30,7 @@ class _CircleButtonState extends State<CircleButton> {
         width: 35.0,
         alignment: Alignment.center,
         padding: EdgeInsets.all(widget.padding),
-        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, border: Border.all(color: isHover ? Colors.grey.shade900 : Colors.transparent)),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: isHover ? Colors.deepPurple.withOpacity(0.4) : Colors.black),
         child: SvgPicture.asset(widget.assetUrl),
       ),
     );
