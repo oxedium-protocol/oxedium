@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:oxedium_website/adapter/adapter.dart';
 import 'package:oxedium_website/adapter/wallet_notifier.dart';
@@ -17,8 +18,9 @@ import 'package:oxedium_website/widgets/disconnect_wallet_button.dart';
 
 class TopWebBar extends ConsumerStatefulWidget {
   final ValueNotifier<TxStatus>? transactionStatus;
+  final bool blurred;
 
-  const TopWebBar({super.key, this.transactionStatus});
+  const TopWebBar({super.key, this.transactionStatus, this.blurred = false});
 
   @override
   ConsumerState<TopWebBar> createState() => _TopWebBarState();
@@ -88,154 +90,163 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
           _hideTimer?.cancel();
         }
 
-        return Column(
-          children: [
-            Container(
-              height: 60.0,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // TRANSACTION STATUS
-                    if (value.status.isNotEmpty)
-                      CustomInkWell(
-                        onTap: () async => await js.context.callMethod('open', [value.signature!]),
-                        child: Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            Container(
-                              height: 30.0,
-                              width: 400.0,
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  if (value.status == "Awaiting approve" || value.status == "Sending transaction")
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 16.0),
-                                    child: SizedBox(
-                                      height: 15.0,
-                                      width: 15.0,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.orangeAccent,
-                                        strokeWidth: 1.0,
-                                        backgroundColor: Colors.orangeAccent.withOpacity(0.05),
-                                      ),
-                                    ),
+        return ClipRect(
+          child: BackdropFilter(
+            filter: widget.blurred
+            ? ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0)
+            : ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+            child: Column(
+              children: [
+                Container(
+                  height: 60.0,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: widget.blurred
+                    ? Colors.black.withOpacity(0.1)
+                    : Colors.transparent,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // TRANSACTION STATUS
+                        if (value.status.isNotEmpty)
+                          CustomInkWell(
+                            onTap: () async => await js.context.callMethod('open', [value.signature!]),
+                            child: Stack(
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                Container(
+                                  height: 30.0,
+                                  width: 400.0,
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(4),
                                   ),
-                                  if (value.status == "Success")
-                                  const Padding(
-                                    padding: EdgeInsets.only(right: 16.0),
-                                    child: Icon(Icons.check_circle_rounded, color: Colors.greenAccent, size: 16.0),
-                                  ),
-                                  Text(
-                                    value.status,
-                                    style: TextStyle(
-                                      color: value.status == 'Success'
-                                          ? Colors.greenAccent
-                                          : (value.status == 'Rejected' ||
-                                                  value.status == 'Error'
-                                              ? Colors.red
-                                              : Colors.orangeAccent),
-                                      fontSize: 14.0,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  if (value.status == "Success")
-                                  const Text("view", style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.grey))
-                                ],
-                              ),
-                            ),
-                                    
-                            // PROGRESS INDICATOR (only when needed)
-                            if (showIndicator)
-                              Positioned(
-                                bottom: 0,
-                                left: 0,
-                                child: AnimatedBuilder(
-                                  animation: _progressController!,
-                                  builder: (context, _) {
-                                    final progress =
-                                        1 - _progressController!.value;
-                                    return Container(
-                                      height: 1,
-                                      width: 400 * progress,
-                                      decoration: BoxDecoration(
-                                        color: value.status == 'Success'
-                                            ? Colors.greenAccent
-                                            : (value.status == 'Rejected' ||
-                                                    value.status == 'Error'
-                                                ? Colors.red
-                                                : Colors.orangeAccent),
-                                        borderRadius: const BorderRadius.only(
-                                          bottomRight: Radius.circular(4),
-                                          bottomLeft: Radius.circular(4),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      if (value.status == "Awaiting approve" || value.status == "Sending transaction")
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 16.0),
+                                        child: SizedBox(
+                                          height: 15.0,
+                                          width: 15.0,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.orangeAccent,
+                                            strokeWidth: 1.0,
+                                            backgroundColor: Colors.orangeAccent.withOpacity(0.05),
+                                          ),
                                         ),
                                       ),
-                                    );
-                                  },
+                                      if (value.status == "Success")
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 16.0),
+                                        child: Icon(Icons.check_circle_rounded, color: Colors.greenAccent, size: 16.0),
+                                      ),
+                                      Text(
+                                        value.status,
+                                        style: TextStyle(
+                                          color: value.status == 'Success'
+                                              ? Colors.greenAccent
+                                              : (value.status == 'Rejected' ||
+                                                      value.status == 'Error'
+                                                  ? Colors.red
+                                                  : Colors.orangeAccent),
+                                          fontSize: 14.0,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      if (value.status == "Success")
+                                      const Text("view", style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.grey))
+                                    ],
+                                  ),
                                 ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // LOGO
-                        const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Oxedium', style: TextStyle(fontSize: 18.0, fontFamily: "Audiowide")),
-                            Text("• Solana Devnet v. ${buildVersion}", style: TextStyle(color: Colors.deepOrange, fontSize: 11.0))
-                          ],
-                        ),
-                                
-                        // SOCIALS MEDIA & WALLET
+                                        
+                                // PROGRESS INDICATOR (only when needed)
+                                if (showIndicator)
+                                  Positioned(
+                                    bottom: 0,
+                                    left: 0,
+                                    child: AnimatedBuilder(
+                                      animation: _progressController!,
+                                      builder: (context, _) {
+                                        final progress =
+                                            1 - _progressController!.value;
+                                        return Container(
+                                          height: 1,
+                                          width: 400 * progress,
+                                          decoration: BoxDecoration(
+                                            color: value.status == 'Success'
+                                                ? Colors.greenAccent
+                                                : (value.status == 'Rejected' ||
+                                                        value.status == 'Error'
+                                                    ? Colors.red
+                                                    : Colors.orangeAccent),
+                                            borderRadius: const BorderRadius.only(
+                                              bottomRight: Radius.circular(4),
+                                              bottomLeft: Radius.circular(4),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            CircleButton(
-                              assetUrl: "assets/icons/x_icon.svg",
-                              padding: 10.0,
-                              onTap: () => js.context.callMethod('open', [twitterLink]),
+                            // LOGO
+                            const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Oxedium', style: TextStyle(fontSize: 18.0, fontFamily: "Audiowide")),
+                                Text("• Solana Devnet v. ${buildVersion}", style: TextStyle(color: Colors.deepOrange, fontSize: 11.0))
+                              ],
                             ),
-                            const SizedBox(width: 4.0),
-                            CircleButton(
-                              assetUrl: "assets/icons/doc_icon.svg",
-                              padding: 10.0,
-                              onTap: () => js.context.callMethod('open', [litepaperLink]),
-                            ),
-                            const SizedBox(width: 4.0),
-                            CircleButton(
-                              assetUrl: "assets/icons/github_icon.svg",
-                              padding: 8.0,
-                              onTap: () => js.context.callMethod('open', [repGithubLink]),
-                            ),
-                            const SizedBox(width: 16.0),
-                            isConnected
-                            ? DisconnectWalletButton(wallet: wallet!, onTap: () => walletNotifier.disconnect())
-                            : ConnectWalletButton(onTap: () => showWalletDialog(context, ref)),
+                                    
+                            // SOCIALS MEDIA & WALLET
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleButton(
+                                  assetUrl: "assets/icons/x_icon.svg",
+                                  padding: 10.0,
+                                  onTap: () => js.context.callMethod('open', [twitterLink]),
+                                ),
+                                const SizedBox(width: 4.0),
+                                CircleButton(
+                                  assetUrl: "assets/icons/doc_icon.svg",
+                                  padding: 10.0,
+                                  onTap: () => js.context.callMethod('open', [litepaperLink]),
+                                ),
+                                const SizedBox(width: 4.0),
+                                CircleButton(
+                                  assetUrl: "assets/icons/github_icon.svg",
+                                  padding: 8.0,
+                                  onTap: () => js.context.callMethod('open', [repGithubLink]),
+                                ),
+                                const SizedBox(width: 16.0),
+                                isConnected
+                                ? DisconnectWalletButton(wallet: wallet!, onTap: () => walletNotifier.disconnect())
+                                : ConnectWalletButton(onTap: () => showWalletDialog(context, ref)),
+                              ],
+                            )
                           ],
-                        )
+                        ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
