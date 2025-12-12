@@ -60,7 +60,16 @@ pub fn swap(
     // Compute swap and protocol fees
     let swap_fee_bps = fees_setting(&vault_in, &vault_out);
     let protocol_fee_bps = ctx.accounts.treasury_pda.proto_fee_bps;
-    let (after_fee, lp_fee, protocol_fee, partner_fee) = calculate_fee_amount(token_raw_amount_out, swap_fee_bps, protocol_fee_bps, partner_fee_bps)?;
+
+    // Check if the swap amount exceeds 10% of the current vault liquidity
+    let ten_percent_of_liquidity = vault_out.current_liquidity / 10; // 10%
+    let adjusted_swap_fee_bps = if token_raw_amount_out > ten_percent_of_liquidity {
+        swap_fee_bps * 500 // e.g., x500 fee
+    } else {
+        swap_fee_bps
+    };
+
+    let (after_fee, lp_fee, protocol_fee, partner_fee) = calculate_fee_amount(token_raw_amount_out, adjusted_swap_fee_bps, protocol_fee_bps, partner_fee_bps)?;
 
     // Check liquidity in the output vault
     if vault_out.current_liquidity < (after_fee + lp_fee + protocol_fee + partner_fee) {
