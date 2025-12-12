@@ -64,7 +64,7 @@ pub fn swap(
     // Check if the swap amount exceeds 10% of the current vault liquidity
     let ten_percent_of_liquidity = vault_out.current_liquidity / 10; // 10%
     let adjusted_swap_fee_bps = if token_raw_amount_out > ten_percent_of_liquidity {
-        swap_fee_bps * 500 // e.g., x500 fee
+        swap_fee_bps * 100 // e.g., x100 fee
     } else {
         swap_fee_bps
     };

@@ -38,7 +38,7 @@ Oxedium allows you to earn from the growing Solana ecosystem **with a single ass
 5. **Dynamic Swap Fee:** Swap fees are applied dynamically to protect vault liquidity and ensure fair trading:  
    - Base Fee: Applied when tokens are swapped from a balanced or surplus vault.  
    - Increased Fee: Applied when tokens are withdrawn from a low-liquidity (deficit) vault.  
-   - Maximum Fee (x500): If the swap amount exceeds 10% of the vault’s current liquidity, the fee is capped at 500× fee.
+   - Maximum Fee (x100): If the swap amount exceeds 10% of the vault’s current liquidity, the fee is capped at 100× fee.
 
 > Join the existing flow of liquidity on Solana and extract yield from it effortlessly.
 
