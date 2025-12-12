@@ -40,7 +40,7 @@ class _StakesListState extends ConsumerState<StakesList> {
                   maxWidth: 400,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.blueGrey.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(10.0)
                 ),
                 child: Row(
