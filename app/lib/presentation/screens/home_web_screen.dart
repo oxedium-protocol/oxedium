@@ -117,13 +117,35 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
     return Scaffold(
         body: vaultsAsync.when(
       data: (stat) {
-        Vault vault = stat!.vaults.where((v) => v.mint == widget.vaultMint).first;
+        Vault vault =
+            stat!.vaults.where((v) => v.mint == widget.vaultMint).first;
         return SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
-              Align(alignment: Alignment.topRight, child: Image.asset("assets/icons/background.png", height: MediaQuery.of(context).size.height / 2)),
+              SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: Transform.scale(
+                  scaleX: 2.5,
+                  scaleY: 1.0,
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: RadialGradient(
+                        center: Alignment.topRight,
+                        radius: 0.5,
+                        colors: [
+                          Color.fromRGBO(42, 42, 56, 0.4),
+                          Color.fromRGBO(42, 42, 56, 0.0),
+                        ],
+                        stops: [0.0, 0.8],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SingleChildScrollView(
                 controller: _scrollController,
                 child: Column(
@@ -154,19 +176,18 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                 const SizedBox(height: 8.0),
                                 Text(
                                   'Choose your staking tokens',
-                                  style:
-                                      TextStyle(color: Theme.of(context).hintColor),
+                                  style: TextStyle(
+                                      color: Theme.of(context).hintColor),
                                 ),
                                 const SizedBox(height: 16.0),
-                        
+
                                 // ----------------- STAKE AMOUNT BLOCK -----------------
                                 Container(
                                   height: 100.0,
                                   padding: const EdgeInsets.all(8.0),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).primaryColor,
-                                    borderRadius:
-                                        BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   child: Column(
                                     mainAxisAlignment:
@@ -178,41 +199,38 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                         children: [
                                           Text('Stake amount',
                                               style: TextStyle(
-                                                  color: Theme.of(context).hintColor)),
+                                                  color: Theme.of(context)
+                                                      .hintColor)),
                                           Consumer(
                                             builder: (context, ref, _) {
                                               final wallet =
                                                   ref.watch(walletProvider);
                                               final isConnected =
                                                   wallet?.pubkey != null;
-                        
+
                                               if (!isConnected) {
-                                                return const SizedBox
-                                                    .shrink();
+                                                return const SizedBox.shrink();
                                               }
-                        
-                                              final userBalancesAsync =
-                                                  ref.watch(
-                                                      userBalanceNotifierProvider(
-                                                          wallet!.pubkey!));
-                        
+
+                                              final userBalancesAsync = ref.watch(
+                                                  userBalanceNotifierProvider(
+                                                      wallet!.pubkey!));
+
                                               return userBalancesAsync.when(
                                                 data: (balances) {
-                                                  final vaultBalance =
-                                                      balances
-                                                          .firstWhere(
-                                                            (b) =>
-                                                                b.mint ==
-                                                                vault.mint,
-                                                            orElse: () =>
-                                                                UserBalance(
-                                                                    mint: vault
-                                                                        .mint,
-                                                                    amount:
-                                                                        0),
-                                                          )
-                                                          .amount;
-                        
+                                                  final vaultBalance = balances
+                                                      .firstWhere(
+                                                        (b) =>
+                                                            b.mint ==
+                                                            vault.mint,
+                                                        orElse: () =>
+                                                            UserBalance(
+                                                                mint:
+                                                                    vault.mint,
+                                                                amount: 0),
+                                                      )
+                                                      .amount;
+
                                                   return Row(
                                                     children: [
                                                       Row(
@@ -220,25 +238,39 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                           Icon(
                                                               Icons
                                                                   .account_balance_wallet_outlined,
-                                                              color: Theme.of(context).hintColor,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .hintColor,
                                                               size: 16.0),
                                                           const SizedBox(
                                                               width: 8.0),
                                                           Text(
                                                             "${vaultBalance.formatBalance()} ${vault.symbol}",
                                                             style: TextStyle(
-                                                                fontSize:
-                                                                    14.0,
-                                                                color: Theme.of(context).hintColor),
+                                                                fontSize: 14.0,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .hintColor),
                                                           ),
                                                           const SizedBox(
                                                               width: 8.0),
                                                           MiniButton(
                                                             text: "max",
                                                             onTap: () {
-                                                              final vb = vault.mint == 'So11111111111111111111111111111111111111112' ? (vaultBalance - 0.006).toString() : vaultBalance.toString();
-                                                              _stakeAmountController.text = vb;
-                                                              calculatingYield(vaultBalance.toString(), vault.apr);
+                                                              final vb = vault
+                                                                          .mint ==
+                                                                      'So11111111111111111111111111111111111111112'
+                                                                  ? (vaultBalance -
+                                                                          0.006)
+                                                                      .toString()
+                                                                  : vaultBalance
+                                                                      .toString();
+                                                              _stakeAmountController
+                                                                  .text = vb;
+                                                              calculatingYield(
+                                                                  vaultBalance
+                                                                      .toString(),
+                                                                  vault.apr);
                                                             },
                                                           ),
                                                         ],
@@ -246,8 +278,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                     ],
                                                   );
                                                 },
-                                                loading: () =>
-                                                    const SizedBox(),
+                                                loading: () => const SizedBox(),
                                                 error: (e, _) => Text(
                                                     'Error loading balance: $e'),
                                               );
@@ -261,9 +292,8 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                         children: [
                                           Expanded(
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.only(
-                                                      right: 4.0),
+                                              padding: const EdgeInsets.only(
+                                                  right: 4.0),
                                               child: TextField(
                                                 controller:
                                                     _stakeAmountController,
@@ -274,15 +304,14 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                     TextInputType.number,
                                                 inputFormatters: [
                                                   FilteringTextInputFormatter
-                                                      .allow(RegExp(
-                                                          r'[0-9.]')),
+                                                      .allow(RegExp(r'[0-9.]')),
                                                 ],
-                                                decoration:
-                                                    InputDecoration(
+                                                decoration: InputDecoration(
                                                   hint: Text('0.00',
                                                       style: TextStyle(
                                                           fontSize: 26.0,
-                                                          color: Colors.grey.shade800)),
+                                                          color: Colors
+                                                              .grey.shade800)),
                                                   border: InputBorder.none,
                                                   isCollapsed: true,
                                                   contentPadding:
@@ -299,25 +328,24 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                 context, ref, stat.vaults),
                                             child: Container(
                                               height: 35.0,
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 8.0),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
                                               decoration: BoxDecoration(
-                                                color: Theme.of(context).cardColor,
+                                                color:
+                                                    Theme.of(context).cardColor,
                                                 border: Border.all(
-                                                    color: Colors.grey.withOpacity(0.1)),
+                                                    color: Colors.grey
+                                                        .withOpacity(0.1)),
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        6.0),
+                                                    BorderRadius.circular(6.0),
                                               ),
                                               child: Row(
                                                 children: [
-                                                  Image.network(
-                                                      vault.logoUrl,
+                                                  Image.network(vault.logoUrl,
                                                       height: 21.0,
                                                       width: 21.0),
-                                                  const SizedBox(
-                                                      width: 8.0),
+                                                  const SizedBox(width: 8.0),
                                                   Text(vault.symbol),
                                                   const Icon(
                                                     Icons
@@ -334,37 +362,38 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                     ],
                                   ),
                                 ),
-                        
+
                                 const SizedBox(height: 16.0),
-                        
+
                                 AnimatedSwitcher(
-                                  duration:
-                                      const Duration(milliseconds: 300),
+                                  duration: const Duration(milliseconds: 300),
                                   transitionBuilder: (child, animation) =>
                                       FadeTransition(
                                           opacity: animation, child: child),
                                   child: _showVaultSection
                                       ? Column(
-                                          key: const ValueKey(
-                                              'vault_section'),
+                                          key: const ValueKey('vault_section'),
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               'You’ll join this vault',
                                               style: TextStyle(
-                                                  color: Theme.of(context).hintColor),
+                                                  color: Theme.of(context)
+                                                      .hintColor),
                                             ),
                                             const SizedBox(height: 8.0),
-                        
+
                                             Container(
                                               height: 50.0,
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 8.0),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
                                               decoration: BoxDecoration(
                                                   border: Border.all(
-                                                      color: const Color(0xFF404056), width: 0.5),
+                                                      color: const Color(
+                                                          0xFF404056),
+                                                      width: 0.5),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10.0)),
@@ -388,32 +417,30 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                   Text(
                                                     '+${vault.apr}%',
                                                     style: const TextStyle(
-                                                      color: Colors
-                                                          .greenAccent,
+                                                      color: Colors.greenAccent,
                                                       fontSize: 18.0,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                        
+
                                             const SizedBox(height: 16.0),
-                        
+
                                             // ---------------- ESTIMATED YIELD BLOCK ----------------
-                        
+
                                             Container(
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               decoration: BoxDecoration(
-                                                color: Theme.of(context).primaryColor,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0),
+                                                    BorderRadius.circular(10.0),
                                               ),
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     mainAxisAlignment:
@@ -423,104 +450,116 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                       Text(
                                                         'Estimated yield',
                                                         style: TextStyle(
-                                                            color: Theme.of(context).hintColor),
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .hintColor),
                                                       ),
                                                       Theme(
                                                         data: ThemeData(
                                                           splashColor: Colors
                                                               .transparent,
-                                                          highlightColor:
-                                                              Colors
-                                                                  .transparent,
+                                                          highlightColor: Colors
+                                                              .transparent,
                                                           hoverColor: Colors
                                                               .grey
                                                               .withOpacity(
                                                                   0.03),
                                                           focusColor: Colors
                                                               .transparent,
-                                                          fontFamily:
-                                                              "Aeonik",
+                                                          fontFamily: "Aeonik",
                                                         ),
-                                                        child: PopupMenuButton<String>(
-                                                          color: Theme.of(context).cardColor,
-                                                          elevation:
-                                                              0,
+                                                        child: PopupMenuButton<
+                                                            String>(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .cardColor,
+                                                          elevation: 0,
                                                           surfaceTintColor:
                                                               Colors.white,
                                                           shadowColor: Colors
                                                               .transparent,
                                                           padding:
-                                                              EdgeInsets
-                                                                  .zero,
+                                                              EdgeInsets.zero,
                                                           tooltip: "",
                                                           shape:
                                                               RoundedRectangleBorder(
                                                             side: BorderSide(
                                                                 color: Colors
-                                                                    .grey.withOpacity(0.1),
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.1),
                                                                 width: 0.5),
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         6),
                                                           ),
-                        
-                                                          onSelected:
-                                                              (value) {
+                                                          onSelected: (value) {
                                                             setState(() {
-                                                              selectedPeriod = value;
-                                                              calculatingYield(_stakeAmountController.text, vault.apr);
+                                                              selectedPeriod =
+                                                                  value;
+                                                              calculatingYield(
+                                                                  _stakeAmountController
+                                                                      .text,
+                                                                  vault.apr);
                                                             });
                                                           },
-                        
                                                           itemBuilder:
                                                               (context) =>
                                                                   periods
                                                                       .map(
-                                                                        (p) =>
-                                                                            PopupMenuItem<String>(
-                                                                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                                          value: p,
-                                                                          child: Text(
+                                                                        (p) => PopupMenuItem<
+                                                                            String>(
+                                                                          padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                              horizontal: 16.0),
+                                                                          value:
+                                                                              p,
+                                                                          child:
+                                                                              Text(
                                                                             p,
-                                                                            style: const TextStyle(fontSize: 16.0, color: Colors.white),
+                                                                            style:
+                                                                                const TextStyle(fontSize: 16.0, color: Colors.white),
                                                                           ),
                                                                         ),
                                                                       )
                                                                       .toList(),
-                        
                                                           child: Container(
                                                             height: 30.0,
-                                                            alignment:
-                                                                Alignment
-                                                                    .center,
-                                                            padding: const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal:
-                                                                    8.0),
+                                                            alignment: Alignment
+                                                                .center,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        8.0),
                                                             decoration:
                                                                 BoxDecoration(
-                                                              color: Theme.of(context).cardColor,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .cardColor,
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .circular(
                                                                           5.0),
-                                                              border: Border
-                                                                  .all(
+                                                              border:
+                                                                  Border.all(
                                                                 color: Colors
-                                                                    .grey.withOpacity(0.1),
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.1),
                                                               ),
                                                             ),
                                                             child: Row(
                                                               children: [
-                                                                Text(selectedPeriod),
+                                                                Text(
+                                                                    selectedPeriod),
                                                                 const Icon(
                                                                   Icons
                                                                       .keyboard_arrow_down_rounded,
                                                                   color: Colors
                                                                       .grey,
-                                                                  size:
-                                                                      21.0,
+                                                                  size: 21.0,
                                                                 ),
                                                               ],
                                                             ),
@@ -529,8 +568,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                       )
                                                     ],
                                                   ),
-                                                  const SizedBox(
-                                                      height: 4.0),
+                                                  const SizedBox(height: 4.0),
                                                   Text(
                                                     '$estimatedAmount ${vault.symbol}',
                                                     style: const TextStyle(
@@ -539,29 +577,37 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                 ],
                                               ),
                                             ),
-                        
+
                                             const SizedBox(height: 16.0),
                                             Text(
                                               'By providing liquidity, you’ll earn a portion of trading fees',
                                               style: TextStyle(
-                                                  color: Theme.of(context).hintColor,
+                                                  color: Theme.of(context)
+                                                      .hintColor,
                                                   fontSize: 13.0),
                                             ),
                                             const SizedBox(height: 32.0),
-                        
-                                            StakingButton(isConnected: isConnected, onTap: () {
-                                                if (isConnected) {
-                                                  staking(context, ref,
-                                                      adapter: wallet!,
-                                                      vault: vault,
-                                                      vaultsData: stat.vaults,
-                                                      status: transactionStatus,
-                                                      amountText: _stakeAmountController.text);
-                                                  _stakeAmountController.clear();
-                                                } else {
-                                                  showWalletDialog(context, ref);
-                                                }
-                                            }),
+
+                                            StakingButton(
+                                                isConnected: isConnected,
+                                                onTap: () {
+                                                  if (isConnected) {
+                                                    staking(context, ref,
+                                                        adapter: wallet!,
+                                                        vault: vault,
+                                                        vaultsData: stat.vaults,
+                                                        status:
+                                                            transactionStatus,
+                                                        amountText:
+                                                            _stakeAmountController
+                                                                .text);
+                                                    _stakeAmountController
+                                                        .clear();
+                                                  } else {
+                                                    showWalletDialog(
+                                                        context, ref);
+                                                  }
+                                                }),
                                             const SizedBox(height: 16.0),
                                           ],
                                         )
@@ -576,14 +622,11 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                     if (isConnected)
                       Padding(
                         padding: const EdgeInsets.only(
-                            left: 280.0,
-                            right: 280.0,
-                            top: 16.0,
-                            bottom: 64.0),
+                            left: 280.0, right: 280.0, top: 16.0, bottom: 64.0),
                         child: stakerAsync.when(
                           data: (stakes) {
                             if (stakes.isEmpty) return const SizedBox();
-                        
+
                             return Column(
                               children: [
                                 SvgPicture.asset("assets/icons/stars.svg",
@@ -592,19 +635,15 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                 Container(
                                   width: 400.0,
                                   decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(12.0),
-                                    color: Theme.of(context).cardColor
-                                  ),
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      color: Theme.of(context).cardColor),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       const Padding(
                                         padding: EdgeInsets.only(
-                                            top: 16.0,
-                                            left: 16.0,
-                                            bottom: 8.0),
+                                            top: 16.0, left: 16.0, bottom: 8.0),
                                         child: Text(
                                           'Your stakes',
                                           style: TextStyle(
@@ -613,8 +652,7 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                       ),
                                       StakesList(
                                           stakes: stakes,
-                                          transactionStatus:
-                                              transactionStatus,
+                                          transactionStatus: transactionStatus,
                                           vaultsData: stat.vaults),
                                       const SizedBox(height: 8.0),
                                     ],
