@@ -139,159 +139,195 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                     minHeight: constraints.maxHeight,
                   ),
                   child: IntrinsicHeight(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: Stack(
                       children: [
-                        const TopMobBar(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 400.0,
-                                padding: const EdgeInsets.all(16.0),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: Theme.of(context).cardColor),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                const Text('Treasury balance',
-                                                    style: TextStyle(
-                                                        color:
-                                                            Color(0xFF5F5B5B))),
-                                                const SizedBox(width: 8.0),
-                                                CustomInkWell(
-                                                  onTap: () => js.context
-                                                      .callMethod('open', [
-                                                    'https://orb.helius.dev/address/${stat.treasuryAddress}?cluster=${SolanaConfig.cluster}&tab=summary'
-                                                  ]),
-                                                  child: Container(
-                                                      height: 20.0,
-                                                      width: 20.0,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      5.0),
-                                                          border: Border.all(
-                                                              color: Colors.grey
-                                                                  .withOpacity(
-                                                                      0.2))),
-                                                      child: Image.asset(
-                                                          "assets/icons/orb.png",
-                                                          height: 10.0,
-                                                          width: 10.0)),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text('\$$whole',
-                                                    style: const TextStyle(
-                                                        fontSize: 26.0)),
-                                                const SizedBox(width: 2.0),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 3.0),
-                                                  child: Text('.$decimals',
-                                                      style: TextStyle(
-                                                          fontSize: 22.0,
-                                                          color: Colors
-                                                              .grey.shade800)),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        SvgPicture.asset(
-                                            'assets/icons/treasury.svg',
-                                            height: 60.0,
-                                            width: 60.0)
-                                      ],
-                                    ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: Transform.scale(
+                            scaleX: 2.5,
+                            scaleY: 1.0,
+                            alignment: Alignment.topRight,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                gradient: RadialGradient(
+                                  center: Alignment.topRight,
+                                  radius: 0.5,
+                                  colors: [
+                                    Color.fromRGBO(42, 42, 56, 0.4),
+                                    Color.fromRGBO(42, 42, 56, 0.0),
                                   ],
+                                  stops: [0.0, 0.8],
                                 ),
                               ),
-                              const SizedBox(height: 8.0),
-                              SvgPicture.asset("assets/icons/stars.svg",
-                                  height: 12.0),
-                              const SizedBox(height: 8.0),
-                              buildStakeBox(vault, stat, isConnected, wallet),
-                              const SizedBox(height: 8.0),
-                              if (isConnected)
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 16.0),
-                                  child: stakerAsync.when(
-                                    data: (stakes) {
-                                      if (stakes.isEmpty) {
-                                        return const SizedBox();
-                                      }
-                                      return Column(
-                                        children: [
-                                          SvgPicture.asset(
-                                              "assets/icons/stars.svg",
-                                              height: 12.0),
-                                          const SizedBox(height: 8.0),
-                                          Container(
-                                            width: 400.0,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0),
-                                              color:
-                                                  Theme.of(context).cardColor,
-                                            ),
-                                            child: Column(
+                            ),
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const TopMobBar(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 400.0,
+                                    padding: const EdgeInsets.all(16.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        color: Theme.of(context).cardColor),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                const Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 16.0,
-                                                      left: 16.0,
-                                                      bottom: 8.0),
-                                                  child: Text(
-                                                    'Your stakes',
-                                                    style: TextStyle(
-                                                        color:
-                                                            Color(0xFF5F5B5B)),
-                                                  ),
+                                                Row(
+                                                  children: [
+                                                    const Text(
+                                                        'Treasury balance',
+                                                        style: TextStyle(
+                                                            color: Color(
+                                                                0xFF5F5B5B))),
+                                                    const SizedBox(width: 8.0),
+                                                    CustomInkWell(
+                                                      onTap: () => js.context
+                                                          .callMethod('open', [
+                                                        'https://orb.helius.dev/address/${stat.treasuryAddress}?cluster=${SolanaConfig.cluster}&tab=summary'
+                                                      ]),
+                                                      child: Container(
+                                                          height: 20.0,
+                                                          width: 20.0,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5.0),
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .withOpacity(
+                                                                          0.2))),
+                                                          child: Image.asset(
+                                                              "assets/icons/orb.png",
+                                                              height: 10.0,
+                                                              width: 10.0)),
+                                                    ),
+                                                  ],
                                                 ),
-                                                StakesList(
-                                                    stakes: stakes,
-                                                    vaultsData: stat.vaults),
-                                                const SizedBox(height: 8.0),
+                                                Row(
+                                                  children: [
+                                                    Text('\$$whole',
+                                                        style: const TextStyle(
+                                                            fontSize: 26.0)),
+                                                    const SizedBox(width: 2.0),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 3.0),
+                                                      child: Text('.$decimals',
+                                                          style: TextStyle(
+                                                              fontSize: 22.0,
+                                                              color: Colors.grey
+                                                                  .shade800)),
+                                                    ),
+                                                  ],
+                                                ),
                                               ],
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                    loading: () =>
-                                        const StarsProgressIndicator(),
-                                    error: (e, _) => Padding(
-                                      padding: const EdgeInsets.only(top: 32.0),
-                                      child: Text('Error: $e',
-                                          style: const TextStyle(
-                                              color: Colors.red)),
+                                            SvgPicture.asset(
+                                                'assets/icons/treasury.svg',
+                                                height: 60.0,
+                                                width: 60.0)
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                            ],
-                          ),
+                                  const SizedBox(height: 8.0),
+                                  SvgPicture.asset("assets/icons/stars.svg",
+                                      height: 12.0),
+                                  const SizedBox(height: 8.0),
+                                  buildStakeBox(
+                                      vault, stat, isConnected, wallet),
+                                  const SizedBox(height: 8.0),
+                                  if (isConnected)
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 16.0),
+                                      child: stakerAsync.when(
+                                        data: (stakes) {
+                                          if (stakes.isEmpty) {
+                                            return const SizedBox();
+                                          }
+                                          return Column(
+                                            children: [
+                                              SvgPicture.asset(
+                                                  "assets/icons/stars.svg",
+                                                  height: 12.0),
+                                              const SizedBox(height: 8.0),
+                                              Container(
+                                                width: 400.0,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0),
+                                                  color: Theme.of(context)
+                                                      .cardColor,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          top: 16.0,
+                                                          left: 16.0,
+                                                          bottom: 8.0),
+                                                      child: Text(
+                                                        'Your stakes',
+                                                        style: TextStyle(
+                                                            color: Color(
+                                                                0xFF5F5B5B)),
+                                                      ),
+                                                    ),
+                                                    StakesList(
+                                                        stakes: stakes,
+                                                        vaultsData:
+                                                            stat.vaults),
+                                                    const SizedBox(height: 8.0),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                        loading: () =>
+                                            const StarsProgressIndicator(),
+                                        error: (e, _) => Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 32.0),
+                                          child: Text('Error: $e',
+                                              style: const TextStyle(
+                                                  color: Colors.red)),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
