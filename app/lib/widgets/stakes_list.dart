@@ -57,7 +57,7 @@ class _StakesListState extends ConsumerState<StakesList> {
                             padding: const EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.grey.withOpacity(0.05)
+                              color: Theme.of(context).cardColor.withOpacity(0.3)
                             ),
                             child: Image.network(
                                         stake.logoUrl,
