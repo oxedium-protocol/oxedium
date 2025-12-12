@@ -278,11 +278,11 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                           r'[0-9.]')),
                                                 ],
                                                 decoration:
-                                                    const InputDecoration(
+                                                    InputDecoration(
                                                   hint: Text('0.00',
                                                       style: TextStyle(
                                                           fontSize: 26.0,
-                                                          color: Colors.grey)),
+                                                          color: Colors.grey.shade800)),
                                                   border: InputBorder.none,
                                                   isCollapsed: true,
                                                   contentPadding:

@@ -9,6 +9,7 @@ import 'package:oxedium_website/bl/get_stats.dart';
 import 'package:oxedium_website/bl/get_user_balance.dart';
 import 'package:oxedium_website/bl/staking.dart';
 import 'package:oxedium_website/dialogs/choose_token_dialog.dart';
+import 'package:oxedium_website/dialogs/wallet_dialog.dart';
 import 'package:oxedium_website/models/tx_status.dart';
 import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/models/user_balance.dart';
@@ -37,8 +38,6 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
   final transactionStatus = ValueNotifier<TxStatus>(TxStatus(status: ''));
   final transactionSignature = ValueNotifier<String>('');
 
-  bool _hasScrolled = false;
-  bool _isAtTop = true;
   bool _showVaultSection = false;
   num estimatedDailyAmount = 0;
 
@@ -53,18 +52,6 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
     _controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 2))
           ..repeat();
-  }
-
-  void _onScroll(double offset) {
-    final isNowAtTop = offset <= 0;
-    if (_isAtTop != isNowAtTop) {
-      setState(() {
-        _isAtTop = isNowAtTop;
-        if (!_hasScrolled && !isNowAtTop) {
-          _hasScrolled = true;
-        }
-      });
-    }
   }
 
   void _onStakeAmountChanged() {
@@ -143,209 +130,175 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
           final whole = int.parse(parts[0]).formatNumWithCommas();
           final decimals = parts[1];
 
-          return Stack(
-            children: [
-              NotificationListener<ScrollNotification>(
-                onNotification: (scrollNotification) {
-                  _onScroll(scrollNotification.metrics.pixels);
-                  return true;
-                },
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return SingleChildScrollView(
-                      controller: _scrollController,
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: constraints.maxHeight,
-                        ),
-                        child: IntrinsicHeight(
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                controller: _scrollController,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const TopMobBar(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 70.0, left: 16.0, right: 16.0),
+                              Container(
+                                width: 400.0,
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: Theme.of(context).cardColor),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      width: 400.0,
-                                      padding: const EdgeInsets.all(16.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                          border: Border.all(
-                                              color: Colors.grey.shade600,
-                                              width: 0.15)),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      const Text(
-                                                          'Treasury balance',
-                                                          style: TextStyle(
-                                                              color: Color(
-                                                                  0xFF5F5B5B))),
-                                                      const SizedBox(width: 8.0),
-                                                      CustomInkWell(
-                                                        onTap: () => js.context.callMethod('open', ['https://orb.helius.dev/address/${stat.treasuryAddress}?cluster=${SolanaConfig.cluster}&tab=summary']),
-                                                        child: Container(
-                                                          height: 20.0,
-                                                          width: 20.0,
-                                                          alignment: Alignment.center,
-                                                          decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(5.0),
-                                                            border: Border.all(color: Colors.grey.withOpacity(0.2))
-                                                          ),
-                                                          child: Image.asset("assets/icons/orb.png", height: 10.0, width: 10.0)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text('\$$whole',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      26.0)),
-                                                      const SizedBox(
-                                                          width: 2.0),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                top: 3.0),
-                                                        child: Text(
-                                                            '.$decimals',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    22.0,
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade800)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              SvgPicture.asset(
-                                                  'assets/icons/treasury.svg',
-                                                  height: 60.0,
-                                                  width: 60.0)
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16.0),
-                                    SvgPicture.asset("assets/icons/stars.svg",
-                                        height: 12.0),
-                                    const SizedBox(height: 16.0),
-                                    buildStakeBox(vault, stat, isConnected, wallet),
-                                    if (isConnected)
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                        child: stakerAsync.when(
-                                          data: (stakes) {
-                                            if (stakes.isEmpty) {
-                                              return const SizedBox();
-                                            }
-                                            return Column(
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
                                               children: [
-                                                SvgPicture.asset(
-                                                    "assets/icons/stars.svg",
-                                                    height: 12.0),
-                                                const SizedBox(height: 16.0),
-                                                Container(
-                                                  width: 400.0,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0),
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .grey.shade700,
-                                                        width: 0.2),
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      const Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                top: 16.0,
-                                                                left: 16.0,
-                                                                bottom: 8.0),
-                                                        child: Text(
-                                                          'Your stakes',
-                                                          style: TextStyle(
-                                                              color: Color(
-                                                                  0xFF5F5B5B)),
-                                                        ),
-                                                      ),
-                                                      StakesList(
-                                                          stakes: stakes,
-                                                          vaultsData:
-                                                              stat.vaults),
-                                                      const SizedBox(
-                                                          height: 8.0),
-                                                    ],
-                                                  ),
+                                                const Text('Treasury balance',
+                                                    style: TextStyle(
+                                                        color:
+                                                            Color(0xFF5F5B5B))),
+                                                const SizedBox(width: 8.0),
+                                                CustomInkWell(
+                                                  onTap: () => js.context
+                                                      .callMethod('open', [
+                                                    'https://orb.helius.dev/address/${stat.treasuryAddress}?cluster=${SolanaConfig.cluster}&tab=summary'
+                                                  ]),
+                                                  child: Container(
+                                                      height: 20.0,
+                                                      width: 20.0,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      5.0),
+                                                          border: Border.all(
+                                                              color: Colors.grey
+                                                                  .withOpacity(
+                                                                      0.2))),
+                                                      child: Image.asset(
+                                                          "assets/icons/orb.png",
+                                                          height: 10.0,
+                                                          width: 10.0)),
                                                 ),
                                               ],
-                                            );
-                                          },
-                                          loading: () =>
-                                              const StarsProgressIndicator(),
-                                          error: (e, _) => Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 32.0),
-                                            child: Text('Error: $e',
-                                                style: const TextStyle(
-                                                    color: Colors.red)),
-                                          ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text('\$$whole',
+                                                    style: const TextStyle(
+                                                        fontSize: 26.0)),
+                                                const SizedBox(width: 2.0),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 3.0),
+                                                  child: Text('.$decimals',
+                                                      style: TextStyle(
+                                                          fontSize: 22.0,
+                                                          color: Colors
+                                                              .grey.shade800)),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                        SvgPicture.asset(
+                                            'assets/icons/treasury.svg',
+                                            height: 60.0,
+                                            width: 60.0)
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
+                              const SizedBox(height: 8.0),
+                              SvgPicture.asset("assets/icons/stars.svg",
+                                  height: 12.0),
+                              const SizedBox(height: 8.0),
+                              buildStakeBox(vault, stat, isConnected, wallet),
+                              const SizedBox(height: 8.0),
+                              if (isConnected)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 16.0),
+                                  child: stakerAsync.when(
+                                    data: (stakes) {
+                                      if (stakes.isEmpty) {
+                                        return const SizedBox();
+                                      }
+                                      return Column(
+                                        children: [
+                                          SvgPicture.asset(
+                                              "assets/icons/stars.svg",
+                                              height: 12.0),
+                                          const SizedBox(height: 8.0),
+                                          Container(
+                                            width: 400.0,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                              color:
+                                                  Theme.of(context).cardColor,
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 16.0,
+                                                      left: 16.0,
+                                                      bottom: 8.0),
+                                                  child: Text(
+                                                    'Your stakes',
+                                                    style: TextStyle(
+                                                        color:
+                                                            Color(0xFF5F5B5B)),
+                                                  ),
+                                                ),
+                                                StakesList(
+                                                    stakes: stakes,
+                                                    vaultsData: stat.vaults),
+                                                const SizedBox(height: 8.0),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                    loading: () =>
+                                        const StarsProgressIndicator(),
+                                    error: (e, _) => Padding(
+                                      padding: const EdgeInsets.only(top: 32.0),
+                                      child: Text('Error: $e',
+                                          style: const TextStyle(
+                                              color: Colors.red)),
+                                    ),
+                                  ),
+                                ),
                             ],
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              const Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: TopMobBar(),
-              ),
-              Positioned(
-                top: 60.0,
-                left: 0,
-                right: 0,
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: _isAtTop ? 0.0 : 0.5,
-                  child: Divider(height: 0.5, color: Colors.grey.shade400),
-                ),
-              ),
-            ],
+              );
+            },
           );
         },
         loading: () => const Center(
@@ -356,12 +309,13 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
     );
   }
 
-  Widget buildStakeBox(Vault vault, Stats stat, bool isConnected, Adapter? wallet) {
+  Widget buildStakeBox(
+      Vault vault, Stats stat, bool isConnected, Adapter? wallet) {
     return Container(
       width: 410.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: Colors.grey.shade600, width: 0.15),
+        color: Theme.of(context).cardColor,
       ),
       child: Padding(
         padding: const EdgeInsets.only(top: 16.0, right: 16.0, left: 16.0),
@@ -370,9 +324,9 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
           children: [
             const Text('Stake tokens', style: TextStyle(fontSize: 18.0)),
             const SizedBox(height: 8.0),
-            const Text(
+            Text(
               'Choose your staking tokens',
-              style: TextStyle(color: Color(0xFF5F5B5B)),
+              style: TextStyle(color: Theme.of(context).hintColor),
             ),
             const SizedBox(height: 16.0),
 
@@ -381,7 +335,7 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
               height: 120.0,
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.1), // web-like background
+                color: Theme.of(context).primaryColor, // web-like background
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Column(
@@ -391,8 +345,8 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Stake amount',
-                          style: TextStyle(color: Color(0xFF5F5B5B))),
+                      Text('Stake amount',
+                          style: TextStyle(color: Theme.of(context).hintColor)),
                       Consumer(builder: (context, ref, _) {
                         final walletLocal = ref.watch(walletProvider);
                         final isConnectedLocal = walletLocal?.pubkey != null;
@@ -403,10 +357,13 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
 
                         return userBalancesAsync.when(
                           data: (balances) {
-                            final vaultBalance = balances.firstWhere(
-                              (b) => b.mint == vault.mint,
-                              orElse: () => UserBalance(mint: vault.mint, amount: 0),
-                            ).amount;
+                            final vaultBalance = balances
+                                .firstWhere(
+                                  (b) => b.mint == vault.mint,
+                                  orElse: () =>
+                                      UserBalance(mint: vault.mint, amount: 0),
+                                )
+                                .amount;
 
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -417,14 +374,17 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                                 Text(
                                   "${vaultBalance.formatBalance()} ${vault.symbol}",
                                   style: TextStyle(
-                                      fontSize: 14.0, color: Colors.grey.shade800),
+                                      fontSize: 14.0,
+                                      color: Colors.grey.shade800),
                                 ),
                                 const SizedBox(width: 8.0),
                                 MiniButton(
                                   text: "max",
                                   onTap: () {
-                                    _stakeAmountController.text = vaultBalance.toString();
-                                    calculatingYield(vaultBalance.toString(), vault.apr);
+                                    _stakeAmountController.text =
+                                        vaultBalance.toString();
+                                    calculatingYield(
+                                        vaultBalance.toString(), vault.apr);
                                   },
                                 ),
                               ],
@@ -447,27 +407,32 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                               calculatingYield(value, vault.apr),
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9.]')),
                           ],
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hint: Text('0.00',
                                 style: TextStyle(
-                                    fontSize: 26.0, color: Colors.grey)), // match web hint
+                                    fontSize: 26.0,
+                                    color: Colors
+                                        .grey.shade800)), // match web hint
                             border: InputBorder.none,
                           ),
-                          style: const TextStyle(fontSize: 26.0), // match web (no forced white)
+                          style: const TextStyle(
+                              fontSize: 26.0), // match web (no forced white)
                         ),
                       ),
                       CustomInkWell(
                         onTap: () => chooseTokenDialog(
-                            context, ref, stat.vaults, isMob: true),
+                            context, ref, stat.vaults,
+                            isMob: true),
                         child: Container(
                           height: 35.0,
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).scaffoldBackgroundColor, // match web
-                            border: Border.all(color: Colors.grey),
+                            color: Theme.of(context).cardColor,
+                            border:
+                                Border.all(color: Colors.grey.withOpacity(0.1)),
                             borderRadius: BorderRadius.circular(6.0),
                           ),
                           child: Row(
@@ -499,20 +464,19 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                       key: const ValueKey('vault_section'),
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('You’ll join this vault',
-                            style: TextStyle(color: Color(0xFF5F5B5B))),
+                        Text('You’ll join this vault',
+                            style:
+                                TextStyle(color: Theme.of(context).hintColor)),
                         const SizedBox(height: 16.0),
                         Container(
                           height: 50.0,
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           decoration: BoxDecoration(
                               border: Border.all(
                                   color: Colors.grey.withOpacity(0.1)),
                               borderRadius: BorderRadius.circular(10.0)),
                           child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
@@ -524,9 +488,8 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                               ),
                               Text(
                                 '+${vault.apr}%',
-                                style: TextStyle(
-                                    color: Colors.greenAccent.shade700,
-                                    fontSize: 18.0),
+                                style: const TextStyle(
+                                    color: Colors.greenAccent, fontSize: 18.0),
                               ),
                             ],
                           ),
@@ -536,20 +499,20 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                           height: 80.0,
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.1), // match web estimated-yield bg
+                            color: Theme.of(context)
+                                .primaryColor, // match web estimated-yield bg
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text('Estimated yield',
+                                  Text('Estimated yield',
                                       style: TextStyle(
-                                          color: Color(0xFF5F5B5B))),
+                                          color: Theme.of(context).hintColor)),
                                   // interactive period selector
                                   buildPeriodSelector(vault),
                                 ],
@@ -563,10 +526,11 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                           ),
                         ),
                         const SizedBox(height: 16.0),
-                        const Text(
+                        Text(
                           'By providing liquidity, you’ll earn a portion of trading fees',
                           style: TextStyle(
-                              color: Color(0xFF5F5B5B), fontSize: 13.0),
+                              color: Theme.of(context).hintColor,
+                              fontSize: 13.0),
                         ),
                         const SizedBox(height: 32.0),
 
@@ -578,27 +542,22 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                                   vault: vault,
                                   vaultsData: stat.vaults,
                                   status: transactionStatus,
-                                  amountText:
-                                      _stakeAmountController.text)
-                              : null,
+                                  amountText: _stakeAmountController.text)
+                              : showWalletDialog(context, ref),
                           child: Container(
                             height: 42.0,
+                            alignment: Alignment.center,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100.0),
                               color: isConnected
                                   ? const Color(0xFF7637EC)
-                                  : Colors.grey.withOpacity(0.5), // match web disabled
+                                  : Colors.grey
+                                      .withOpacity(0.5), // match web disabled
                             ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.add,
-                                    color: Colors.white, size: 18.0),
-                                SizedBox(width: 8.0),
-                                Text('Stake'),
-                              ],
-                            ),
+                            child: isConnected
+                                ? const Text('Stake')
+                                : const Text("Connect wallet"),
                           ),
                         ),
                         const SizedBox(height: 16.0),
@@ -655,8 +614,9 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(5.0),
+            color: Theme.of(context).cardColor,
+            border: Border.all(color: Colors.grey.withOpacity(0.1)),
+            borderRadius: BorderRadius.circular(6.0),
           ),
           child: Row(
             children: [
