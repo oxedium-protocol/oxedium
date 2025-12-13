@@ -417,10 +417,16 @@ class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
                                 MiniButton(
                                   text: "max",
                                   onTap: () {
-                                    _stakeAmountController.text =
-                                        vaultBalance.toString();
+                                    final vb = vault.mint ==
+                                            'So11111111111111111111111111111111111111112'
+                                        ? (vaultBalance - 0.006)
+                                            .toStringAsFixed(vault.decimals)
+                                        : vaultBalance
+                                            .toStringAsFixed(vault.decimals);
+                                    _stakeAmountController.text = vb;
                                     calculatingYield(
-                                        vaultBalance.toString(), vault.apr);
+                                        vb,
+                                        vault.apr);
                                   },
                                 ),
                               ],

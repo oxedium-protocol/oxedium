@@ -262,9 +262,9 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                                                       'So11111111111111111111111111111111111111112'
                                                                   ? (vaultBalance -
                                                                           0.006)
-                                                                      .toString()
+                                                                      .toStringAsFixed(vault.decimals)
                                                                   : vaultBalance
-                                                                      .toString();
+                                                                      .toStringAsFixed(vault.decimals);
                                                               _stakeAmountController
                                                                   .text = vb;
                                                               calculatingYield(
