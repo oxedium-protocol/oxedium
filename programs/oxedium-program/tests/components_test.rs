@@ -8,9 +8,9 @@ mod tyrbine {
 #[test]
 fn calculating_fee_amount() {
     let amount_out: u64 = 1000000;
-    let fee = 100;
-    let protocol_fee = 100;
-    let partner_fee = 0;
+    let fee = 50 * 100;
+    let protocol_fee = 10;
+    let partner_fee = 10;
     // Call the fee function: returns (amount after all fees, LP fee, partner fee, protocol fee)
     let (after_fee, lp_fee, protocol_fee, partner_fee) = calculate_fee_amount(amount_out, fee, protocol_fee, partner_fee).unwrap();
 

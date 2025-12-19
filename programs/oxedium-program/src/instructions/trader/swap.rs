@@ -69,6 +69,10 @@ pub fn swap(
         swap_fee_bps
     };
 
+    if swap_fee_bps + protocol_fee_bps + partner_fee_bps > 10000 {
+        return Err(TyrbineError::FeeExceeds.into());
+    }
+
     let (after_fee, lp_fee, protocol_fee, partner_fee) = calculate_fee_amount(token_raw_amount_out, adjusted_swap_fee_bps, protocol_fee_bps, partner_fee_bps)?;
 
     // Check liquidity in the output vault

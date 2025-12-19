@@ -73,5 +73,8 @@ pub enum TyrbineError {
     OracleDataTooOld,
 
     #[msg("Overflow in cast")]
-    OverflowInCast
+    OverflowInCast,
+
+    #[msg("The fee exceeds 100%")]
+    FeeExceeds
 }
