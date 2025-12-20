@@ -2,7 +2,7 @@
 mod tyrbine {
 
     use anchor_lang::prelude::Pubkey;
-    use tyrbine_program::{components::{calculate_fee_amount, calculate_staker_yield, fees_setting, raw_amount_out}, states::Vault, utils::SCALE};
+    use oxedium_program::{components::{calculate_fee_amount, calculate_staker_yield, fees_setting, raw_amount_out}, states::Vault, utils::SCALE};
     
 
 #[test]

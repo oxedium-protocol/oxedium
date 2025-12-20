@@ -22,15 +22,15 @@ import 'package:oxedium_website/widgets/stakes_list.dart';
 import 'package:oxedium_website/widgets/mini_button.dart';
 import 'dart:js' as js;
 
-class HomeMobScreen extends ConsumerStatefulWidget {
+class StakingMobScreen extends ConsumerStatefulWidget {
   final String vaultMint;
-  const HomeMobScreen({super.key, required this.vaultMint});
+  const StakingMobScreen({super.key, required this.vaultMint});
 
   @override
-  ConsumerState<HomeMobScreen> createState() => _HomeMobScreenState();
+  ConsumerState<StakingMobScreen> createState() => _HomeMobScreenState();
 }
 
-class _HomeMobScreenState extends ConsumerState<HomeMobScreen>
+class _HomeMobScreenState extends ConsumerState<StakingMobScreen>
     with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _stakeAmountController = TextEditingController();

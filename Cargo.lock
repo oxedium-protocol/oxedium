@@ -1220,6 +1220,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c08d65885ee38876c4f86fa503fb49d7b507c2b62552df7c70b2fce627e06381"
 
 [[package]]
+name = "oxedium-program"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "pyth-solana-receiver-sdk",
+ "uint",
+]
+
+[[package]]
 name = "parking_lot"
 version = "0.12.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3783,16 +3793,6 @@ name = "typenum"
 version = "1.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "562d481066bde0658276a35467c4af00bdc6ee726305698a55b86e61d7ad82bb"
-
-[[package]]
-name = "tyrbine-program"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "pyth-solana-receiver-sdk",
- "uint",
-]
 
 [[package]]
 name = "uint"

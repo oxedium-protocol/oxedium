@@ -16,21 +16,22 @@ import 'package:oxedium_website/models/user_balance.dart';
 import 'package:oxedium_website/presentation/bars/top_web_bar.dart';
 import 'package:oxedium_website/utils/extensions.dart';
 import 'package:oxedium_website/widgets/mini_button.dart';
-import 'package:oxedium_website/widgets/staking_button.dart';
+import 'package:oxedium_website/widgets/custom_button.dart';
 import 'package:oxedium_website/widgets/stars_progress_indicator.dart';
 import 'package:oxedium_website/widgets/custom_inkwell.dart';
 import 'package:oxedium_website/widgets/stakes_list.dart';
 import 'package:oxedium_website/widgets/stats_container_card.dart';
 
-class HomeWebScreen extends ConsumerStatefulWidget {
+class StakingWebScreen extends ConsumerStatefulWidget {
   final String vaultMint;
-  const HomeWebScreen({super.key, required this.vaultMint});
+  const StakingWebScreen({super.key, required this.vaultMint});
+  static const routeName = '/';
 
   @override
-  ConsumerState<HomeWebScreen> createState() => _HomeWebScreenState();
+  ConsumerState<StakingWebScreen> createState() => _HomeWebScreenState();
 }
 
-class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
+class _HomeWebScreenState extends ConsumerState<StakingWebScreen>
     with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _stakeAmountController = TextEditingController();
@@ -588,8 +589,9 @@ class _HomeWebScreenState extends ConsumerState<HomeWebScreen>
                                             ),
                                             const SizedBox(height: 32.0),
 
-                                            StakingButton(
+                                            CustomButton(
                                                 isConnected: isConnected,
+                                                title: "Stake",
                                                 onTap: () {
                                                   if (isConnected) {
                                                     staking(context, ref,

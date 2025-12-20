@@ -1,12 +1,12 @@
 [package]
-name = "tyrbine-program"
+name = "oxedium-program"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "tyrbine_program"
+name = "oxedium_program"
 
 [features]
 default = []

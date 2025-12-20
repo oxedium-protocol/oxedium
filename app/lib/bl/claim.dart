@@ -8,7 +8,7 @@ import 'package:oxedium_website/models/tx_status.dart';
 import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/service/config.dart';
 import 'package:oxedium_website/service/helius_api.dart';
-import 'package:oxedium_website/service/tyrbine_program.dart';
+import 'package:oxedium_website/service/oxedium_program.dart';
 
 Future<void> claim(
   BuildContext context,
@@ -21,7 +21,7 @@ Future<void> claim(
   status.value = TxStatus(status: 'Awaiting approve');
 
   final message =
-      await TyrbineProgram.claim(signer: adapter.pubkey!, mint: mint);
+      await OxediumProgram.claim(signer: adapter.pubkey!, mint: mint);
 
   final hash = await solanaClient.rpcClient.getLatestBlockhash();
 

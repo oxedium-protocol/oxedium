@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oxedium_website/metadata/vaults.dart';
-import 'package:oxedium_website/presentation/screens/home_mob_screen.dart';
-import 'package:oxedium_website/presentation/screens/home_web_screen.dart';
+import 'package:oxedium_website/presentation/screens/staking_mob_screen.dart';
+import 'package:oxedium_website/presentation/screens/staking_web_screen.dart';
+import 'package:oxedium_website/presentation/screens/swap_web_screen.dart';
 import 'package:oxedium_website/theme/theme.dart';
 import 'package:oxedium_website/widgets/no_thumb_scroll_behavior.dart';
 
@@ -31,8 +32,19 @@ final GoRouter _router = GoRouter(
 
           return NoTransitionPage(
           child: AdaptiveScreen(
-            mobile: HomeMobScreen(vaultMint: address ?? 'So11111111111111111111111111111111111111112'),
-            web: HomeWebScreen(vaultMint: address ?? 'So11111111111111111111111111111111111111112'),
+            mobile: StakingMobScreen(vaultMint: address ?? 'So11111111111111111111111111111111111111112'),
+            web: StakingWebScreen(vaultMint: address ?? 'So11111111111111111111111111111111111111112'),
+          ),
+        );
+        },
+      ),
+      GoRoute(
+        path: '/swap',
+        pageBuilder: (context, state) {
+          return const NoTransitionPage(
+          child: AdaptiveScreen(
+            mobile: SwapWebScreen(),
+            web: SwapWebScreen(),
           ),
         );
         },

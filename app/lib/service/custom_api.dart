@@ -7,7 +7,7 @@ import 'package:solana/solana.dart';
 import 'package:oxedium_website/models/user_balance.dart';
 import 'package:oxedium_website/models/vault_pda.dart';
 import 'package:oxedium_website/service/config.dart';
-import 'package:oxedium_website/service/tyrbine_program.dart';
+import 'package:oxedium_website/service/oxedium_program.dart';
 import '../utils/extensions.dart';
 
 class CustomApi {
@@ -79,7 +79,7 @@ class CustomApi {
   }
 
   static Future<List<VaultPda>> getVaults() async {
-    final tyrbineVaults = await solanaClient.rpcClient.getProgramAccounts(TyrbineProgram.programId, encoding: Encoding.jsonParsed, filters: [const ProgramDataFilter.dataSize(169)], commitment: Commitment.processed);
+    final tyrbineVaults = await solanaClient.rpcClient.getProgramAccounts(OxediumProgram.programId, encoding: Encoding.jsonParsed, filters: [const ProgramDataFilter.dataSize(169)], commitment: Commitment.processed);
     final vaults = tyrbineVaults.map((vlt) => VaultPda.fromProgramAccount(vlt)).toList();
     return vaults;
   }

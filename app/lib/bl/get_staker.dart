@@ -8,7 +8,7 @@ import 'package:oxedium_website/models/staker.dart';
 import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/models/vault_pda.dart';
 import 'package:oxedium_website/service/config.dart';
-import 'package:oxedium_website/service/tyrbine_program.dart';
+import 'package:oxedium_website/service/oxedium_program.dart';
 import 'package:oxedium_website/utils/extensions.dart';
 
 final stakerNotifierProvider =
@@ -55,7 +55,7 @@ Future<List<Staked>> getStaker(
       owner, const TokenAccountsFilter.byProgramId(TokenProgram.programId),
       encoding: Encoding.jsonParsed, commitment: Commitment.processed);
   var tyrbineVaults = await solanaClient.rpcClient.getProgramAccounts(
-      TyrbineProgram.programId,
+      OxediumProgram.programId,
       encoding: Encoding.jsonParsed,
       filters: [const ProgramDataFilter.dataSize(169)],
       commitment: Commitment.processed);
@@ -77,7 +77,7 @@ Future<List<Staked>> getStaker(
           "staker-seed".codeUnits,
           base58decode(vault.address),
           base58decode(owner),
-        ], programId: Ed25519HDPublicKey.fromBase58(TyrbineProgram.programId));
+        ], programId: Ed25519HDPublicKey.fromBase58(OxediumProgram.programId));
 
         final getStakerAccount = await solanaClient.rpcClient.getAccountInfo(
             stakerPDA.toBase58(),

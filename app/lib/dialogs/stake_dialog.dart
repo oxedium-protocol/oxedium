@@ -7,8 +7,8 @@ import 'package:oxedium_website/bl/unstaking.dart';
 import 'package:oxedium_website/models/staked.dart';
 import 'package:oxedium_website/models/tx_status.dart';
 import 'package:oxedium_website/models/stats.dart';
-import 'package:oxedium_website/presentation/screens/home_mob_screen.dart';
-import 'package:oxedium_website/presentation/screens/home_web_screen.dart';
+import 'package:oxedium_website/presentation/screens/staking_mob_screen.dart';
+import 'package:oxedium_website/presentation/screens/staking_web_screen.dart';
 import 'package:oxedium_website/widgets/custom_inkwell.dart';
 import 'package:oxedium_website/widgets/mini_button.dart';
 import 'package:oxedium_website/widgets/staked_earned_bar.dart';
@@ -141,9 +141,9 @@ void showStakeDialog(BuildContext context, WidgetRef ref, Staked stake,
                               pageBuilder:
                                   (context, animation, secondaryAnimation) {
                                 if (isMob != null && isMob) {
-                                  return HomeMobScreen(vaultMint: stake.mint);
+                                  return StakingMobScreen(vaultMint: stake.mint);
                                 }
-                                return HomeWebScreen(vaultMint: stake.mint);
+                                return StakingWebScreen(vaultMint: stake.mint);
                               },
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,

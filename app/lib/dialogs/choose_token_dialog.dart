@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:oxedium_website/models/stats.dart';
-import 'package:oxedium_website/presentation/screens/home_mob_screen.dart';
-import 'package:oxedium_website/presentation/screens/home_web_screen.dart';
+import 'package:oxedium_website/presentation/screens/staking_mob_screen.dart';
+import 'package:oxedium_website/presentation/screens/staking_web_screen.dart';
 import 'package:oxedium_website/widgets/custom_inkwell.dart';
 import 'package:oxedium_website/widgets/hover_builder.dart';
 import 'package:oxedium_website/widgets/mini_button.dart';
@@ -50,9 +50,9 @@ void chooseTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, 
                                   PageRouteBuilder(
                                     pageBuilder: (context, animation, secondaryAnimation) {
                                       if (isMob != null && isMob) {
-                                        return HomeMobScreen(vaultMint: vaults[index].mint);
+                                        return StakingMobScreen(vaultMint: vaults[index].mint);
                                       }
-                                      return HomeWebScreen(vaultMint: vaults[index].mint);
+                                      return StakingWebScreen(vaultMint: vaults[index].mint);
                                     },
                                     transitionDuration: Duration.zero,
                                     reverseTransitionDuration: Duration.zero,

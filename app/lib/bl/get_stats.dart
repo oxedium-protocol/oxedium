@@ -5,7 +5,7 @@ import 'package:oxedium_website/metadata/vaults.dart';
 import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/models/vault_pda.dart';
 import 'package:oxedium_website/service/custom_api.dart';
-import 'package:oxedium_website/service/tyrbine_program.dart';
+import 'package:oxedium_website/service/oxedium_program.dart';
 import 'package:oxedium_website/utils/extensions.dart';
 
 final statsProvider = FutureProvider<Stats?>((ref) async {
@@ -18,7 +18,7 @@ Future<Stats?> getStats() async {
       "oxedium-seed".codeUnits,
       "treasury-seed".codeUnits,
     ],
-    programId: Ed25519HDPublicKey.fromBase58(TyrbineProgram.programId),
+    programId: Ed25519HDPublicKey.fromBase58(OxediumProgram.programId),
   );
 
   final vaultsFuture = CustomApi.getVaults();

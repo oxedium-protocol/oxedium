@@ -12,6 +12,12 @@ extension StringExtension on String {
     '';
     return '$startSymbols...$endSymbols';
   }
+
+  String? extractProgramData() {
+    final regex = RegExp(r'Program data:\s([A-Za-z0-9+/=]+)');
+    final match = regex.firstMatch(this);
+    return match?.group(1);
+  }
 }
 
 extension DoubleExtension on double {

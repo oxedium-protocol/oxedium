@@ -9,7 +9,7 @@ import 'package:oxedium_website/models/tx_status.dart';
 import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/service/config.dart';
 import 'package:oxedium_website/service/helius_api.dart';
-import 'package:oxedium_website/service/tyrbine_program.dart';
+import 'package:oxedium_website/service/oxedium_program.dart';
 
 
 Future<void> staking(BuildContext context, WidgetRef ref, {required Adapter adapter, required Vault vault, required List<Vault> vaultsData, required ValueNotifier<TxStatus> status, required String amountText}) async {
@@ -17,7 +17,7 @@ Future<void> staking(BuildContext context, WidgetRef ref, {required Adapter adap
 
   final amount = (num.parse(amountText) * pow(10, vault.decimals)).toInt();
 
-  final message = await TyrbineProgram.staking(signer: adapter.pubkey!, vault: vault, amount: amount);
+  final message = await OxediumProgram.staking(signer: adapter.pubkey!, vault: vault, amount: amount);
   
   final hash = await solanaClient.rpcClient.getLatestBlockhash();
 
