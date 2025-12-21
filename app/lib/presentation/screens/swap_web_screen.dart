@@ -278,8 +278,8 @@ class _SwapWebScreenState extends ConsumerState<SwapWebScreen> {
                               ),
                               child: loading
                                   ? const SizedBox(
-                                      width: 22.0,
-                                      height: 22.0,
+                                      width: 18.0,
+                                      height: 18.0,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
                                         color: Colors.black,

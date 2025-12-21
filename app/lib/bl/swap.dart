@@ -2,8 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:oxedium_website/bl/get_staker.dart';
-import 'package:oxedium_website/metadata/vaults.dart';
+import 'package:oxedium_website/bl/get_user_balance.dart';
 import 'package:solana/solana.dart';
 import 'package:oxedium_website/adapter/adapter.dart';
 import 'package:oxedium_website/models/tx_status.dart';
@@ -11,7 +10,6 @@ import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/service/config.dart';
 import 'package:oxedium_website/service/helius_api.dart';
 import 'package:oxedium_website/service/oxedium_program.dart';
-
 
 Future<void> swap(BuildContext context, WidgetRef ref, {required Adapter adapter, required Vault vaultA, required Vault vaultB, required ValueNotifier<TxStatus> status, required String amountText}) async {
   status.value = TxStatus(status: 'Awaiting approve');
@@ -31,12 +29,8 @@ Future<void> swap(BuildContext context, WidgetRef ref, {required Adapter adapter
     status.value = TxStatus(status: 'Sending transaction', signature: 'https://orb.helius.dev/tx/$signature?cluster=${SolanaConfig.cluster}&tab=summary');
     await HeliusApi.waitingSignatureStatus(signature: signature, expectedStatus: Commitment.processed);
     status.value = TxStatus(status: 'Success', signature: 'https://orb.helius.dev/tx/$signature?cluster=${SolanaConfig.cluster}&tab=summary');
-    final currentStakes = ref.read(stakerNotifierProvider);
-    if (currentStakes.value == null || currentStakes.value!.isEmpty) {
-      await ref.read(stakerNotifierProvider.notifier).loadStaker(vaultsData: vaultsData.values.toList(), owner: adapter.pubkey!);
-    } else {
-      await ref.read(stakerNotifierProvider.notifier).loadStakerBackground(vaultsData: vaultsData.values.toList(), owner: adapter.pubkey!);
-    }
+    final userBalanceNotifier = ref.read(userBalanceNotifierProvider(adapter.pubkey!).notifier);
+    await userBalanceNotifier.loadBalances(adapter.pubkey!);
   } catch (_) {
     status.value = TxStatus(status: 'Rejected');
   }
