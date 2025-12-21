@@ -8,7 +8,7 @@ import 'package:oxedium_website/bl/get_staker.dart';
 import 'package:oxedium_website/bl/get_stats.dart';
 import 'package:oxedium_website/bl/get_user_balance.dart';
 import 'package:oxedium_website/bl/staking.dart';
-import 'package:oxedium_website/dialogs/choose_token_dialog.dart';
+import 'package:oxedium_website/dialogs/choose_staking_token_dialog.dart';
 import 'package:oxedium_website/dialogs/wallet_dialog.dart';
 import 'package:oxedium_website/models/tx_status.dart';
 import 'package:oxedium_website/models/stats.dart';
@@ -325,7 +325,7 @@ class _HomeWebScreenState extends ConsumerState<StakingWebScreen>
                                             ),
                                           ),
                                           CustomInkWell(
-                                            onTap: () => chooseTokenDialog(
+                                            onTap: () => chooseStakingTokenDialog(
                                                 context, ref, stat.vaults),
                                             child: Container(
                                               height: 35.0,

@@ -6,7 +6,7 @@ import 'package:oxedium_website/widgets/custom_inkwell.dart';
 import 'package:oxedium_website/widgets/hover_builder.dart';
 import 'package:oxedium_website/widgets/mini_button.dart';
 
-void chooseTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, {bool? isMob}) {
+void chooseStakingTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, {bool? isMob}) {
   showDialog(
     context: context,
     barrierDismissible: true,

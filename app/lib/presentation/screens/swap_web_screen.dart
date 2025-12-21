@@ -8,7 +8,7 @@ import 'package:oxedium_website/bl/get_stats.dart';
 import 'package:oxedium_website/bl/get_user_balance.dart';
 import 'package:oxedium_website/bl/get_route.dart';
 import 'package:oxedium_website/bl/swap.dart';
-import 'package:oxedium_website/dialogs/choose_token_dialog.dart';
+import 'package:oxedium_website/dialogs/choose_swap_token_dialog.dart';
 import 'package:oxedium_website/dialogs/wallet_dialog.dart';
 import 'package:oxedium_website/metadata/vaults.dart';
 import 'package:oxedium_website/models/stats.dart';
@@ -34,6 +34,7 @@ class _SwapWebScreenState extends ConsumerState<SwapWebScreen> {
 
   Vault inputToken = vaultsData.values.elementAt(0);
   Vault outputToken = vaultsData.values.elementAt(1);
+  bool isPriceLoading = false;
 
   final TextEditingController _inputTokenAmountController =
       TextEditingController();
@@ -68,6 +69,7 @@ class _SwapWebScreenState extends ConsumerState<SwapWebScreen> {
 
     if (amount.isEmpty) {
       _outputTokenAmountController.clear();
+      setState(() => isPriceLoading = false);
       return;
     }
 
@@ -89,6 +91,7 @@ class _SwapWebScreenState extends ConsumerState<SwapWebScreen> {
         _outputTokenAmountController.text =
             (route.amountOut / pow(10, route.decimalsOut))
                 .toStringAsFixed(route.decimalsOut);
+        setState(() => isPriceLoading = true);
       } catch (_) {
         _outputTokenAmountController.clear();
       } finally {
@@ -287,10 +290,14 @@ class _SwapWebScreenState extends ConsumerState<SwapWebScreen> {
                                           ),
                                         ),
                                         CustomInkWell(
-                                          onTap: () => chooseTokenDialog(
-                                              context,
-                                              ref,
-                                              vaultsData.values.toList()),
+                                          onTap: () async {
+                                            final selectedVault = await chooseSwapTokenDialog(context, ref, vaultsData.values.toList());
+
+                                            if (selectedVault != null && selectedVault.mint != outputToken.mint) {
+                                              inputToken = selectedVault;
+                                              setState(() {});
+                                            }
+                                          },
                                           child: Container(
                                             height: 35.0,
                                             padding: const EdgeInsets.symmetric(
@@ -461,10 +468,14 @@ class _SwapWebScreenState extends ConsumerState<SwapWebScreen> {
                                           ),
                                         ),
                                         CustomInkWell(
-                                          onTap: () => chooseTokenDialog(
-                                              context,
-                                              ref,
-                                              vaultsData.values.toList()),
+                                          onTap: () async {
+                                            final selectedVault = await chooseSwapTokenDialog(context, ref, vaultsData.values.toList());
+
+                                            if (selectedVault != null && selectedVault.mint != inputToken.mint) {
+                                              outputToken = selectedVault;
+                                              setState(() {});
+                                            }
+                                          },
                                           child: Container(
                                             height: 35.0,
                                             padding: const EdgeInsets.symmetric(
@@ -581,11 +592,11 @@ class _SwapWebScreenState extends ConsumerState<SwapWebScreen> {
                             ),
                             child: loading
                                 ? const SizedBox(
-                                    width: 22.0,
-                                    height: 22.0,
+                                    width: 18.0,
+                                    height: 18.0,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      color: Colors.white,
+                                      color: Colors.black,
                                     ),
                                   )
                                 : const Text(
@@ -597,91 +608,93 @@ class _SwapWebScreenState extends ConsumerState<SwapWebScreen> {
                         );
                       },
                     ),
-                    const SizedBox(height: 16.0),
-                    Container(
-                      width: 400.0,
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          border:
-                              Border.all(color: Theme.of(context).cardColor)),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 45.0,
-                            padding: const EdgeInsets.only(left: 4.0, right: 8.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                border: Border.all(
-                                    color: Theme.of(context).cardColor)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                        width: 40.0,
-                                        child: Image.asset(
-                                            "assets/icons/oxedium.png",
-                                            height: 21.0)),
-                                    const SizedBox(width: 2.0),
-                                    const Text("Oxedium"),
-                                    const SizedBox(width: 8.0),
-                                    Container(
-                                      height: 20.0,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.deepPurpleAccent),
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          color: Theme.of(context)
-                                              .hintColor
-                                              .withOpacity(0.1)),
-                                      child: const Text("best price",
-                                          style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.deepPurpleAccent)),
-                                    )
-                                  ],
-                                ),
-                                const Text("126.79")
-                              ],
+                    isPriceLoading ? Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Container(
+                        width: 400.0,
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border:
+                                Border.all(color: Theme.of(context).cardColor)),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 45.0,
+                              padding: const EdgeInsets.only(left: 4.0, right: 8.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border: Border.all(
+                                      color: Theme.of(context).cardColor)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                          width: 40.0,
+                                          child: Image.asset(
+                                              "assets/icons/oxedium.png",
+                                              height: 21.0)),
+                                      const SizedBox(width: 2.0),
+                                      const Text("Oxedium"),
+                                      const SizedBox(width: 8.0),
+                                      Container(
+                                        height: 20.0,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.deepPurpleAccent),
+                                            borderRadius:
+                                                BorderRadius.circular(5.0),
+                                            color: Theme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.1)),
+                                        child: const Text("best price",
+                                            style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: Colors.deepPurpleAccent)),
+                                      )
+                                    ],
+                                  ),
+                                  const Text("126.79")
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8.0),
-                          Container(
-                            height: 45.0,
-                            padding: const EdgeInsets.only(left: 4.0, right: 8.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                border: Border.all(
-                                    color: Theme.of(context).cardColor)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                        width: 40.0,
-                                        child: Image.asset(
-                                            "assets/icons/jupiter.png",
-                                            height: 21.0)),
-                                    const SizedBox(width: 2.0),
-                                    const Text("Jupiter"),
-                                  ],
-                                ),
-                                const Text("126.23")
-                              ],
+                            const SizedBox(height: 8.0),
+                            Container(
+                              height: 45.0,
+                              padding: const EdgeInsets.only(left: 4.0, right: 8.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border: Border.all(
+                                      color: Theme.of(context).cardColor)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                          width: 40.0,
+                                          child: Image.asset(
+                                              "assets/icons/jupiter.png",
+                                              height: 21.0)),
+                                      const SizedBox(width: 2.0),
+                                      const Text("Jupiter"),
+                                    ],
+                                  ),
+                                  const Text("126.23")
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
+                    ) : const SizedBox(),
                   ],
                 ),
               ),
