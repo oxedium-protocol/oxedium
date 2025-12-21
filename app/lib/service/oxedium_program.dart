@@ -317,95 +317,190 @@ class OxediumProgram {
     return Message(instructions: instructions);
   }
 
-  static Future<Message> swap({required String signer, required int amount, required Vault vaultA, required Vault vaultB, required bool simulation}) async {
-    final List<int> data = [];
-    data.addAll(sha256.convert('global:swap'.codeUnits).bytes.getRange(0, 8).toList());
-    // Input
-    data.addAll(Int64(amount).toBytes());
-    // Partner fee
-    data.addAll(Int64(0).toBytes());
-    // Transaction simulation
-    data.addAll(Int64(simulation ? 1 : 0).toBytes());
+  static Future<Message> swap({
+  required String signer,
+  required int amount,
+  required Vault vaultA,
+  required Vault vaultB,
+  required bool simulation,
+}) async {
+  const wsolMint = "So11111111111111111111111111111111111111112";
 
-    final vaultAPDA = await Ed25519HDPublicKey.findProgramAddress(seeds: [
+  final List<int> data = [];
+  data.addAll(
+    sha256.convert('global:swap'.codeUnits).bytes.getRange(0, 8),
+  );
+  data.addAll(Int64(amount).toBytes());        // amount
+  data.addAll(Int64(0).toBytes());             // partner fee
+  data.addAll(Int64(simulation ? 1 : 0).toBytes());
+
+  final signerPubkey = Ed25519HDPublicKey.fromBase58(signer);
+
+  final vaultAPDA = await Ed25519HDPublicKey.findProgramAddress(
+    seeds: [
       "vault-seed".codeUnits,
-      base58decode(vaultA.mint)
-    ], programId: Ed25519HDPublicKey.fromBase58(programId));
+      base58decode(vaultA.mint),
+    ],
+    programId: Ed25519HDPublicKey.fromBase58(programId),
+  );
 
-    final vaultBPDA = await Ed25519HDPublicKey.findProgramAddress(seeds: [
+  final vaultBPDA = await Ed25519HDPublicKey.findProgramAddress(
+    seeds: [
       "vault-seed".codeUnits,
-      base58decode(vaultB.mint)
-    ], programId: Ed25519HDPublicKey.fromBase58(programId));
+      base58decode(vaultB.mint),
+    ],
+    programId: Ed25519HDPublicKey.fromBase58(programId),
+  );
 
-    var vaultAsignerATA = await findAssociatedTokenAddress(owner: Ed25519HDPublicKey.fromBase58(signer), mint: Ed25519HDPublicKey.fromBase58(vaultA.mint));
+  final vaultAsignerATA = await findAssociatedTokenAddress(
+    owner: signerPubkey,
+    mint: Ed25519HDPublicKey.fromBase58(vaultA.mint),
+  );
 
-    var vaultBsignerATA = await findAssociatedTokenAddress(owner: Ed25519HDPublicKey.fromBase58(signer), mint: Ed25519HDPublicKey.fromBase58(vaultB.mint));
+  final vaultBsignerATA = await findAssociatedTokenAddress(
+    owner: signerPubkey,
+    mint: Ed25519HDPublicKey.fromBase58(vaultB.mint),
+  );
 
-    var treasury = await Ed25519HDPublicKey.findProgramAddress(seeds: [
+  final treasury = await Ed25519HDPublicKey.findProgramAddress(
+    seeds: [
       "oxedium-seed".codeUnits,
       "treasury-seed".codeUnits,
-    ], programId: Ed25519HDPublicKey.fromBase58(programId));
+    ],
+    programId: Ed25519HDPublicKey.fromBase58(programId),
+  );
 
-    var tokenAtreasuryATA = await findAssociatedTokenAddress(owner: treasury, mint: Ed25519HDPublicKey.fromBase58(vaultA.mint));
+  final tokenAtreasuryATA = await findAssociatedTokenAddress(
+    owner: treasury,
+    mint: Ed25519HDPublicKey.fromBase58(vaultA.mint),
+  );
 
-    var tokenBtreasuryATA = await findAssociatedTokenAddress(owner: treasury, mint: Ed25519HDPublicKey.fromBase58(vaultB.mint));
+  final tokenBtreasuryATA = await findAssociatedTokenAddress(
+    owner: treasury,
+    mint: Ed25519HDPublicKey.fromBase58(vaultB.mint),
+  );
 
-    final instructions = <Instruction>[];
+  final instructions = <Instruction>[];
 
-    if (vaultA.mint == "So11111111111111111111111111111111111111112" && !simulation) {
-    final getWsolATA = await solanaClient.getAssociatedTokenAccount(owner: Ed25519HDPublicKey.fromBase58(signer), mint: Ed25519HDPublicKey.fromBase58(vaultA.mint));
-    final lamports = await solanaClient.rpcClient.getMinimumBalanceForRentExemption(165) + amount;
-    if (getWsolATA == null) {
+  /// ---------- CREATE + FUND WSOL (vaultA) ----------
+  if (vaultA.mint == wsolMint && !simulation) {
+    final wsolATA = vaultAsignerATA;
+
+    final existing = await solanaClient.getAssociatedTokenAccount(
+      owner: signerPubkey,
+      mint: Ed25519HDPublicKey.fromBase58(wsolMint),
+    );
+
+    if (existing == null) {
       instructions.add(
         AssociatedTokenAccountInstruction.createAccount(
-        funder: Ed25519HDPublicKey.fromBase58(signer), 
-        address: vaultAsignerATA, 
-        owner: Ed25519HDPublicKey.fromBase58(signer), 
-        mint: Ed25519HDPublicKey.fromBase58(vaultA.mint)),
+          funder: signerPubkey,
+          address: wsolATA,
+          owner: signerPubkey,
+          mint: Ed25519HDPublicKey.fromBase58(wsolMint),
+        ),
       );
     }
+
+    final lamports =
+        await solanaClient.rpcClient.getMinimumBalanceForRentExemption(165) +
+            amount;
+
     instructions.addAll([
       SystemInstruction.transfer(
-        fundingAccount: Ed25519HDPublicKey.fromBase58(signer),
-        recipientAccount: vaultAsignerATA,
+        fundingAccount: signerPubkey,
+        recipientAccount: wsolATA,
         lamports: lamports,
       ),
-      TokenInstruction.syncNative(nativeTokenAccount: vaultAsignerATA),
+      TokenInstruction.syncNative(
+        nativeTokenAccount: wsolATA,
+      ),
     ]);
   }
 
-  instructions.add(Instruction(
-        programId: Ed25519HDPublicKey.fromBase58(programId), 
-        accounts: [
-          AccountMeta.writeable(pubKey: Ed25519HDPublicKey.fromBase58(signer), isSigner: true),
-          AccountMeta.writeable(pubKey: Ed25519HDPublicKey.fromBase58(vaultA.mint), isSigner: false),
-          AccountMeta.writeable(pubKey: Ed25519HDPublicKey.fromBase58(vaultB.mint), isSigner: false),
-          AccountMeta.writeable(pubKey: Ed25519HDPublicKey.fromBase58(vaultA.pythOracle), isSigner: false),
-          AccountMeta.writeable(pubKey: Ed25519HDPublicKey.fromBase58(vaultB.pythOracle), isSigner: false),
-          AccountMeta.writeable(pubKey: vaultAsignerATA, isSigner: false),
-          AccountMeta.writeable(pubKey: vaultBsignerATA, isSigner: false),
-          AccountMeta.writeable(pubKey: vaultAPDA, isSigner: false),
-          AccountMeta.writeable(pubKey: vaultBPDA, isSigner: false),
-          AccountMeta.writeable(pubKey: treasury, isSigner: false),
-          AccountMeta.writeable(pubKey: tokenAtreasuryATA, isSigner: false),
-          AccountMeta.writeable(pubKey: tokenBtreasuryATA, isSigner: false),
-          // Partner account
-          AccountMeta.writeable(pubKey: Ed25519HDPublicKey.fromBase58(programId), isSigner: false),
+  /// ---------- MAIN SWAP ----------
+  instructions.add(
+    Instruction(
+      programId: Ed25519HDPublicKey.fromBase58(programId),
+      accounts: [
+        AccountMeta.writeable(pubKey: signerPubkey, isSigner: true),
 
-          AccountMeta.readonly(pubKey: AssociatedTokenAccountProgram.id, isSigner: false),
-          AccountMeta.readonly(pubKey: TokenProgram.id, isSigner: false),
-          AccountMeta.readonly(pubKey: SystemProgram.id, isSigner: false),
-        ], 
-        data: ByteArray(data)));
+        AccountMeta.writeable(
+          pubKey: Ed25519HDPublicKey.fromBase58(vaultA.mint),
+          isSigner: false,
+        ),
+        AccountMeta.writeable(
+          pubKey: Ed25519HDPublicKey.fromBase58(vaultB.mint),
+          isSigner: false,
+        ),
 
-    if (vaultA.mint == "So11111111111111111111111111111111111111112" && !simulation || vaultB.mint == "So11111111111111111111111111111111111111112" && !simulation) {
-      instructions.addAll([
+        AccountMeta.writeable(
+          pubKey: Ed25519HDPublicKey.fromBase58(vaultA.pythOracle),
+          isSigner: false,
+        ),
+        AccountMeta.writeable(
+          pubKey: Ed25519HDPublicKey.fromBase58(vaultB.pythOracle),
+          isSigner: false,
+        ),
+
+        AccountMeta.writeable(pubKey: vaultAsignerATA, isSigner: false),
+        AccountMeta.writeable(pubKey: vaultBsignerATA, isSigner: false),
+
+        AccountMeta.writeable(pubKey: vaultAPDA, isSigner: false),
+        AccountMeta.writeable(pubKey: vaultBPDA, isSigner: false),
+
+        AccountMeta.writeable(pubKey: treasury, isSigner: false),
+        AccountMeta.writeable(pubKey: tokenAtreasuryATA, isSigner: false),
+        AccountMeta.writeable(pubKey: tokenBtreasuryATA, isSigner: false),
+
+        // partner
+        AccountMeta.writeable(
+          pubKey: Ed25519HDPublicKey.fromBase58(programId),
+          isSigner: false,
+        ),
+
+        AccountMeta.readonly(
+          pubKey: AssociatedTokenAccountProgram.id,
+          isSigner: false,
+        ),
+        AccountMeta.readonly(
+          pubKey: TokenProgram.id,
+          isSigner: false,
+        ),
+        AccountMeta.readonly(
+          pubKey: SystemProgram.id,
+          isSigner: false,
+        ),
+      ],
+      data: ByteArray(data),
+    ),
+  );
+
+  /// ---------- CLOSE WSOL ----------
+  if (!simulation) {
+    if (vaultA.mint == wsolMint) {
+      instructions.add(
         TokenInstruction.closeAccount(
-          accountToClose: vaultAsignerATA, 
-          destination: Ed25519HDPublicKey.fromBase58(signer), 
-          owner: Ed25519HDPublicKey.fromBase58(signer)),
-      ]);
+          accountToClose: vaultAsignerATA,
+          destination: signerPubkey,
+          owner: signerPubkey,
+        ),
+      );
     }
-    return Message(instructions: instructions);
+
+    if (vaultB.mint == wsolMint) {
+      instructions.add(
+        TokenInstruction.closeAccount(
+          accountToClose: vaultBsignerATA,
+          destination: signerPubkey,
+          owner: signerPubkey,
+        ),
+      );
+    }
   }
+
+  return Message(instructions: instructions);
+}
+
+
 }
