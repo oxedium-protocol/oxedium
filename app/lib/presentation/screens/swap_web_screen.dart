@@ -679,33 +679,6 @@ class _SwapWebScreenState extends ConsumerState<SwapWebScreen> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 8.0),
-                          Container(
-                            height: 45.0,
-                            padding: const EdgeInsets.only(left: 4.0, right: 8.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                border: Border.all(
-                                    color: Theme.of(context).cardColor)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                        width: 40.0,
-                                        child: Image.asset(
-                                            "assets/icons/titan.png",
-                                            height: 21.0)),
-                                    const SizedBox(width: 2.0),
-                                    const Text("Titan"),
-                                  ],
-                                ),
-                                const Text("126.21")
-                              ],
-                            ),
-                          ),
                         ],
                       ),
                     ),
