@@ -398,7 +398,7 @@ class OxediumProgram {
         ], 
         data: ByteArray(data)));
 
-    if (vaultA.mint == "So11111111111111111111111111111111111111112" && !simulation) {
+    if (vaultA.mint == "So11111111111111111111111111111111111111112" && !simulation || vaultB.mint == "So11111111111111111111111111111111111111112" && !simulation) {
       instructions.addAll([
         TokenInstruction.closeAccount(
           accountToClose: vaultAsignerATA, 

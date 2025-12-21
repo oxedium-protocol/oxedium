@@ -38,8 +38,8 @@ fn calculating_yield_per_lp() {
 
 #[test]
 fn calculating_yield() {
-    let staker_lp_balance = 10000000000;
-    let cumulative_yield_per_lp = (127987 as u128 * SCALE) / staker_lp_balance as u128;
+    let staker_lp_balance = 1000000000;
+    let cumulative_yield_per_lp = (29219519732 as u128 * SCALE) / staker_lp_balance as u128;
 
     let last_cumulative_yield: u128 = 0;
 
