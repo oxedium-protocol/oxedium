@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:oxedium_website/models/stats.dart';
-import 'package:oxedium_website/presentation/screens/staking_mob_screen.dart';
-import 'package:oxedium_website/presentation/screens/staking_web_screen.dart';
 import 'package:oxedium_website/widgets/custom_inkwell.dart';
 import 'package:oxedium_website/widgets/hover_builder.dart';
 import 'package:oxedium_website/widgets/mini_button.dart';
@@ -45,19 +44,10 @@ void chooseTokenDialog(BuildContext context, WidgetRef ref, List<Vault> vaults, 
                           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                           child: HoverBuilder(
                             builder: (context, hover) => CustomInkWell(
-                              onTap: () => Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) {
-                                      if (isMob != null && isMob) {
-                                        return StakingMobScreen(vaultMint: vaults[index].mint);
-                                      }
-                                      return StakingWebScreen(vaultMint: vaults[index].mint);
-                                    },
-                                    transitionDuration: Duration.zero,
-                                    reverseTransitionDuration: Duration.zero,
-                                  ),
-                                ),
+                              onTap: () {
+                                context.go('?vault=${vaults[index].mint}');
+                                Navigator.of(context).pop();
+                              },
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 250),
                                 height: 70.0,
