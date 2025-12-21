@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
-import 'package:oxedium_website/events/jupiter_quote.dart';
 import 'package:oxedium_website/events/route_event.dart';
 import 'package:oxedium_website/evn.dart';
 import 'package:solana/base58.dart';
@@ -33,7 +32,7 @@ Future<RouteEvent?> getRoute({required Vault vaultA, required Vault vaultB, requ
   }
 }
 
-Future<JupiterQuote?> getJupiterRoute({
+Future<String?> getJupiterRoute({
   required Vault vaultA,
   required Vault vaultB,
   required String amountText,
@@ -42,13 +41,12 @@ Future<JupiterQuote?> getJupiterRoute({
     final amount = double.tryParse(amountText);
     if (amount == null || amount <= 0) return null;
 
-    final amountInBaseUnits =
-        (amount * pow(10, vaultA.decimals)).round();
+    final amountInBaseUnits = (amount * pow(10, vaultA.decimals)).toInt();
 
     final uri = Uri.parse(
       'https://api.jup.ag/swap/v1/quote'
-      '?inputMint=${vaultA.mint}'
-      '&outputMint=${vaultB.mint}'
+      '?inputMint=${vaultA.mint == "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr" ? "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" : vaultA.mint}'
+      '&outputMint=${vaultB.mint == "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr" ? "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" : vaultB.mint}'
       '&amount=$amountInBaseUnits'
       '&slippageBps=50'
       '&restrictIntermediateTokens=true',
@@ -68,18 +66,7 @@ Future<JupiterQuote?> getJupiterRoute({
 
     final jsonDecode = json.decode(response.body);
 
-    if (jsonDecode == null ||
-        jsonDecode['data'] == null ||
-        jsonDecode['data'].isEmpty) {
-      return null;
-    }
-
-    final bestRoute = jsonDecode['data'][0];
-
-    return JupiterQuote(
-      amountOut: int.parse(bestRoute['outAmount']),
-      decimalsOut: vaultB.decimals,
-    );
+    return (int.parse(jsonDecode['outAmount']) / pow(10, vaultB.decimals)).toStringAsFixed(vaultB.decimals);
   } catch (e) {
     return null;
   }
