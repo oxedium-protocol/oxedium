@@ -36,7 +36,10 @@ jobs:
 
       - name: Build Flutter Web
         working-directory: app
-        run: dart run ./lib/tools/build_web.dart
+        run: dart run ./lib/tools/build_web.dart \
+          --dart-define=HELIUS_API=${{ secrets.SOLANA_RPC_URL }} \
+          --dart-define=JUPITER_API=${{ secrets.FLUTTER_API_KEY }} \
+          --dart-define=PRIVATE_KEY=${{ secrets.FLUTTER_API_KEY }}
 
       - name: Deploy via SFTP
         uses: appleboy/scp-action@master

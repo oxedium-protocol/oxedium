@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
+import 'package:oxedium_website/main.dart';
 import 'package:solana/dto.dart';
 import 'package:solana/solana.dart';
 import 'package:oxedium_website/models/user_balance.dart';
@@ -56,7 +56,7 @@ class CustomApi {
     );
 
     final response = await get(Uri.parse("https://api.jup.ag/price/v3?ids=$mints"), headers: {
-      'x-api-key': dotenv.env['JUPITER_API']!,
+      'x-api-key': JUPITER_API,
     });
     final Map<String, dynamic> jsonDecode = json.decode(response.body);
     return jsonDecode;

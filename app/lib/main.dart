@@ -1,6 +1,5 @@
 import 'package:adaptive_screen_flutter/adaptive_screen_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:go_router/go_router.dart';
@@ -60,12 +59,14 @@ final GoRouter _router = GoRouter(
           ),
         ));
 
+const HELIUS_API = String.fromEnvironment('HELIUS_API');
+const JUPITER_API = String.fromEnvironment('JUPITER_API');
+const PRIVATE_KEY = String.fromEnvironment('PRIVATE_KEY');
+
 void main() async {
   usePathUrlStrategy();
   
   WidgetsFlutterBinding.ensureInitialized();
-
-  await dotenv.load(fileName: ".env");
 
   runApp(ProviderScope(
     child: MaterialApp.router(

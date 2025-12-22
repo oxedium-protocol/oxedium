@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:oxedium_website/events/route_event.dart';
+import 'package:oxedium_website/main.dart';
 import 'package:oxedium_website/service/config.dart';
 import 'package:oxedium_website/service/helius_api.dart';
 import 'package:solana/base58.dart';
@@ -17,7 +17,7 @@ import '../utils/extensions.dart';
 Future<RouteEvent?> getRoute({required Vault vaultA, required Vault vaultB, required String amountText}) async {
   final amount = (num.parse(amountText) * pow(10, vaultA.decimals)).toInt();
 
-  final wallet = await Wallet.fromPrivateKeyBytes(privateKey: base58decode(dotenv.env['PRIVATE_KEY']!).getRange(0, 32).toList());
+  final wallet = await Wallet.fromPrivateKeyBytes(privateKey: base58decode(PRIVATE_KEY).getRange(0, 32).toList());
 
   final message = await OxediumProgram.quote(vaultA: vaultA, vaultB: vaultB, amount: amount);
   final hash = await solanaClient.rpcClient.getLatestBlockhash();
@@ -39,7 +39,6 @@ Future<String?> getJupiterRoute({
   required Vault vaultB,
   required String amountText,
 }) async {
-  final rpcUrl = dotenv.env['JUPITER_API'];
   try {
     final amount = double.tryParse(amountText);
     if (amount == null || amount <= 0) return null;
@@ -58,7 +57,7 @@ Future<String?> getJupiterRoute({
     final response = await http.get(
       uri,
       headers: {
-        'x-api-key': rpcUrl!,
+        'x-api-key': JUPITER_API,
         'Content-Type': 'application/json',
       },
     );
