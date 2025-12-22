@@ -27,8 +27,7 @@ jobs:
 
       - name: Build Flutter Web
         working-directory: app
-        run: dart run ./lib/tools/build_web.dart \
-          --dart-define=PRIVATE_KEY=${{ secrets.FLUTTER_API_KEY }}
+        run: dart run ./lib/tools/build_web.dart
 
       - name: Deploy via SFTP
         uses: appleboy/scp-action@master
