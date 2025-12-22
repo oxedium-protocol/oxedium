@@ -21,15 +21,6 @@ jobs:
         with:
           flutter-version: '3.35.7'
 
-      - name: Create .env
-        run: |
-          echo "HELIUS_API=${{ secrets.HELIUS_API }}" >> .env
-          echo "JUPITER_API=${{ secrets.JUPITER_API }}" >> .env
-          echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" >> .env
-
-      - name: Print .env
-        run: cat .env
-
       - name: Install dependencies
         working-directory: app
         run: flutter pub get
@@ -37,8 +28,6 @@ jobs:
       - name: Build Flutter Web
         working-directory: app
         run: dart run ./lib/tools/build_web.dart \
-          --dart-define=HELIUS_API=${{ secrets.SOLANA_RPC_URL }} \
-          --dart-define=JUPITER_API=${{ secrets.FLUTTER_API_KEY }} \
           --dart-define=PRIVATE_KEY=${{ secrets.FLUTTER_API_KEY }}
 
       - name: Deploy via SFTP
