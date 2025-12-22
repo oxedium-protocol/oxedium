@@ -7,15 +7,15 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-tyrbine_program = "293CUNeKDztnuReerSB5bPB65u3ZbRir5egDZWdt9PCo"
+oxedium_program = "HHZuHvAboWrgmyxSPx77bHE1b699WBrVfZZBsaeqJcbC"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-# cluster = "https://mainnet.helius-rpc.com/?api-key=7f2a3c15-9d37-4850-a525-2aab028411bf"
-cluster = "https://devnet.helius-rpc.com/?api-key=e73529ad-6e9e-417e-91a1-564aea0a32d3"
-wallet = "~/.config/solana/hasby.json"
+cluster = "https://mainnet.helius-rpc.com/?api-key=7f2a3c15-9d37-4850-a525-2aab028411bf"
+# cluster = "https://devnet.helius-rpc.com/?api-key=e73529ad-6e9e-417e-91a1-564aea0a32d3"
+wallet = "~/.config/solana/main.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

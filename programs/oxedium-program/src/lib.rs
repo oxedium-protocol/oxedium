@@ -13,7 +13,7 @@ pub mod utils;
 pub mod events;
 
 
-declare_id!("B561qYVBnYrjM6tn3piLQ6E5fajxit1fCWoPPpMVtwmP");
+declare_id!("HHZuHvAboWrgmyxSPx77bHE1b699WBrVfZZBsaeqJcbC");
 
 #[program]
 pub mod oxedium_program {

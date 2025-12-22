@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:oxedium_website/adapter/adapter.dart';
 import 'package:oxedium_website/adapter/wallet_notifier.dart';
 import 'package:oxedium_website/adapter/wallets/wallets.dart';
-import 'package:oxedium_website/build_version.dart';
 import 'package:oxedium_website/dialogs/wallet_dialog.dart';
 import 'package:oxedium_website/models/tx_status.dart';
 import 'package:oxedium_website/presentation/screens/staking_web_screen.dart';
@@ -201,14 +200,7 @@ class _TopWebBarState extends ConsumerState<TopWebBar>
                           // LOGO
                           Row(
                             children: [
-                              const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Oxedium', style: TextStyle(fontSize: 18.0, fontFamily: "Audiowide")),
-                                  Text("• Devnet v. $buildVersion", style: TextStyle(color: Colors.deepOrange, fontSize: 11.0))
-                                ],
-                              ),
+                              const Text('Oxedium', style: TextStyle(fontSize: 18.0, fontFamily: "Audiowide")),
                               const SizedBox(width: 64.0),
                               CustomInkWell(
                                 onTap: () => context.go('/swap'),
