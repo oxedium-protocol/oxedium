@@ -59,8 +59,6 @@ final GoRouter _router = GoRouter(
           ),
         ));
 
-const PRIVATE_KEY = String.fromEnvironment('PRIVATE_KEY');
-
 void main() async {
   usePathUrlStrategy();
   

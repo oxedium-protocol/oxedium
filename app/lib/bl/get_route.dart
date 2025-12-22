@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:oxedium_website/events/route_event.dart';
-import 'package:oxedium_website/main.dart';
 import 'package:oxedium_website/service/config.dart';
 import 'package:oxedium_website/service/helius_api.dart';
 import 'package:solana/base58.dart';
@@ -15,9 +14,10 @@ import '../utils/extensions.dart';
 
 
 Future<RouteEvent?> getRoute({required Vault vaultA, required Vault vaultB, required String amountText}) async {
+  const privateKey = String.fromEnvironment('PRIVATE_KEY');
   final amount = (num.parse(amountText) * pow(10, vaultA.decimals)).toInt();
 
-  final wallet = await Wallet.fromPrivateKeyBytes(privateKey: base58decode(PRIVATE_KEY).getRange(0, 32).toList());
+  final wallet = await Wallet.fromPrivateKeyBytes(privateKey: base58decode(privateKey).getRange(0, 32).toList());
 
   final message = await OxediumProgram.quote(vaultA: vaultA, vaultB: vaultB, amount: amount);
   final hash = await solanaClient.rpcClient.getLatestBlockhash();
