@@ -118,10 +118,11 @@ pub struct StakingInstructionAccounts<'info> {
 ```
 2. **Unstaking** – withdraw from a vault - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/staker/unstaking.rs#L73)
 3. **Claim** – claim earned fees - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/staker/claim.rs#L58)
-4. **Swap** – swap between vaults - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/trader/swap.rs#L128)
+4. **Quote** – get quote - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/trader/quote.rs#L107)
+5. **Swap** – swap between vaults - [How to call it?](https://github.com/oxedium-protocol/oxedium/blob/main/programs/oxedium-program/src/instructions/trader/swap.rs#L128)
 
 ## Learn More
 
 - [Whitepaper](https://4dac7oaqhkztsapbsfnjdxiau4yhvykfizpgwajvw2h7xr2bz3qq.arweave.net/4MAvuBA6szkB4ZFakd0ApzB64UVGXmsBNbaP-8dBzuE)
-- [Twitter](https://x.com/tyrbine)
-- [Telegram](https://t.me/oxedium_protocol)
+- [Twitter](https://x.com/0xedium)
+- [Community](https://t.me/oxedium_portal)

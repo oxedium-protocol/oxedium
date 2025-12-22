@@ -59,8 +59,6 @@ final GoRouter _router = GoRouter(
           ),
         ));
 
-const HELIUS_API = String.fromEnvironment('HELIUS_API');
-const JUPITER_API = String.fromEnvironment('JUPITER_API');
 const PRIVATE_KEY = String.fromEnvironment('PRIVATE_KEY');
 
 void main() async {

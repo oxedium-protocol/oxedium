@@ -57,7 +57,7 @@ Future<String?> getJupiterRoute({
     final response = await http.get(
       uri,
       headers: {
-        'x-api-key': JUPITER_API,
+        'x-api-key': 'a7e8aee6-b556-47f7-abed-5d187fd6b8d6',
         'Content-Type': 'application/json',
       },
     );
