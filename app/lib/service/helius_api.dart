@@ -73,4 +73,41 @@ class HeliusApi {
         return null;
     }
   }
+
+/// Simulate Solana transaction (base64 encoded)
+static Future<List> simulateTransaction({
+  required String base64Transaction,
+}) async {
+  final body = {
+    'jsonrpc': '2.0',
+    'id': '1',
+    'method': 'simulateTransaction',
+    'params': [
+      base64Transaction,
+      {
+        'encoding': 'base64',
+        // "sigVerify": false
+      }
+    ],
+  };
+
+  final response = await http.post(
+    Uri.parse(SolanaConfig.rpc),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(body),
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception('RPC error: ${response.statusCode}');
+  }
+
+  final decoded = jsonDecode(response.body);
+
+  if (decoded['error'] != null) {
+    throw Exception('Simulation failed: ${decoded['error']}');
+  }
+
+  return decoded['result']['value']['logs'];
+}
+
 }

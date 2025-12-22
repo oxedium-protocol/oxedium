@@ -3,13 +3,12 @@ import 'package:fixnum/fixnum.dart';
 import 'package:solana/base58.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
-import 'package:oxedium_website/evn.dart';
 import 'package:oxedium_website/models/staked.dart';
 import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/service/config.dart';
 
 class OxediumProgram {
-  static const String programId = OXEDIUM_PROGRAM_ID;
+  static const String programId = "HHZuHvAboWrgmyxSPx77bHE1b699WBrVfZZBsaeqJcbC";
 
   static Future<String> getTreasuryAddress() async {
     var treasury = await Ed25519HDPublicKey.findProgramAddress(seeds: [
@@ -322,7 +321,6 @@ class OxediumProgram {
     required int amount,
     required Vault vaultA,
     required Vault vaultB,
-    required bool simulation,
   }) async {
     const wsolMint = "So11111111111111111111111111111111111111112";
 
@@ -332,7 +330,6 @@ class OxediumProgram {
     );
     data.addAll(Int64(amount).toBytes()); // amount
     data.addAll(Int64(0).toBytes()); // partner fee
-    data.addAll(Int64(simulation ? 1 : 0).toBytes());
 
     final signerPubkey = Ed25519HDPublicKey.fromBase58(signer);
 
@@ -383,7 +380,7 @@ class OxediumProgram {
     final instructions = <Instruction>[];
 
     /// ---------- CREATE + FUND WSOL (vaultA) ----------
-    if (vaultA.mint == wsolMint && !simulation) {
+    if (vaultA.mint == wsolMint) {
       final wsolATA = vaultAsignerATA;
 
       final existing = await solanaClient.getAssociatedTokenAccount(
@@ -477,7 +474,6 @@ class OxediumProgram {
     );
 
     /// ---------- CLOSE WSOL ----------
-    if (!simulation) {
       if (vaultA.mint == wsolMint) {
         instructions.add(
           TokenInstruction.closeAccount(
@@ -486,7 +482,6 @@ class OxediumProgram {
             owner: signerPubkey,
           ),
         );
-      }
 
       if (vaultB.mint == wsolMint) {
         instructions.add(
@@ -498,6 +493,79 @@ class OxediumProgram {
         );
       }
     }
+
+    return Message(instructions: instructions);
+  }
+
+    static Future<Message> quote({
+    required int amount,
+    required Vault vaultA,
+    required Vault vaultB,
+  }) async {
+    final List<int> data = [];
+    data.addAll(
+      sha256.convert('global:quote'.codeUnits).bytes.getRange(0, 8),
+    );
+    data.addAll(Int64(amount).toBytes()); // amount
+    data.addAll(Int64(0).toBytes()); // partner fee
+
+    final vaultAPDA = await Ed25519HDPublicKey.findProgramAddress(
+      seeds: [
+        "vault-seed".codeUnits,
+        base58decode(vaultA.mint),
+      ],
+      programId: Ed25519HDPublicKey.fromBase58(programId),
+    );
+
+    final vaultBPDA = await Ed25519HDPublicKey.findProgramAddress(
+      seeds: [
+        "vault-seed".codeUnits,
+        base58decode(vaultB.mint),
+      ],
+      programId: Ed25519HDPublicKey.fromBase58(programId),
+    );
+
+    final treasury = await Ed25519HDPublicKey.findProgramAddress(
+      seeds: [
+        "oxedium-seed".codeUnits,
+        "treasury-seed".codeUnits,
+      ],
+      programId: Ed25519HDPublicKey.fromBase58(programId),
+    );
+
+    final instructions = <Instruction>[];
+
+    /// ---------- MAIN SWAP ----------
+    instructions.add(
+      Instruction(
+        programId: Ed25519HDPublicKey.fromBase58(programId),
+        accounts: [
+          AccountMeta.writeable(
+            pubKey: Ed25519HDPublicKey.fromBase58(vaultA.mint),
+            isSigner: false,
+          ),
+          AccountMeta.writeable(
+            pubKey: Ed25519HDPublicKey.fromBase58(vaultB.mint),
+            isSigner: false,
+          ),
+
+          AccountMeta.writeable(
+            pubKey: Ed25519HDPublicKey.fromBase58(vaultA.pythOracle),
+            isSigner: false,
+          ),
+          AccountMeta.writeable(
+            pubKey: Ed25519HDPublicKey.fromBase58(vaultB.pythOracle),
+            isSigner: false,
+          ),
+
+          AccountMeta.writeable(pubKey: vaultAPDA, isSigner: false),
+          AccountMeta.writeable(pubKey: vaultBPDA, isSigner: false),
+
+          AccountMeta.writeable(pubKey: treasury, isSigner: false),
+        ],
+        data: ByteArray(data),
+      ),
+    );
 
     return Message(instructions: instructions);
   }

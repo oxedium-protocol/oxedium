@@ -16,7 +16,7 @@ Future<void> swap(BuildContext context, WidgetRef ref, {required Adapter adapter
 
   final amount = (num.parse(amountText) * pow(10, vaultA.decimals)).toInt();
 
-  final message = await OxediumProgram.swap(signer: adapter.pubkey!, vaultA: vaultA, vaultB: vaultB, amount: amount, simulation: false);
+  final message = await OxediumProgram.swap(signer: adapter.pubkey!, vaultA: vaultA, vaultB: vaultB, amount: amount);
   
   final hash = await solanaClient.rpcClient.getLatestBlockhash();
 

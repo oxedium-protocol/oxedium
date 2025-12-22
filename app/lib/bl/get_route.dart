@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:oxedium_website/events/route_event.dart';
-import 'package:oxedium_website/evn.dart';
+import 'package:oxedium_website/service/config.dart';
+import 'package:oxedium_website/service/helius_api.dart';
 import 'package:solana/base58.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart';
 import 'package:oxedium_website/models/stats.dart';
-import 'package:oxedium_website/service/config.dart';
 import 'package:oxedium_website/service/oxedium_program.dart';
 import '../utils/extensions.dart';
 
@@ -15,19 +17,19 @@ import '../utils/extensions.dart';
 Future<RouteEvent?> getRoute({required Vault vaultA, required Vault vaultB, required String amountText}) async {
   final amount = (num.parse(amountText) * pow(10, vaultA.decimals)).toInt();
 
-  final wallet = await Wallet.fromPrivateKeyBytes(privateKey: base58decode("2UtAxXQ2CakpayAu6rKwoUM7eAqUptGXTeXMYCHnXNNivmcQbKT3ZsCtAzbrNpr3EGsHb6KboYmBCuSce5ir7R1Q").getRange(0, 32).toList());
-  final message = await OxediumProgram.swap(signer: wallet.publicKey.toBase58(), vaultA: vaultA, vaultB: vaultB, amount: amount, simulation: true);
+  final wallet = await Wallet.fromPrivateKeyBytes(privateKey: base58decode(dotenv.env['PRIVATE_KEY']!).getRange(0, 32).toList());
 
-  final res = await solanaClient.rpcClient.getLatestBlockhash();
+  final message = await OxediumProgram.quote(vaultA: vaultA, vaultB: vaultB, amount: amount);
+  final hash = await solanaClient.rpcClient.getLatestBlockhash();
   final SignedTx signedTx = await wallet.signMessage(
         message: message,
-        recentBlockhash: res.value.blockhash,
+        recentBlockhash: hash.value.blockhash,
       );
   try {
-    final transaction = await solanaClient.rpcClient.simulateTransaction(signedTx.encode(), sigVerify: false);
-    return RouteEvent.fromBase64(transaction.value.logs!.toString().extractProgramData()!);
-  } catch (_) {
-    // ...
+    final transaction = await HeliusApi.simulateTransaction(base64Transaction: signedTx.encode());
+    return RouteEvent.fromBase64(transaction.toString().extractProgramData()!);
+  } catch (e) {
+    debugPrint(e.toString());
     return null;
   }
 }
@@ -37,6 +39,7 @@ Future<String?> getJupiterRoute({
   required Vault vaultB,
   required String amountText,
 }) async {
+  final rpcUrl = dotenv.env['JUPITER_API'];
   try {
     final amount = double.tryParse(amountText);
     if (amount == null || amount <= 0) return null;
@@ -55,7 +58,7 @@ Future<String?> getJupiterRoute({
     final response = await http.get(
       uri,
       headers: {
-        'x-api-key': JUPITER_API,
+        'x-api-key': rpcUrl!,
         'Content-Type': 'application/json',
       },
     );

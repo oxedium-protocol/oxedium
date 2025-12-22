@@ -1,5 +1,6 @@
 import 'package:adaptive_screen_flutter/adaptive_screen_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:go_router/go_router.dart';
@@ -63,6 +64,8 @@ void main() async {
   usePathUrlStrategy();
   
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: ".env");
 
   runApp(ProviderScope(
     child: MaterialApp.router(

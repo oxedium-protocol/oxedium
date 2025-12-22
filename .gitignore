@@ -51,4 +51,4 @@ app/android/app/release
 
 # Makefile
 app/Makefile
-
+app/.env

@@ -154,7 +154,7 @@ class _SwapWebScreenState extends ConsumerState<SwapWebScreen> {
                 )
             ],
           ),
-          Text(price.toStringAsFixed(2))
+          Text(price.toString())
         ],
       ),
     );
