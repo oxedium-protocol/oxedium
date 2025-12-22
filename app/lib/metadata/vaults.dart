@@ -10,9 +10,9 @@ Map<String, Vault> vaultsData = {
       decimals: 9,
       tvl: 0,
       apr: 0),
-  'Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr': Vault(
+  'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v': Vault(
       mint:
-          'Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr', // // [mainnet] - EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
+          'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // // [mainnet] - EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
       pythOracle: 'Dpw1EAVrSB1ibxiDQyTAW6Zip3J4Btk2x4SgApQCeFbX',
       symbol: 'USDC',
       logoUrl:

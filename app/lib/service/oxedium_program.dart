@@ -9,7 +9,7 @@ import 'package:oxedium_website/models/stats.dart';
 import 'package:oxedium_website/service/config.dart';
 
 class OxediumProgram {
-  static const String programId = TYRBINE_PROGRAM_ID;
+  static const String programId = OXEDIUM_PROGRAM_ID;
 
   static Future<String> getTreasuryAddress() async {
     var treasury = await Ed25519HDPublicKey.findProgramAddress(seeds: [
