@@ -8,17 +8,20 @@ use crate::{components::{calculate_staker_yield, check_stoptap}, states::{Staker
 /// # Arguments
 /// * `ctx` - context containing all accounts required for claiming
 pub fn claim(ctx: Context<ClaimInstructionAccounts>) -> Result<()> {
+    let vault: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda;
+    let staker: &mut Account<'_, Staker> = &mut ctx.accounts.staker_pda;
+
     // Check if vault is active and stop-tap is not enabled
-    check_stoptap(&ctx.accounts.vault_pda, &ctx.accounts.treasury_pda)?;
+    check_stoptap(vault, &ctx.accounts.treasury_pda)?;
 
     // Get cumulative yield per LP token from the vault
-    let cumulative_yield_per_lp: u128 = ctx.accounts.vault_pda.cumulative_yield_per_lp;
+    let cumulative_yield_per_lp: u128 = vault.cumulative_yield_per_lp;
     // Get the staker's LP token balance
     let staker_lp: u64 = ctx.accounts.signer_lp_ata.amount;
     // Get the last cumulative yield recorded for the staker
-    let staker_last_cumulative_yield: u128 = ctx.accounts.staker_pda.last_cumulative_yield;
+    let staker_last_cumulative_yield: u128 = staker.last_cumulative_yield;
     // Get the pending claim for the staker
-    let staker_pending_claim: u64 = ctx.accounts.staker_pda.pending_claim;
+    let staker_pending_claim: u64 = staker.pending_claim;
 
     // Calculate total yield: new yield + pending claim
     let staker_yield: u64 = calculate_staker_yield(cumulative_yield_per_lp, staker_lp, staker_last_cumulative_yield);
@@ -44,11 +47,11 @@ pub fn claim(ctx: Context<ClaimInstructionAccounts>) -> Result<()> {
         amount)?;
 
     // Update staker PDA state
-    ctx.accounts.staker_pda.last_cumulative_yield = cumulative_yield_per_lp;
-    ctx.accounts.staker_pda.pending_claim = 0;
+    staker.last_cumulative_yield = cumulative_yield_per_lp;
+    staker.pending_claim = 0;
     
     // Log the claim for transparency
-    msg!("Claim {{staker: {}, mint: {}, amount: {}}}", ctx.accounts.signer.key(), ctx.accounts.vault_pda.token_mint.key(), amount);
+    msg!("Claim {{staker: {}, mint: {}, amount: {}}}", ctx.accounts.signer.key(), vault.token_mint.key(), amount);
 
     Ok(())
 }

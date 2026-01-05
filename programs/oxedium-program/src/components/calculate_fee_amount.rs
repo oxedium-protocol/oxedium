@@ -5,8 +5,8 @@ use crate::utils::TyrbineError;
 /// # Arguments
 /// * `amount` - The initial amount to apply fees on
 /// * `lp_fee_bps` - LP fee in basis points (bps, 1 bps = 0.01%) applied to the full amount
-/// * `protocol_fee_bps` - Protocol fee in bps, applied to the LP fee
-/// * `partner_fee_bps` - Partner fee in bps, applied to the original amount
+/// * `protocol_fee_bps` - Protocol fee in bps applied to the full amount
+/// * `partner_fee_bps` - Partner fee in bps applied to the full amount
 ///
 /// # Returns
 /// * `Result<(amount_after_fee, lp_fee, protocol_fee, partner_fee), TyrbineError>` - 
@@ -22,7 +22,7 @@ pub fn calculate_fee_amount(
     let lp_fee = fee(amount, lp_fee_bps)?;
 
     // Calculate protocol fee as a percentage of LP fee
-    let protocol_fee = fee(lp_fee, protocol_fee_bps)?;
+    let protocol_fee = fee(amount, protocol_fee_bps)?;
 
     // Calculate partner fee independently from the original amount
     let partner_fee = fee(amount, partner_fee_bps)?;
@@ -47,15 +47,12 @@ pub fn calculate_fee_amount(
 /// # Returns
 /// * `Result<u64, TyrbineError>` - Calculated fee, rounded up to ensure at least 1 unit if applicable
 fn fee(amount: u64, bps: u64) -> Result<u64, TyrbineError> {
-    if bps == 0 {
-        return Ok(0); // No fee if bps is zero
+    if bps == 0 || amount == 0 {
+        return Ok(0);
     }
-
-    Ok(
-        amount
-            .checked_mul(bps).ok_or(TyrbineError::Overflow)?
-            .checked_add(9_999).ok_or(TyrbineError::Overflow)? // CEIL rounding to avoid losing small fractions
-            / 10_000
-    )
+    let f = amount
+        .checked_mul(bps).ok_or(TyrbineError::Overflow)?
+        / 10_000;
+    Ok(f.max(1).min(amount)) // at least 1, but no more than amount
 }
 

@@ -76,5 +76,8 @@ pub enum TyrbineError {
     OverflowInCast,
 
     #[msg("The fee exceeds 100%")]
-    FeeExceeds
+    FeeExceeds,
+
+    #[msg("Vault capacity exceeded")]
+    VaultCapacityExceeded
 }

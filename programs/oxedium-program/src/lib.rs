@@ -27,12 +27,12 @@ pub mod oxedium_program {
         instructions::admin::update_treasury(ctx, stoptap, proto_fee)
     }
 
-    pub fn init_vault(ctx: Context<InitVaultInstructionAccounts>, is_active: bool, base_fee: u64, max_age_price: u64) -> Result<()> {
-        instructions::admin::init_vault(ctx, is_active, base_fee, max_age_price)
+    pub fn init_vault(ctx: Context<InitVaultInstructionAccounts>, is_active: bool, base_fee: u64, max_age_price: u64, max_liquidity: u64) -> Result<()> {
+        instructions::admin::init_vault(ctx, is_active, base_fee, max_age_price, max_liquidity)
     }
 
-    pub fn update_vault(ctx: Context<UpdateVaultInstructionAccounts>, is_active: bool, base_fee: u64, max_age_price: u64) -> Result<()> {
-        instructions::admin::update_vault(ctx, is_active, base_fee, max_age_price)
+    pub fn update_vault(ctx: Context<UpdateVaultInstructionAccounts>, is_active: bool, base_fee: u64, max_age_price: u64, max_liquidity: u64) -> Result<()> {
+        instructions::admin::update_vault(ctx, is_active, base_fee, max_age_price, max_liquidity)
     }
 
     pub fn collect(ctx: Context<CollectInstructionAccounts>) -> Result<()> {
@@ -56,9 +56,4 @@ pub mod oxedium_program {
     pub fn swap(ctx: Context<SwapInstructionAccounts>, amount_in: u64, partner_fee: u64) -> Result<()> {
         instructions::trader::swap(ctx, amount_in, partner_fee)
     }
-
-    pub fn quote(ctx: Context<QuoteInstructionAccounts>, amount_in: u64, partner_fee: u64) -> Result<()> {
-        instructions::trader::quote(ctx, amount_in, partner_fee)
-    }
-    
 }

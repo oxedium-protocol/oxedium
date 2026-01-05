@@ -4,18 +4,15 @@ use crate::{components::{calculate_fee_amount, calculate_staker_yield, check_sto
 
 #[inline(never)]
 pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Result<()> {
+    let vault: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda;
+    let staker: &mut Account<'_, Staker> = &mut ctx.accounts.staker_pda;
+    let signer_lp_ata: Account<'_, TokenAccount> = ctx.accounts.signer_lp_ata.clone();
 
-    check_stoptap(&ctx.accounts.vault_pda, &ctx.accounts.treasury_pda)?;
-
-    let vault = &mut ctx.accounts.vault_pda;
+    // Check if the vault is active and stop-tap is not enabled
+    check_stoptap(vault, &ctx.accounts.treasury_pda)?;
 
     let cumulative_yield: u128 = vault.cumulative_yield_per_lp;
-    let staker_lp: u64 = ctx.accounts.signer_lp_ata.amount;
-    let last_cumulative_yield: u128 = ctx.accounts.staker_pda.last_cumulative_yield;
-
-    // Update pending yield for the staker
-    ctx.accounts.staker_pda.pending_claim += calculate_staker_yield(cumulative_yield, staker_lp, last_cumulative_yield);
-    ctx.accounts.staker_pda.last_cumulative_yield = cumulative_yield;
+    let last_cumulative_yield: u128 = staker.last_cumulative_yield;
 
     // --- Dynamic Fee Logic ---
     let mut unstake_amount = amount;
@@ -34,7 +31,7 @@ pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Res
     // Burn LP tokens
     let cpi_accounts = Burn {
         mint: ctx.accounts.lp_mint.to_account_info(),
-        from: ctx.accounts.signer_lp_ata.to_account_info(),
+        from: signer_lp_ata.to_account_info(),
         authority: ctx.accounts.signer.to_account_info(),
     };
     let cpi_ctx = CpiContext::new(
@@ -59,6 +56,10 @@ pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Res
             cpi_accounts, 
             signer_seeds), 
         unstake_amount)?;
+
+    // Update pending yield for the staker
+    staker.pending_claim += calculate_staker_yield(cumulative_yield, signer_lp_ata.amount, last_cumulative_yield);
+    staker.last_cumulative_yield = cumulative_yield;
 
     // Update vault liquidity
     vault.initial_liquidity -= amount;

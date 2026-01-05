@@ -9,24 +9,23 @@ use crate::{components::{calculate_staker_yield, check_stoptap}, states::{Staker
 /// * `amount` - amount of vault tokens to stake
 #[inline(never)]
 pub fn staking(ctx: Context<StakingInstructionAccounts>, amount: u64) -> Result<()> {
+    let vault: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda;
+    let staker: &mut Account<'_, Staker> = &mut ctx.accounts.staker_pda;
+    let signer_lp_ata: Account<'_, TokenAccount> = ctx.accounts.signer_lp_ata.clone();
 
     // Check if the vault is active and stop-tap is not enabled
-    check_stoptap(&ctx.accounts.vault_pda, &ctx.accounts.treasury_pda)?;
+    check_stoptap(vault, &ctx.accounts.treasury_pda)?;
+
+    if vault.current_liquidity + amount <= vault.max_liquidity {
+        return Err(TyrbineError::VaultCapacityExceeded.into());
+    }
 
     // Get the cumulative yield per LP token from the vault
-    let cumulative_yield: u128 = ctx.accounts.vault_pda.cumulative_yield_per_lp;
+    let cumulative_yield: u128 = vault.cumulative_yield_per_lp;
     // Get the staker's current LP token balance
-    let staker_lp: u64 = ctx.accounts.signer_lp_ata.amount;
+    let staker_lp: u64 = signer_lp_ata.amount;
     // Get the last recorded cumulative yield for the staker
-    let last_cumulative_yield: u128 = ctx.accounts.staker_pda.last_cumulative_yield;
-
-    // Set staker PDA owner and vault
-    ctx.accounts.staker_pda.owner = ctx.accounts.signer.key();
-    ctx.accounts.staker_pda.vault = ctx.accounts.vault_mint.key();
-
-    // Calculate pending yield for staker and update
-    ctx.accounts.staker_pda.pending_claim += calculate_staker_yield(cumulative_yield, staker_lp, last_cumulative_yield);
-    ctx.accounts.staker_pda.last_cumulative_yield = cumulative_yield;
+    let last_cumulative_yield: u128 = staker.last_cumulative_yield;
 
     // Transfer the staked vault tokens from signer to treasury
     let cpi_accounts = token::Transfer {
@@ -44,7 +43,7 @@ pub fn staking(ctx: Context<StakingInstructionAccounts>, amount: u64) -> Result<
     // Mint LP tokens to the staker corresponding to the staked amount
     let cpi_accounts: MintTo<'_> = MintTo {
         mint: ctx.accounts.lp_mint.to_account_info(),
-        to: ctx.accounts.signer_lp_ata.to_account_info(),
+        to: signer_lp_ata.to_account_info(),
         authority: ctx.accounts.treasury_pda.to_account_info(),
     };
 
@@ -55,12 +54,20 @@ pub fn staking(ctx: Context<StakingInstructionAccounts>, amount: u64) -> Result<
     );
     token::mint_to(cpi_ctx, amount)?;
 
+    // Set staker PDA owner and vault
+    staker.owner = ctx.accounts.signer.key();
+    staker.vault = ctx.accounts.vault_mint.key();
+
+    // Calculate pending yield for staker and update
+    staker.pending_claim += calculate_staker_yield(cumulative_yield, staker_lp, last_cumulative_yield);
+    staker.last_cumulative_yield = cumulative_yield;
+
     // Update vault liquidity accounting
-    ctx.accounts.vault_pda.initial_liquidity += amount;
-    ctx.accounts.vault_pda.current_liquidity += amount;
+    vault.initial_liquidity += amount;
+    vault.current_liquidity += amount;
 
     // Log the staking operation
-    msg!("Staking {{staker: {}, mint: {}, amount: {}}}", ctx.accounts.signer.key(), ctx.accounts.vault_pda.token_mint.key(), amount);
+    msg!("Staking {{staker: {}, mint: {}, amount: {}}}", ctx.accounts.signer.key(), vault.token_mint.key(), amount);
 
     Ok(())
 }

@@ -6,14 +6,16 @@ use anchor_spl::{
 use pyth_solana_receiver_sdk::price_update::PriceUpdateV2;
 
 use crate::{
-    components::{calculate_fee_amount, check_stoptap, fees_setting, raw_amount_out},
+    components::{
+        check_stoptap, compute_swap_math,
+    },
     events::SwapEvent,
     states::{Treasury, Vault},
-    utils::{OXEDIUM_SEED, SCALE, TREASURY_SEED, TyrbineError, VAULT_SEED},
+    utils::{TyrbineError, OXEDIUM_SEED, SCALE, TREASURY_SEED, VAULT_SEED},
 };
 
 /// Swap tokens from one vault to another, optionally in quote-only mode
-/// 
+///
 /// # Arguments
 /// * `ctx` - context containing all accounts
 /// * `amount_in` - amount of input tokens from user
@@ -24,12 +26,13 @@ pub fn swap(
     amount_in: u64,
     partner_fee_bps: u64,
 ) -> Result<()> {
-    // === 1. Check if vaults are active ===
-    check_stoptap(&ctx.accounts.vault_pda_in, &ctx.accounts.treasury_pda)?;
-    check_stoptap(&ctx.accounts.vault_pda_out, &ctx.accounts.treasury_pda)?;
-
+    let treasury: Account<'_, Treasury> = ctx.accounts.treasury_pda.clone();
     let vault_in: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda_in;
     let vault_out: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda_out;
+
+    // === 1. Check if vaults are active ===
+    check_stoptap(vault_in, &treasury)?;
+    check_stoptap(vault_out, &treasury)?;
 
     // === 2. Validate Pyth price accounts ===
     if ctx.accounts.pyth_price_account_in.key() != vault_in.pyth_price_account {
@@ -47,67 +50,67 @@ pub fn swap(
     let clock: Clock = Clock::get()?;
     let current_timestamp: i64 = clock.unix_timestamp;
 
-    let max_age_vault_in = current_timestamp - ctx.accounts.pyth_price_account_in.price_message.publish_time;
-    let max_age_vault_out = current_timestamp - ctx.accounts.pyth_price_account_out.price_message.publish_time;
+    let max_age_vault_in = current_timestamp
+        - ctx
+            .accounts
+            .pyth_price_account_in
+            .price_message
+            .publish_time;
+    let max_age_vault_out = current_timestamp
+        - ctx
+            .accounts
+            .pyth_price_account_out
+            .price_message
+            .publish_time;
 
     if max_age_vault_in > vault_in.max_age_price as i64 {
         msg!("Vault In: Price feed stale by {} seconds", max_age_vault_in);
         return Err(TyrbineError::OracleDataTooOld.into());
     }
     if max_age_vault_out > vault_out.max_age_price as i64 {
-        msg!("Vault Out: Price feed stale by {} seconds", max_age_vault_out);
+        msg!(
+            "Vault Out: Price feed stale by {} seconds",
+            max_age_vault_out
+        );
         return Err(TyrbineError::OracleDataTooOld.into());
     }
 
-    // === 5. Compute raw output amount ===
-    let token_raw_amount_out: u64 = raw_amount_out(
+    // === 5. Compute swap math ===
+    let result = compute_swap_math(
         amount_in,
-        ctx.accounts.mint_in.decimals,
-        ctx.accounts.mint_out.decimals,
         price_in,
         price_out,
+        ctx.accounts.mint_in.decimals,
+        ctx.accounts.mint_out.decimals,
+        vault_in,
+        vault_out,
+        &treasury,
+        0,
     )?;
 
-    // === 6. Compute swap and protocol fees ===
-    let swap_fee_bps = fees_setting(&vault_in, &vault_out);
-    let protocol_fee_bps = ctx.accounts.treasury_pda.proto_fee_bps;
-
-    // Apply high fee if swap > 10% of liquidity
-    let ten_percent_of_liquidity = vault_out.current_liquidity / 10;
-    let adjusted_swap_fee_bps = if token_raw_amount_out > ten_percent_of_liquidity {
-        swap_fee_bps * 100
-    } else {
-        swap_fee_bps
-    };
-
-    if swap_fee_bps + protocol_fee_bps + partner_fee_bps > 10000 {
-        return Err(TyrbineError::FeeExceeds.into());
-    }
-
-    let (after_fee, lp_fee, protocol_fee, partner_fee) =
-        calculate_fee_amount(token_raw_amount_out, adjusted_swap_fee_bps, protocol_fee_bps, partner_fee_bps)?;
-
-    // === 7. Check liquidity ===
-    if vault_out.current_liquidity < (after_fee + lp_fee + protocol_fee + partner_fee) {
-        return Err(TyrbineError::InsufficientLiquidity.into());
-    }
-
-    // === 8. Update vaults and yields ===
+    // === 6. Update vaults and yields ===
     vault_in.current_liquidity += amount_in;
-    vault_out.current_liquidity -= after_fee;
-    vault_out.cumulative_yield_per_lp += (lp_fee as u128 * SCALE) / vault_out.initial_liquidity as u128;
-    vault_out.protocol_yield += protocol_fee;
+    vault_out.current_liquidity -= result.net_amount_out;
+    vault_out.cumulative_yield_per_lp += (result.lp_fee_amount as u128 * SCALE) / vault_out.initial_liquidity as u128;
+    vault_out.protocol_yield += result.protocol_fee_amount;
 
-    // === 9. Transfer input tokens from user to treasury ===
+    // === 7. Transfer input tokens from user to treasury ===
     let cpi_accounts: token::Transfer<'_> = token::Transfer {
         from: ctx.accounts.signer_ata_in.to_account_info(),
         to: ctx.accounts.treasury_ata_in.to_account_info(),
         authority: ctx.accounts.signer.to_account_info(),
     };
-    token::transfer(CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts), amount_in)?;
+    token::transfer(
+        CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts),
+        amount_in,
+    )?;
 
-    // === 10. Transfer output tokens from treasury to user ===
-    let seeds: &[&[u8]; 3] = &[OXEDIUM_SEED.as_bytes(), TREASURY_SEED.as_bytes(), &[ctx.bumps.treasury_pda]];
+    // === 8. Transfer output tokens from treasury to user ===
+    let seeds: &[&[u8]; 3] = &[
+        OXEDIUM_SEED.as_bytes(),
+        TREASURY_SEED.as_bytes(),
+        &[ctx.bumps.treasury_pda],
+    ];
     let signer_seeds: &[&[&[u8]]; 1] = &[&seeds[..]];
 
     let cpi_accounts_out: token::Transfer<'_> = token::Transfer {
@@ -116,40 +119,49 @@ pub fn swap(
         authority: ctx.accounts.treasury_pda.to_account_info(),
     };
     token::transfer(
-        CpiContext::new_with_signer(ctx.accounts.token_program.to_account_info(), cpi_accounts_out, signer_seeds),
-        after_fee,
+        CpiContext::new_with_signer(
+            ctx.accounts.token_program.to_account_info(),
+            cpi_accounts_out,
+            signer_seeds,
+        ),
+        result.net_amount_out,
     )?;
 
-    // === 11. Transfer partner fee (if applicable) ===
-    if partner_fee > 0 {
-        let partner_fee_account: &AccountInfo<'_> =
-            ctx.accounts.partner_fee_ata.as_ref().ok_or(TyrbineError::MissingSPLAccount)?;
+    // === 9. Transfer partner fee (if applicable) ===
+    if result.partner_fee_amount > 0 {
+        let partner_fee_account: &AccountInfo<'_> = ctx
+            .accounts
+            .partner_fee_ata
+            .as_ref()
+            .ok_or(TyrbineError::MissingSPLAccount)?;
         let cpi_accounts_fee: token::Transfer<'_> = token::Transfer {
             from: ctx.accounts.treasury_ata_out.to_account_info(),
             to: partner_fee_account.to_account_info(),
             authority: ctx.accounts.treasury_pda.to_account_info(),
         };
         token::transfer(
-            CpiContext::new_with_signer(ctx.accounts.token_program.to_account_info(), cpi_accounts_fee, signer_seeds),
-            partner_fee,
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                cpi_accounts_fee,
+                signer_seeds,
+            ),
+            result.partner_fee_amount,
         )?;
     }
 
-    // === 12. Emit swap event for off-chain indexing ===
+    // === 10. Emit swap event for off-chain indexing ===
     emit!(SwapEvent {
         user: ctx.accounts.signer.key(),
-        fee_bps: swap_fee_bps + protocol_fee_bps,
+        fee_bps: result.swap_fee_bps + treasury.fee_bps + partner_fee_bps,
         token_in: vault_in.token_mint,
         token_out: vault_out.token_mint,
-        amount_in,
-        amount_out: after_fee,
-        price_in,
-        price_out,
-        decimals_in: ctx.accounts.mint_in.decimals,
-        decimals_out: ctx.accounts.mint_out.decimals,
-        lp_fee,
-        protocol_fee,
-        partner_fee,
+        amount_in: amount_in,
+        amount_out: result.net_amount_out,
+        price_in: price_in,
+        price_out: price_out,
+        lp_fee: result.lp_fee_amount,
+        protocol_fee: result.protocol_fee_amount,
+        partner_fee: result.partner_fee_amount,
         timestamp: current_timestamp,
     });
 
@@ -165,7 +177,7 @@ pub struct SwapInstructionAccounts<'info> {
     pub mint_in: Account<'info, Mint>,  // input token mint
     pub mint_out: Account<'info, Mint>, // output token mint
 
-    pub pyth_price_account_in: Account<'info, PriceUpdateV2>,  // Pyth price feed for input token
+    pub pyth_price_account_in: Account<'info, PriceUpdateV2>, // Pyth price feed for input token
     pub pyth_price_account_out: Account<'info, PriceUpdateV2>, // Pyth price feed for output token
 
     #[account(mut, token::authority = signer, token::mint = mint_in)]

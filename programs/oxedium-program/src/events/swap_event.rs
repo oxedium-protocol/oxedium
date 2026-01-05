@@ -10,8 +10,6 @@ pub struct SwapEvent {
     pub amount_out: u64,
     pub price_in: u64,
     pub price_out: u64,
-    pub decimals_in: u8,
-    pub decimals_out: u8,
     pub lp_fee: u64,
     pub protocol_fee: u64,
     pub partner_fee: u64,

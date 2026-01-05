@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 pub struct Vault {
     pub create_at_ts: i64,
     pub is_active: bool,
-    pub base_fee: u64, // scale 1:FEE_SCALE
+    pub base_fee: u64,
     pub token_mint: Pubkey,
 
     pub pyth_price_account: Pubkey,
@@ -13,7 +13,8 @@ pub struct Vault {
     pub lp_mint: Pubkey,
     pub initial_liquidity: u64,
     pub current_liquidity: u64,
+    pub max_liquidity: u64,
     
-    pub cumulative_yield_per_lp: u128, // scale 1:SPICE_SCALE
+    pub cumulative_yield_per_lp: u128,
     pub protocol_yield: u64
 }
