@@ -123,5 +123,5 @@ pub struct StakingInstructionAccounts<'info> {
 ## Learn More
 
 - [Whitepaper](https://4dac7oaqhkztsapbsfnjdxiau4yhvykfizpgwajvw2h7xr2bz3qq.arweave.net/4MAvuBA6szkB4ZFakd0ApzB64UVGXmsBNbaP-8dBzuE)
-- [Twitter](https://x.com/0xedium)
+- [X (prev. Twitter)](https://x.com/0xedium)
 - [Community](https://t.me/oxedium_portal)
