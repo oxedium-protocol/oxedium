@@ -70,6 +70,7 @@ pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Res
     Ok(())
 }
 
+/// Accounts required for the unstaking instruction
 #[derive(Accounts)]
 pub struct UnstakingInstructionAccounts<'info> {
     #[account(mut)]

@@ -2,7 +2,7 @@ use anchor_lang::error_code;
 
 
 #[error_code]
-pub enum TyrbineError {
+pub enum OxediumError {
     #[msg("Invalid Admin")]
     InvalidAdmin,
 

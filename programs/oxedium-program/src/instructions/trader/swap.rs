@@ -11,7 +11,7 @@ use crate::{
     },
     events::SwapEvent,
     states::{Treasury, Vault},
-    utils::{TyrbineError, OXEDIUM_SEED, SCALE, TREASURY_SEED, VAULT_SEED},
+    utils::{OxediumError, OXEDIUM_SEED, SCALE, TREASURY_SEED, VAULT_SEED},
 };
 
 /// Swap tokens from one vault to another, optionally in quote-only mode
@@ -36,10 +36,10 @@ pub fn swap(
 
     // === 2. Validate Pyth price accounts ===
     if ctx.accounts.pyth_price_account_in.key() != vault_in.pyth_price_account {
-        return Err(TyrbineError::InvalidPythAccount.into());
+        return Err(OxediumError::InvalidPythAccount.into());
     }
     if ctx.accounts.pyth_price_account_out.key() != vault_out.pyth_price_account {
-        return Err(TyrbineError::InvalidPythAccount.into());
+        return Err(OxediumError::InvalidPythAccount.into());
     }
 
     // === 3. Read prices from Pyth ===
@@ -65,14 +65,14 @@ pub fn swap(
 
     if max_age_vault_in > vault_in.max_age_price as i64 {
         msg!("Vault In: Price feed stale by {} seconds", max_age_vault_in);
-        return Err(TyrbineError::OracleDataTooOld.into());
+        return Err(OxediumError::OracleDataTooOld.into());
     }
     if max_age_vault_out > vault_out.max_age_price as i64 {
         msg!(
             "Vault Out: Price feed stale by {} seconds",
             max_age_vault_out
         );
-        return Err(TyrbineError::OracleDataTooOld.into());
+        return Err(OxediumError::OracleDataTooOld.into());
     }
 
     // === 5. Compute swap math ===
@@ -133,7 +133,7 @@ pub fn swap(
             .accounts
             .partner_fee_ata
             .as_ref()
-            .ok_or(TyrbineError::MissingSPLAccount)?;
+            .ok_or(OxediumError::MissingSPLAccount)?;
         let cpi_accounts_fee: token::Transfer<'_> = token::Transfer {
             from: ctx.accounts.treasury_ata_out.to_account_info(),
             to: partner_fee_account.to_account_info(),

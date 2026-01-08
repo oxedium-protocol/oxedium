@@ -1,4 +1,4 @@
-use crate::utils::TyrbineError;
+use crate::utils::OxediumError;
 
 /// Calculates the resulting amount after applying LP, protocol, and partner fees.
 /// 
@@ -16,7 +16,7 @@ pub fn calculate_fee_amount(
     lp_fee_bps: u64,
     protocol_fee_bps: u64,
     partner_fee_bps: u64
-) -> Result<(u64, u64, u64, u64), TyrbineError> {
+) -> Result<(u64, u64, u64, u64), OxediumError> {
 
     // Calculate LP fee from the original amount
     let lp_fee = fee(amount, lp_fee_bps)?;
@@ -32,7 +32,7 @@ pub fn calculate_fee_amount(
         .checked_sub(lp_fee)
         .and_then(|v| v.checked_sub(protocol_fee))
         .and_then(|v| v.checked_sub(partner_fee))
-        .ok_or(TyrbineError::Overflow)?;
+        .ok_or(OxediumError::Overflow)?;
 
     // Return the remaining amount and all individual fees
     Ok((amount_after_fee, lp_fee, protocol_fee, partner_fee))
@@ -46,12 +46,12 @@ pub fn calculate_fee_amount(
 ///
 /// # Returns
 /// * `Result<u64, TyrbineError>` - Calculated fee, rounded up to ensure at least 1 unit if applicable
-fn fee(amount: u64, bps: u64) -> Result<u64, TyrbineError> {
+fn fee(amount: u64, bps: u64) -> Result<u64, OxediumError> {
     if bps == 0 || amount == 0 {
         return Ok(0);
     }
     let f = amount
-        .checked_mul(bps).ok_or(TyrbineError::Overflow)?
+        .checked_mul(bps).ok_or(OxediumError::Overflow)?
         / 10_000;
     Ok(f.max(1).min(amount)) // at least 1, but no more than amount
 }

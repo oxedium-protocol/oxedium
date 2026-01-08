@@ -1,4 +1,4 @@
-use crate::{components::{calculate_fee_amount, fees_setting, raw_amount_out}, states::{Treasury, Vault}, utils::TyrbineError};
+use crate::{components::{calculate_fee_amount, fees_setting, raw_amount_out}, states::{Treasury, Vault}, utils::OxediumError};
 
 pub struct SwapMathResult {
     pub swap_fee_bps: u64,
@@ -19,7 +19,7 @@ pub fn compute_swap_math(
     vault_out: &Vault,
     treasury: &Treasury,
     partner_fee_bps: u64,
-) -> Result<SwapMathResult, TyrbineError> {
+) -> Result<SwapMathResult, OxediumError> {
     let swap_fee_bps = fees_setting(&vault_in, &vault_out);
     let protocol_fee_bps = treasury.fee_bps;
 
@@ -32,7 +32,7 @@ pub fn compute_swap_math(
     )?;
 
     if swap_fee_bps + protocol_fee_bps + partner_fee_bps > 10_000 {
-        return Err(TyrbineError::FeeExceeds.into());
+        return Err(OxediumError::FeeExceeds.into());
     }
 
     let (after_fee, lp_fee, protocol_fee, partner_fee) =
@@ -44,7 +44,7 @@ pub fn compute_swap_math(
         )?;
     
     if vault_out.current_liquidity < (after_fee + lp_fee + protocol_fee + partner_fee) {
-        return Err(TyrbineError::InsufficientLiquidity.into());
+        return Err(OxediumError::InsufficientLiquidity.into());
     }
 
     Ok(SwapMathResult {

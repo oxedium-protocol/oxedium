@@ -17,7 +17,7 @@ pub fn staking(ctx: Context<StakingInstructionAccounts>, amount: u64) -> Result<
     check_stoptap(vault, &ctx.accounts.treasury_pda)?;
 
     if vault.current_liquidity + amount > vault.max_liquidity {
-        return Err(TyrbineError::VaultCapacityExceeded.into());
+        return Err(OxediumError::VaultCapacityExceeded.into());
     }
 
     // Get the cumulative yield per LP token from the vault
