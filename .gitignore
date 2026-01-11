@@ -5,7 +5,6 @@ target
 test-ledger
 .yarn
 Makefile
-admin
 
 # Miscellaneous
 app/**/*.class
@@ -49,6 +48,4 @@ app/android/app/debug
 app/android/app/profile
 app/android/app/release
 
-# Makefile
-app/Makefile
-app/.env
+/admin/
