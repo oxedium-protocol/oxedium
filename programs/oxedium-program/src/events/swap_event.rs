@@ -12,6 +12,5 @@ pub struct SwapEvent {
     pub price_out: u64,
     pub lp_fee: u64,
     pub protocol_fee: u64,
-    pub partner_fee: u64,
     pub timestamp: i64,
 }

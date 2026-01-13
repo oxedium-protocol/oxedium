@@ -27,7 +27,6 @@ mod swap {
             vault_in,
             vault_out,
             treasury,
-            0
         )
         .expect("swap math should succeed");
 
@@ -36,17 +35,16 @@ mod swap {
         println!("After fee:     {}", result.net_amount_out);
         println!("LP fee:        {}", result.lp_fee_amount);
         println!("Protocol fee:  {}", result.protocol_fee_amount);
-        println!("Partner fee:   {}", result.partner_fee_amount);
 
         let total_fee =
-            result.lp_fee_amount + result.protocol_fee_amount + result.partner_fee_amount;
+            result.lp_fee_amount + result.protocol_fee_amount;
 
         println!("Total fee:     {}", total_fee);
 
         //assert_eq!(result.after_fee, 0);
         assert_eq!(
             result.raw_amount_out,
-            result.net_amount_out + result.lp_fee_amount + result.protocol_fee_amount + result.partner_fee_amount
+            result.net_amount_out + result.lp_fee_amount + result.protocol_fee_amount
         );
     }
 }

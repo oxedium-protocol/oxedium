@@ -25,7 +25,7 @@ pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Res
     }
 
     if extra_fee_bps > 0 {
-        unstake_amount -= calculate_fee_amount(unstake_amount, extra_fee_bps, 0, 0)?.0;
+        unstake_amount -= calculate_fee_amount(unstake_amount, extra_fee_bps, 0)?.0;
     }
 
     // Burn LP tokens

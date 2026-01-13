@@ -6,7 +6,6 @@ pub struct SwapMathResult {
     pub net_amount_out: u64,
     pub lp_fee_amount: u64,
     pub protocol_fee_amount: u64,
-    pub partner_fee_amount: u64,
 }
 
 pub fn compute_swap_math(
@@ -18,7 +17,6 @@ pub fn compute_swap_math(
     vault_in: &Vault,
     vault_out: &Vault,
     treasury: &Treasury,
-    partner_fee_bps: u64,
 ) -> Result<SwapMathResult, OxediumError> {
     let swap_fee_bps = fees_setting(&vault_in, &vault_out);
     let protocol_fee_bps = treasury.fee_bps;
@@ -31,19 +29,18 @@ pub fn compute_swap_math(
         price_out,
     )?;
 
-    if swap_fee_bps + protocol_fee_bps + partner_fee_bps > 10_000 {
+    if swap_fee_bps + protocol_fee_bps > 10_000 {
         return Err(OxediumError::FeeExceeds.into());
     }
 
-    let (after_fee, lp_fee, protocol_fee, partner_fee) =
+    let (after_fee, lp_fee, protocol_fee) =
         calculate_fee_amount(
             raw_out,
             swap_fee_bps,
             protocol_fee_bps,
-            partner_fee_bps,
         )?;
     
-    if vault_out.current_liquidity < (after_fee + lp_fee + protocol_fee + partner_fee) {
+    if vault_out.current_liquidity < (after_fee + lp_fee + protocol_fee) {
         return Err(OxediumError::InsufficientLiquidity.into());
     }
 
@@ -53,6 +50,5 @@ pub fn compute_swap_math(
         net_amount_out: after_fee,
         lp_fee_amount: lp_fee,
         protocol_fee_amount: protocol_fee,
-        partner_fee_amount: partner_fee,
     })
 }

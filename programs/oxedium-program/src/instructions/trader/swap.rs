@@ -19,12 +19,11 @@ use crate::{
 /// # Arguments
 /// * `ctx` - context containing all accounts
 /// * `amount_in` - amount of input tokens from user
-/// * `partner_fee_bps` - optional partner fee in basis points
-/// * `quote_only` - if true, only calculates output without executing transfers
+/// * `minimum_out` - minimum amount output
 pub fn swap(
     ctx: Context<SwapInstructionAccounts>,
     amount_in: u64,
-    partner_fee_bps: u64,
+    minimum_out: u64,
 ) -> Result<()> {
     let treasury: Account<'_, Treasury> = ctx.accounts.treasury_pda.clone();
     let vault_in: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda_in;
@@ -85,8 +84,11 @@ pub fn swap(
         vault_in,
         vault_out,
         &treasury,
-        0,
     )?;
+
+    if result.net_amount_out < minimum_out {
+        return Err(OxediumError::HighSlippage.into());
+    }
 
     // === 6. Update vaults and yields ===
     vault_in.current_liquidity += amount_in;
@@ -127,32 +129,10 @@ pub fn swap(
         result.net_amount_out,
     )?;
 
-    // === 9. Transfer partner fee (if applicable) ===
-    if result.partner_fee_amount > 0 {
-        let partner_fee_account: &AccountInfo<'_> = ctx
-            .accounts
-            .partner_fee_ata
-            .as_ref()
-            .ok_or(OxediumError::MissingSPLAccount)?;
-        let cpi_accounts_fee: token::Transfer<'_> = token::Transfer {
-            from: ctx.accounts.treasury_ata_out.to_account_info(),
-            to: partner_fee_account.to_account_info(),
-            authority: ctx.accounts.treasury_pda.to_account_info(),
-        };
-        token::transfer(
-            CpiContext::new_with_signer(
-                ctx.accounts.token_program.to_account_info(),
-                cpi_accounts_fee,
-                signer_seeds,
-            ),
-            result.partner_fee_amount,
-        )?;
-    }
-
-    // === 10. Emit swap event for off-chain indexing ===
+    // === 9. Emit swap event for off-chain indexing ===
     emit!(SwapEvent {
         user: ctx.accounts.signer.key(),
-        fee_bps: result.swap_fee_bps + treasury.fee_bps + partner_fee_bps,
+        fee_bps: result.swap_fee_bps + treasury.fee_bps,
         token_in: vault_in.token_mint,
         token_out: vault_out.token_mint,
         amount_in: amount_in,
@@ -161,7 +141,6 @@ pub fn swap(
         price_out: price_out,
         lp_fee: result.lp_fee_amount,
         protocol_fee: result.protocol_fee_amount,
-        partner_fee: result.partner_fee_amount,
         timestamp: current_timestamp,
     });
 
@@ -205,8 +184,6 @@ pub struct SwapInstructionAccounts<'info> {
 
     #[account(mut, token::authority = treasury_pda, token::mint = mint_out)]
     pub treasury_ata_out: Account<'info, TokenAccount>, // treasury output token account
-
-    pub partner_fee_ata: Option<AccountInfo<'info>>, // optional partner fee account
 
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub token_program: Program<'info, Token>,

@@ -53,7 +53,7 @@ pub mod oxedium_program {
     }
 
     // Trader instruction
-    pub fn swap(ctx: Context<SwapInstructionAccounts>, amount_in: u64, partner_fee: u64) -> Result<()> {
-        instructions::trader::swap(ctx, amount_in, partner_fee)
+    pub fn swap(ctx: Context<SwapInstructionAccounts>, amount_in: u64, minimum_out: u64) -> Result<()> {
+        instructions::trader::swap(ctx, amount_in, minimum_out)
     }
 }

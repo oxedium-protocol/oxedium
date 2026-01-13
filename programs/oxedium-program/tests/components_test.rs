@@ -10,19 +10,17 @@ fn calculating_fee_amount() {
     let amount_out: u64 = 1000000;
     let fee = 50 * 100;
     let protocol_fee = 10;
-    let partner_fee = 10;
     // Call the fee function: returns (amount after all fees, LP fee, partner fee, protocol fee)
-    let (after_fee, lp_fee, protocol_fee, partner_fee) = calculate_fee_amount(amount_out, fee, protocol_fee, partner_fee).unwrap();
+    let (after_fee, lp_fee, protocol_fee) = calculate_fee_amount(amount_out, fee, protocol_fee).unwrap();
 
     // Print results for clarity
     println!("Input: {}", amount_out);
     println!("After fee: {}", after_fee);
     println!("LP fee ({}%): {}", (100 / fee) as f64, lp_fee);
     println!("Protocol fee: {}", protocol_fee);
-    println!("Partner fee: {}", partner_fee);
 
     // Check that the sum after distributing all fees equals the original amount
-    let total: u64 = after_fee + lp_fee + partner_fee + protocol_fee;
+    let total: u64 = after_fee + lp_fee + protocol_fee;
     assert_eq!(total, amount_out as u64, "The total after distributing fees does not equal the original amount");
 }
 
