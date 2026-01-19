@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, token::{self, burn, Burn, Mint, Token, TokenAccount, Transfer}};
-use crate::{components::{calculate_fee_amount, calculate_staker_yield, check_stoptap}, states::{Staker, Treasury, Vault}, utils::*};
+use crate::{components::{calculate_fee_amount, calculate_staker_yield, check_stoptap}, events::UnstakingEvent, states::{Staker, Treasury, Vault}, utils::*};
 
 #[inline(never)]
 pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Result<()> {
@@ -65,7 +65,12 @@ pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Res
     vault.initial_liquidity -= amount;
     vault.current_liquidity -= unstake_amount;
 
-    msg!("Unstaking {{staker: {}, mint: {}, amount: {}, extra_fee_bps: {}}}", ctx.accounts.signer.key(), vault.token_mint.key(), unstake_amount, extra_fee_bps);
+    emit!(UnstakingEvent {
+        user: ctx.accounts.signer.key(),
+        mint: vault.token_mint.key(),
+        amount: amount,
+        extra_fee_bps: extra_fee_bps
+    });
 
     Ok(())
 }

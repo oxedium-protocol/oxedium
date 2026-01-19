@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, token::{self, Mint, MintTo, Token, TokenAccount}};
-use crate::{components::{calculate_staker_yield, check_stoptap}, states::{Staker, Treasury, Vault}, utils::*};
+use crate::{components::{calculate_staker_yield, check_stoptap}, events::StakingEvent, states::{Staker, Treasury, Vault}, utils::*};
 
 /// Stake a given amount of vault tokens and mint LP tokens to the staker
 ///
@@ -68,6 +68,12 @@ pub fn staking(ctx: Context<StakingInstructionAccounts>, amount: u64) -> Result<
 
     // Log the staking operation
     msg!("Staking {{staker: {}, mint: {}, amount: {}}}", ctx.accounts.signer.key(), vault.token_mint.key(), amount);
+
+    emit!(StakingEvent {
+        user: ctx.accounts.signer.key(),
+        mint: vault.token_mint.key(),
+        amount: amount
+    });
 
     Ok(())
 }

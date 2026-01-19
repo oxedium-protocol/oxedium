@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
 
-use crate::{components::{calculate_staker_yield, check_stoptap}, states::{Staker, Treasury, Vault}, utils::{MINT_SEED, STAKER_SEED, TREASURY_SEED, OXEDIUM_SEED, VAULT_SEED}};
+use crate::{components::{calculate_staker_yield, check_stoptap}, events::ClaimEvent, states::{Staker, Treasury, Vault}, utils::{MINT_SEED, OXEDIUM_SEED, STAKER_SEED, TREASURY_SEED, VAULT_SEED}};
 
 /// Claim accumulated yield for a staker from a vault
 ///
@@ -50,8 +50,11 @@ pub fn claim(ctx: Context<ClaimInstructionAccounts>) -> Result<()> {
     staker.last_cumulative_yield = cumulative_yield_per_lp;
     staker.pending_claim = 0;
     
-    // Log the claim for transparency
-    msg!("Claim {{staker: {}, mint: {}, amount: {}}}", ctx.accounts.signer.key(), vault.token_mint.key(), amount);
+    emit!(ClaimEvent {
+        user: ctx.accounts.signer.key(),
+        mint: vault.token_mint.key(),
+        amount: amount
+    });
 
     Ok(())
 }
