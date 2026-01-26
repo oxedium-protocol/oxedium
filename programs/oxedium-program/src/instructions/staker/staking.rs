@@ -66,9 +66,6 @@ pub fn staking(ctx: Context<StakingInstructionAccounts>, amount: u64) -> Result<
     vault.initial_liquidity += amount;
     vault.current_liquidity += amount;
 
-    // Log the staking operation
-    msg!("Staking {{staker: {}, mint: {}, amount: {}}}", ctx.accounts.signer.key(), vault.token_mint.key(), amount);
-
     emit!(StakingEvent {
         user: ctx.accounts.signer.key(),
         mint: vault.token_mint.key(),

@@ -140,8 +140,7 @@ pub fn swap(
         price_in: price_in,
         price_out: price_out,
         lp_fee: result.lp_fee_amount,
-        protocol_fee: result.protocol_fee_amount,
-        timestamp: current_timestamp,
+        protocol_fee: result.protocol_fee_amount
     });
 
     Ok(())
