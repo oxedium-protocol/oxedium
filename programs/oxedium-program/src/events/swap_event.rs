@@ -8,8 +8,8 @@ pub struct SwapEvent {
     pub token_out: Pubkey,
     pub amount_in: u64,
     pub amount_out: u64,
-    pub price_in: i64,
-    pub price_out: i64,
+    pub price_in: u64,
+    pub price_out: u64,
     pub lp_fee: u64,
     pub protocol_fee: u64
 }

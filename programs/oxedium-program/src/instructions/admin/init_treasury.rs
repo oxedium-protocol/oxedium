@@ -52,12 +52,13 @@ pub struct InitTreasuryInstructionAccounts<'info> {
     /// - 1 byte: bool `stoptap`
     /// - 32 bytes: `admin` Pubkey
     /// - 8 bytes: `proto_fee_bps` u64 — protocol fee in basis points, taken from the total swap fee
+    /// - 8 bytes: `deviation` u64 — max swap %
     #[account(
         init,
         payer = signer,
         seeds = [OXEDIUM_SEED.as_bytes(), TREASURY_SEED.as_bytes()],
         bump,
-        space = 8 + 1 + 32 + 8,
+        space = 8 + 1 + 32 + 8 + 8,
     )]
     pub treasury_pda: Account<'info, Treasury>,
 

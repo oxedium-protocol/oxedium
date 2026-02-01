@@ -86,7 +86,7 @@ pub struct InitVaultInstructionAccounts<'info> {
         payer = signer,
         seeds = [VAULT_SEED.as_bytes(), vault_mint.key().as_ref()],
         bump,
-        space = 8 + 8 + 1 + 8 + 32 + 32 + 8 + 32 + 8 + 8 + 8 + 16 + 8,
+        space = 8 + 8 + 32 + 32 + 8 + 32 + 8 + 8 + 16 + 8,
     )]
     pub vault_pda: Account<'info, Vault>,
 
