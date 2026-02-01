@@ -15,7 +15,6 @@ pub fn update_vault(
     is_active: bool,
     base_fee: u64,
     max_age_price: u64,
-    max_liquidity: u64,
 ) -> Result<()> {
     let treasury: Account<'_, Treasury> = ctx.accounts.treasury_pda.clone();
     let vault: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda;
@@ -28,7 +27,14 @@ pub fn update_vault(
     vault.base_fee = base_fee;                       // set the base fee for the vault
     vault.pyth_price_account = ctx.accounts.pyth_price_account.key(); // update Pyth price feed
     vault.max_age_price = max_age_price;             // max allowed age of price feed
-    vault.max_liquidity = max_liquidity;
+
+    // Log the update for transparency
+    msg!("UpdateVault {{mint: {}, is_active: {}, base_fee: {}, max_age_price: {}}}", 
+        vault.token_mint.key(), 
+        vault.is_active, 
+        vault.base_fee,
+        vault.max_age_price
+    );
 
     Ok(())
 }

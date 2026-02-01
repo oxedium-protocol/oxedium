@@ -64,8 +64,8 @@ fn testing_raw_amount_out() {
 #[test]
 fn testing_fees_setting() {
     let pubkey = Pubkey::default();
-    let vault_in = Vault {create_at_ts: 1111, base_fee: 1, initial_liquidity: 1000000000000, current_liquidity: 900000000000, max_liquidity: 1000, is_active: true, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
-    let vault_out = Vault{create_at_ts: 1111, base_fee: 1, initial_liquidity: 150000000000, current_liquidity: 100000000000, max_liquidity: 1000, is_active: true, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
+    let vault_in = Vault {create_at_ts: 1111, base_fee: 1, initial_liquidity: 1000000000000, current_liquidity: 900000000000, is_active: true, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
+    let vault_out = Vault{create_at_ts: 1111, base_fee: 1, initial_liquidity: 150000000000, current_liquidity: 100000000000, is_active: true, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
 
     let fee = fees_setting(&vault_in, &vault_out);
 

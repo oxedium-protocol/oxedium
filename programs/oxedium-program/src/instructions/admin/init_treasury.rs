@@ -26,8 +26,9 @@ pub fn init_treasury(
 
     // Set the treasury fields
     treasury.admin = ctx.accounts.signer.key();  // admin public key
-    treasury.stoptap = false;                     // stop-tap flag, default false
+    treasury.stoptap = false;                  // stop-tap flag, default false
     treasury.fee_bps = protocol_fee_bps;     // protocol fee in basis points
+    treasury.deviation = 10;                // 10%
 
     Ok(())
 }

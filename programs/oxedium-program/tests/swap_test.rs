@@ -14,9 +14,9 @@ mod swap {
         let decimals_out = 6;
 
         let pubkey = Pubkey::default();
-        let vault_in = &Vault{create_at_ts: 1111, base_fee: 1, initial_liquidity: 1000000000000, current_liquidity: 1000000000000, max_liquidity: 0, is_active: true, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
-        let vault_out = &Vault{create_at_ts: 1111, base_fee: 1, initial_liquidity: 150000000000, current_liquidity: 150000000000, max_liquidity: 0, is_active: true, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
-        let treasury = &Treasury{stoptap: false, admin: pubkey, fee_bps: 1};
+        let vault_in = &Vault{create_at_ts: 1111, base_fee: 1, initial_liquidity: 1000000000000, current_liquidity: 1000000000000, is_active: true, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
+        let vault_out = &Vault{create_at_ts: 1111, base_fee: 1, initial_liquidity: 150000000000, current_liquidity: 150000000000, is_active: true, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
+        let treasury = &Treasury{stoptap: false, admin: pubkey, fee_bps: 1, deviation: 10};
 
         let result = compute_swap_math(
             amount_in,

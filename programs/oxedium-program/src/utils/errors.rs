@@ -77,7 +77,4 @@ pub enum OxediumError {
 
     #[msg("The fee exceeds 100%")]
     FeeExceeds,
-
-    #[msg("Vault capacity exceeded")]
-    VaultCapacityExceeded
 }

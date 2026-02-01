@@ -23,16 +23,16 @@ pub mod oxedium_program {
         instructions::admin::init_treasury(ctx, proto_fee)
     }
 
-    pub fn update_treasury(ctx: Context<UpdateTreasuryInstructionAccounts>, stoptap: bool, proto_fee: u64) -> Result<()> {
-        instructions::admin::update_treasury(ctx, stoptap, proto_fee)
+    pub fn update_treasury(ctx: Context<UpdateTreasuryInstructionAccounts>, stoptap: bool, proto_fee: u64, deviation: u64) -> Result<()> {
+        instructions::admin::update_treasury(ctx, stoptap, proto_fee, deviation)
     }
 
-    pub fn init_vault(ctx: Context<InitVaultInstructionAccounts>, is_active: bool, base_fee: u64, max_age_price: u64, max_liquidity: u64) -> Result<()> {
-        instructions::admin::init_vault(ctx, is_active, base_fee, max_age_price, max_liquidity)
+    pub fn init_vault(ctx: Context<InitVaultInstructionAccounts>, is_active: bool, base_fee: u64, max_age_price: u64) -> Result<()> {
+        instructions::admin::init_vault(ctx, is_active, base_fee, max_age_price)
     }
 
-    pub fn update_vault(ctx: Context<UpdateVaultInstructionAccounts>, is_active: bool, base_fee: u64, max_age_price: u64, max_liquidity: u64) -> Result<()> {
-        instructions::admin::update_vault(ctx, is_active, base_fee, max_age_price, max_liquidity)
+    pub fn update_vault(ctx: Context<UpdateVaultInstructionAccounts>, is_active: bool, base_fee: u64, max_age_price: u64) -> Result<()> {
+        instructions::admin::update_vault(ctx, is_active, base_fee, max_age_price)
     }
 
     pub fn collect(ctx: Context<CollectInstructionAccounts>) -> Result<()> {

@@ -13,7 +13,6 @@ pub struct Vault {
     pub lp_mint: Pubkey,
     pub initial_liquidity: u64,
     pub current_liquidity: u64,
-    pub max_liquidity: u64,
     
     pub cumulative_yield_per_lp: u128,
     pub protocol_yield: u64

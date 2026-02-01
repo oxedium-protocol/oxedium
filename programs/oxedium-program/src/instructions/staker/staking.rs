@@ -16,10 +16,6 @@ pub fn staking(ctx: Context<StakingInstructionAccounts>, amount: u64) -> Result<
     // Check if the vault is active and stop-tap is not enabled
     check_stoptap(vault, &ctx.accounts.treasury_pda)?;
 
-    if vault.current_liquidity + amount > vault.max_liquidity {
-        return Err(OxediumError::VaultCapacityExceeded.into());
-    }
-
     // Get the cumulative yield per LP token from the vault
     let cumulative_yield: u128 = vault.cumulative_yield_per_lp;
     // Get the staker's current LP token balance

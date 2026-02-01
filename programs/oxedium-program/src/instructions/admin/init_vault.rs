@@ -15,7 +15,6 @@ pub fn init_vault(
     is_active: bool,
     base_fee: u64,
     max_age_price: u64,
-    max_liquidity: u64,
 ) -> Result<()> {
     // Ensure the caller is an admin using the Treasury account
     check_admin(&ctx.accounts.treasury_pda, &ctx.accounts.signer)?;
@@ -36,7 +35,6 @@ pub fn init_vault(
     vault.lp_mint = ctx.accounts.lp_mint.key();              // LP token mint for liquidity providers
     vault.initial_liquidity = 0;                             // initial liquidity in the vault
     vault.current_liquidity = 0;                             // current liquidity in the vault
-    vault.max_liquidity = max_liquidity;                     // max liquidity in the vault
     vault.cumulative_yield_per_lp = 0;                       // cumulative yield per LP token
     vault.protocol_yield = 0;                                // yield earned by the protocol
 

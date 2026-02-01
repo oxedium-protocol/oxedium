@@ -11,7 +11,8 @@ use anchor_lang::prelude::*;
 pub fn update_treasury(
     ctx: Context<UpdateTreasuryInstructionAccounts>,
     stoptap: bool,
-    protocol_fee_bps: u64
+    protocol_fee_bps: u64,
+    deviation: u64
 ) -> Result<()> {
     let treasury: &mut Account<'_, Treasury> = &mut ctx.accounts.treasury_pda;
 
@@ -22,12 +23,14 @@ pub fn update_treasury(
     treasury.admin = ctx.accounts.new_admin.key(); // set new admin
     treasury.stoptap = stoptap;                    // enable/disable operations
     treasury.fee_bps = protocol_fee_bps;     // protocol fee in bps
+    treasury.deviation = deviation;
 
     // Log the update for transparency
-    msg!("UpdateTreasury {{new_admin: {}, stoptap: {}, protocol_fee: {}}}", 
+    msg!("UpdateTreasury {{admin: {}, stoptap: {}, protocol_fee: {}, deviation: {}}}", 
         treasury.admin.key(), 
         treasury.stoptap, 
-        treasury.fee_bps
+        treasury.fee_bps,
+        treasury.deviation
     );
 
     Ok(())

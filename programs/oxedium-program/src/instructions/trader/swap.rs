@@ -92,7 +92,7 @@ pub fn swap(
 
     // === 6. Update vaults and yields ===
     vault_in.current_liquidity += amount_in;
-    vault_out.current_liquidity -= result.net_amount_out;
+    vault_out.current_liquidity -= result.raw_amount_out;
     vault_out.cumulative_yield_per_lp += (result.lp_fee_amount as u128 * SCALE) / vault_out.initial_liquidity as u128;
     vault_out.protocol_yield += result.protocol_fee_amount;
 

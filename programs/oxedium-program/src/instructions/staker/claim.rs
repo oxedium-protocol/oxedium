@@ -49,6 +49,7 @@ pub fn claim(ctx: Context<ClaimInstructionAccounts>) -> Result<()> {
     // Update staker PDA state
     staker.last_cumulative_yield = cumulative_yield_per_lp;
     staker.pending_claim = 0;
+    vault.current_liquidity -= amount;
     
     emit!(ClaimEvent {
         user: ctx.accounts.signer.key(),
