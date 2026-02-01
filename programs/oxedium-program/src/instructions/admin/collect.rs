@@ -41,7 +41,7 @@ pub fn collect(ctx: Context<CollectInstructionAccounts>) -> Result<()> {
     vault.protocol_yield -= protocol_yield;
 
     // Log the collection for transparency
-    msg!("Collected {{mint: {}, amount: {}}}", vault.token_mint.key(), protocol_yield);
+    msg!("Collect {{mint: {}, amount: {}}}", vault.token_mint.key(), protocol_yield);
 
     Ok(())
 }

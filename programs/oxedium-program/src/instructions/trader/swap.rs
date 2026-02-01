@@ -40,8 +40,8 @@ pub fn swap(
     }
 
     // === 3. Read prices from Pyth ===
-    let price_in: u64 = ctx.accounts.pyth_price_account_in.price_message.price as u64;
-    let price_out: u64 = ctx.accounts.pyth_price_account_out.price_message.price as u64;
+    let oracle_in: Account<'_, PriceUpdateV2>  = ctx.accounts.pyth_price_account_in.clone();
+    let oracle_out: Account<'_, PriceUpdateV2>  = ctx.accounts.pyth_price_account_out.clone();
 
     // === 4. Check price feed freshness ===
     let clock: Clock = Clock::get()?;
@@ -75,8 +75,8 @@ pub fn swap(
     // === 5. Compute swap math ===
     let result = compute_swap_math(
         amount_in,
-        price_in,
-        price_out,
+        oracle_in.price_message,
+        oracle_out.price_message,
         ctx.accounts.mint_in.decimals,
         ctx.accounts.mint_out.decimals,
         vault_in,
@@ -135,8 +135,8 @@ pub fn swap(
         token_out: vault_out.token_mint,
         amount_in: amount_in,
         amount_out: result.net_amount_out,
-        price_in: price_in,
-        price_out: price_out,
+        price_in: oracle_in.price_message.price,
+        price_out: oracle_out.price_message.price,
         lp_fee: result.lp_fee_amount,
         protocol_fee: result.protocol_fee_amount
     });

@@ -62,13 +62,13 @@ pub fn unstaking(ctx: Context<UnstakingInstructionAccounts>, amount: u64) -> Res
     staker.last_cumulative_yield = cumulative_yield;
 
     // Update vault liquidity
-    vault.initial_liquidity -= amount;
+    vault.initial_liquidity -= unstake_amount;
     vault.current_liquidity -= unstake_amount;
 
     emit!(UnstakingEvent {
         user: ctx.accounts.signer.key(),
         mint: vault.token_mint.key(),
-        amount: amount,
+        amount: unstake_amount,
         extra_fee_bps: extra_fee_bps
     });
 

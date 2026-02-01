@@ -2,13 +2,11 @@
 mod swap {
     use anchor_lang::prelude::Pubkey;
     use oxedium_program::{components::compute_swap_math, states::{Treasury, Vault}};
+    use pyth_solana_receiver_sdk::price_update::PriceFeedMessage;
 
     #[test]
     fn test_swap_math_output() {
         let amount_in = 1000000000; // 1 token (9 decimals)
-
-        let price_in = 13524400000;   // $134.00
-        let price_out = 100000000;   // $0.9998
 
         let decimals_in = 9;
         let decimals_out = 6;
@@ -20,8 +18,8 @@ mod swap {
 
         let result = compute_swap_math(
             amount_in,
-            price_in,
-            price_out,
+            PriceFeedMessage { feed_id: [8; 32], price: 10000000000, conf: 15, exponent: 8, publish_time: 1, prev_publish_time: 1, ema_price: 1, ema_conf: 1 },
+            PriceFeedMessage { feed_id: [8; 32], price: 100000000, conf: 15, exponent: 8, publish_time: 1, prev_publish_time: 1, ema_price: 1, ema_conf: 1 },
             decimals_in,
             decimals_out,
             vault_in,

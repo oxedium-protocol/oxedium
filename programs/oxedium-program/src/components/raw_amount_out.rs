@@ -1,59 +1,56 @@
+use pyth_solana_receiver_sdk::price_update::PriceFeedMessage;
 use crate::utils::{SCALE, OxediumError};
 
-/// Calculates the raw output amount for a token swap using fixed-point math.
-/// Supports dust swaps by avoiding early division and rounding only once at the end.
-///
-/// # Arguments
-/// * `amount_in` - Input token amount in smallest units
-/// * `decimals_in` - Decimals of the input token
-/// * `decimals_out` - Decimals of the output token
-/// * `price_in` - Price of the input token (e.g. Pyth price, scaled)
-/// * `price_out` - Price of the output token (e.g. Pyth price, scaled)
-///
-/// # Returns
-/// * `Result<u64, TyrbineError>` - Output token amount in smallest units
 pub fn raw_amount_out(
     amount_in: u64,
     decimals_in: u8,
     decimals_out: u8,
-    price_in: u64,
-    price_out: u64,
+    price_message_in: PriceFeedMessage,
+    price_message_out: PriceFeedMessage,
 ) -> Result<u64, OxediumError> {
     let amount_in = amount_in as u128;
-    let price_in = price_in as u128;
-    let price_out = price_out as u128;
 
-    // 1. Convert input amount into fixed-point token representation
-    //    amount_fp = amount_in / 10^decimals_in (in FP precision)
+    // ---------- 1. Adverse prices ----------
+    // input token -> lower bound
+    let price_in = (price_message_in.price as i128)
+        .checked_sub(price_message_in.conf as i128)
+        .ok_or(OxediumError::OverflowInSub)? as u128;
+
+    // output token -> upper bound
+    let price_out = (price_message_out.price as i128)
+        .checked_add(price_message_out.conf as i128)
+        .ok_or(OxediumError::OverflowInAdd)? as u128;
+
+    let exp_in = price_message_in.exponent.abs() as u32;
+    let exp_out = price_message_out.exponent.abs() as u32;
+
+    // ---------- 2. amount_in → fixed point ----------
     let amount_fp = amount_in
         .checked_mul(SCALE)
         .ok_or(OxediumError::OverflowInMul)?
         .checked_div(10u128.pow(decimals_in as u32))
         .ok_or(OxediumError::OverflowInDiv)?;
 
-    // 2. Convert input token amount into USD value (still fixed-point)
-    //    Assumes price is scaled (e.g. 1e8 for Pyth)
+    // ---------- 3. token_in → USD ----------
     let usd_fp = amount_fp
         .checked_mul(price_in)
         .ok_or(OxediumError::OverflowInMul)?
-        .checked_div(1_000_000_00) // price scale (adjust if different)
+        .checked_div(10u128.pow(exp_in))
         .ok_or(OxediumError::OverflowInDiv)?;
 
-    // 3. Convert USD value into output token amount (fixed-point)
+    // ---------- 4. USD → token_out ----------
     let out_fp = usd_fp
-        .checked_mul(1_000_000_00) // price scale
+        .checked_mul(10u128.pow(exp_out))
         .ok_or(OxediumError::OverflowInMul)?
         .checked_div(price_out)
         .ok_or(OxediumError::OverflowInDiv)?;
 
-    // 4. Convert fixed-point output into smallest output token units
-    //    This is the ONLY place where rounding occurs
+    // ---------- 5. fixed point → smallest units ----------
     let out = out_fp
         .checked_mul(10u128.pow(decimals_out as u32))
         .ok_or(OxediumError::OverflowInMul)?
         .checked_div(SCALE)
         .ok_or(OxediumError::OverflowInDiv)?;
 
-    // Convert back to u64
     u64::try_from(out).map_err(|_| OxediumError::OverflowInCast)
 }

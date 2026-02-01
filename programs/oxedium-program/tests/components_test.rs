@@ -1,8 +1,9 @@
 #[cfg(test)]
-mod tyrbine {
+mod components {
 
     use anchor_lang::prelude::Pubkey;
     use oxedium_program::{components::{calculate_fee_amount, calculate_staker_yield, fees_setting, raw_amount_out}, states::Vault, utils::SCALE};
+    use pyth_solana_receiver_sdk::price_update::PriceFeedMessage;
     
 
 #[test]
@@ -49,9 +50,9 @@ fn calculating_yield() {
 
 #[test]
 fn testing_raw_amount_out() {
-    let amount_in: u64 = 1000000000000000000;
-    let price_a: u64 = 24600443821;
-    let price_b: u64 = 99984320;
+    let amount_in: u64 = 1000000000;
+    let price_a: PriceFeedMessage = PriceFeedMessage { feed_id: [8; 32], price: 10200000000, conf: 15, exponent: 8, publish_time: 1, prev_publish_time: 1, ema_price: 1, ema_conf: 1 };
+    let price_b: PriceFeedMessage = PriceFeedMessage { feed_id: [8; 32], price: 100000000, conf: 15, exponent: 8, publish_time: 1, prev_publish_time: 1, ema_price: 1, ema_conf: 1 };
     let token_a_decimals: u8 = 9;
     let token_b_decimals: u8 = 6;
 
@@ -65,7 +66,7 @@ fn testing_raw_amount_out() {
 fn testing_fees_setting() {
     let pubkey = Pubkey::default();
     let vault_in = Vault {base_fee: 1, initial_liquidity: 1000000000000, current_liquidity: 900000000000, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
-    let vault_out = Vault{base_fee: 1, initial_liquidity: 150000000000, current_liquidity: 100000000000, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
+    let vault_out = Vault {base_fee: 1, initial_liquidity: 150000000000, current_liquidity: 100000000000, token_mint: pubkey, pyth_price_account: pubkey, max_age_price: 300, lp_mint: pubkey, cumulative_yield_per_lp: 0, protocol_yield: 0};
 
     let fee = fees_setting(&vault_in, &vault_out);
 

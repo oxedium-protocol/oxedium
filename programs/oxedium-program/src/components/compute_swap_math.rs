@@ -1,3 +1,5 @@
+use pyth_solana_receiver_sdk::price_update::PriceFeedMessage;
+
 use crate::{
     components::{calculate_fee_amount, fees_setting, raw_amount_out},
     states::{Treasury, Vault},
@@ -14,8 +16,8 @@ pub struct SwapMathResult {
 
 pub fn compute_swap_math(
     amount_in: u64,
-    price_in: u64,
-    price_out: u64,
+    oracle_in: PriceFeedMessage,
+    oracle_out: PriceFeedMessage,
     decimals_in: u8,
     decimals_out: u8,
     vault_in: &Vault,
@@ -26,7 +28,7 @@ pub fn compute_swap_math(
 
     let protocol_fee_bps = treasury.fee_bps;
 
-    let raw_out = raw_amount_out(amount_in, decimals_in, decimals_out, price_in, price_out)?;
+    let raw_out = raw_amount_out(amount_in, decimals_in, decimals_out, oracle_in, oracle_out)?;
 
     let ten_percent_of_liquidity = vault_out.current_liquidity / treasury.deviation; // 10%
     let adjusted_swap_fee_bps = if raw_out > ten_percent_of_liquidity {
