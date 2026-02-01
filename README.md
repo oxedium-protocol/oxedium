@@ -56,6 +56,8 @@ Oxedium allows you to earn from the growing Solana ecosystem **with a single ass
 
 Oxedium Protocol exposes **4 Solana instructions** that can be called to interact with vaults and manage liquidity.  
 
+Program ID: oxe2YhrQZ8yjbaHfp6mQXfSJd124qK2sRpdH9ePZXh1
+
 ### Available Instructions
 
 1. **Staking** – deposit a token into a vault
