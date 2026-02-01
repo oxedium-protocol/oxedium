@@ -12,7 +12,7 @@ pub fn claim(ctx: Context<ClaimInstructionAccounts>) -> Result<()> {
     let staker: &mut Account<'_, Staker> = &mut ctx.accounts.staker_pda;
 
     // Check if vault is active and stop-tap is not enabled
-    check_stoptap(vault, &ctx.accounts.treasury_pda)?;
+    check_stoptap(&ctx.accounts.treasury_pda)?;
 
     // Get cumulative yield per LP token from the vault
     let cumulative_yield_per_lp: u128 = vault.cumulative_yield_per_lp;

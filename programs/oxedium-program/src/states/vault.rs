@@ -2,8 +2,6 @@ use anchor_lang::prelude::*;
 
 #[account]
 pub struct Vault {
-    pub create_at_ts: i64,
-    pub is_active: bool,
     pub base_fee: u64,
     pub token_mint: Pubkey,
 

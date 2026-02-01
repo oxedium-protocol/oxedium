@@ -29,9 +29,7 @@ pub fn swap(
     let vault_in: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda_in;
     let vault_out: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda_out;
 
-    // === 1. Check if vaults are active ===
-    check_stoptap(vault_in, &treasury)?;
-    check_stoptap(vault_out, &treasury)?;
+    check_stoptap(&treasury)?;
 
     // === 2. Validate Pyth price accounts ===
     if ctx.accounts.pyth_price_account_in.key() != vault_in.pyth_price_account {

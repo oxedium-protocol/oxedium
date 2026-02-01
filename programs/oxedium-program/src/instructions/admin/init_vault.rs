@@ -7,27 +7,19 @@ use pyth_solana_receiver_sdk::price_update::PriceUpdateV2;
 ///
 /// # Arguments
 /// * `ctx` - context containing all accounts required for this instruction
-/// * `is_active` - whether the vault is active
 /// * `base_fee` - base fee for swaps involving this vault
 /// * `max_age_price` - maximum allowed age for the Pyth price feed in seconds
 pub fn init_vault(
     ctx: Context<InitVaultInstructionAccounts>,
-    is_active: bool,
     base_fee: u64,
     max_age_price: u64,
 ) -> Result<()> {
     // Ensure the caller is an admin using the Treasury account
     check_admin(&ctx.accounts.treasury_pda, &ctx.accounts.signer)?;
 
-    // Get the current UNIX timestamp
-    let clock = Clock::get()?;
-    let current_timestamp = clock.unix_timestamp;
-
     // Initialize the Vault PDA
     let vault: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda;
     
-    vault.create_at_ts = current_timestamp;                  // timestamp of vault creation
-    vault.is_active = is_active;                             // whether the vault is active
     vault.base_fee = base_fee;                               // base fee for swaps
     vault.token_mint = ctx.accounts.vault_mint.key();        // token associated with the vault
     vault.pyth_price_account = ctx.accounts.pyth_price_account.key(); // Pyth price feed account

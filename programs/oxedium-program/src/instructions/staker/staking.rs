@@ -14,7 +14,7 @@ pub fn staking(ctx: Context<StakingInstructionAccounts>, amount: u64) -> Result<
     let signer_lp_ata: Account<'_, TokenAccount> = ctx.accounts.signer_lp_ata.clone();
 
     // Check if the vault is active and stop-tap is not enabled
-    check_stoptap(vault, &ctx.accounts.treasury_pda)?;
+    check_stoptap(&ctx.accounts.treasury_pda)?;
 
     // Get the cumulative yield per LP token from the vault
     let cumulative_yield: u128 = vault.cumulative_yield_per_lp;
