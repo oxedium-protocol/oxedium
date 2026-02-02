@@ -6,7 +6,7 @@ mod swap {
 
     #[test]
     fn test_swap_math_output() {
-        let amount_in = 1000000000; // 1 token (9 decimals)
+        let amount_in = 50000000000; // 1 token (9 decimals)
 
         let decimals_in = 9;
         let decimals_out = 6;

@@ -30,8 +30,8 @@ pub fn compute_swap_math(
 
     let raw_out = raw_amount_out(amount_in, decimals_in, decimals_out, oracle_in, oracle_out)?;
 
-    let ten_percent_of_liquidity = vault_out.current_liquidity / treasury.deviation; // 10%
-    let adjusted_swap_fee_bps = if raw_out > ten_percent_of_liquidity {
+    let percent_of_liquidity = vault_out.current_liquidity / treasury.deviation; // 10%
+    let adjusted_swap_fee_bps = if raw_out > percent_of_liquidity {
         swap_fee_bps * 10 // e.g., x10 fee
     } else {
         swap_fee_bps
