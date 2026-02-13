@@ -25,12 +25,12 @@ pub fn fees_setting(
         (vault_in.current_liquidity as i128 - vault_in.initial_liquidity as i128)
             * 10_000
             / vault_in.initial_liquidity as i128;
-    println!("Delta in bps: {}", delta_in_bps);
+
     let delta_out_bps: i128 =
         (vault_out.current_liquidity as i128 - vault_out.initial_liquidity as i128)
             * 10_000
             / vault_out.initial_liquidity as i128;
-    println!("Delta out bps: {}", delta_out_bps);
+
     // If the swap does not worsen relative imbalance,
     // apply only the base fee
     if delta_in_bps <= delta_out_bps {

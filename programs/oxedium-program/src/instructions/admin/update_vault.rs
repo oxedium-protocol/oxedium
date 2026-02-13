@@ -14,11 +14,10 @@ pub fn update_vault(
     base_fee: u64,
     max_age_price: u64,
 ) -> Result<()> {
-    let treasury: Account<'_, Treasury> = ctx.accounts.treasury_pda.clone();
     let vault: &mut Account<'_, Vault> = &mut ctx.accounts.vault_pda;
 
     // Ensure the caller is an admin using the Treasury account
-    check_admin(&treasury, &ctx.accounts.signer)?;
+    check_admin(&ctx.accounts.treasury_pda, &ctx.accounts.signer)?;
 
     // Update vault fields
     vault.base_fee = base_fee;                       // set the base fee for the vault
