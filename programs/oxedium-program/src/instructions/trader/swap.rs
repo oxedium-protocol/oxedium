@@ -90,7 +90,7 @@ pub fn swap(
 
     // === 6. Update vaults and yields ===
     vault_in.current_liquidity += amount_in;
-    vault_out.current_liquidity -= result.raw_amount_out;
+    vault_out.current_liquidity -= result.net_amount_out;
     vault_out.cumulative_yield_per_lp += (result.lp_fee_amount as u128 * SCALE) / vault_out.initial_liquidity as u128;
     vault_out.protocol_yield += result.protocol_fee_amount;
 
@@ -135,8 +135,8 @@ pub fn swap(
         token_out: vault_out.token_mint,
         amount_in: amount_in,
         amount_out: result.net_amount_out,
-        price_in: oracle_in.price_message.price as u64 - oracle_in.price_message.conf,
-        price_out: oracle_out.price_message.price as u64 + oracle_out.price_message.conf,
+        price_in: oracle_in.price_message.price.unsigned_abs(),
+        price_out: oracle_out.price_message.price.unsigned_abs(),
         lp_fee: result.lp_fee_amount,
         protocol_fee: result.protocol_fee_amount
     });

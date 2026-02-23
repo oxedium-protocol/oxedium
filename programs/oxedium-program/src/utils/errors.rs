@@ -41,4 +41,7 @@ pub enum OxediumError {
 
     #[msg("The fee exceeds 100%")]
     FeeExceeds,
+
+    #[msg("Deviation must be greater than zero")]
+    InvalidDeviation,
 }

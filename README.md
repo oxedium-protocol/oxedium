@@ -34,10 +34,11 @@ Oxedium allows you to earn from the growing Solana ecosystem **with a single ass
 2. Traders rebalance vaults using the balancer mechanism.
 3. Earn trading fees without worrying about impermanent loss.
 4. **Dynamic Unstake Fee:** When withdrawing LP tokens, a 2% fee may be applied if the vault’s current liquidity drops below 50% of its initial liquidity. The fee is sent to the treasury to protect vault stability and safeguard remaining users’ funds.
-5. **Dynamic Swap Fee:** Swap fees are applied dynamically to protect vault liquidity and ensure fair trading:  
-   - Base Fee: Applied when tokens are swapped from a balanced or surplus vault.  
-   - Increased Fee: Applied when tokens are withdrawn from a low-liquidity (deficit) vault.  
-   - Maximum Fee (x10): If the swap amount exceeds 10% of the vault’s current liquidity, the fee is capped at 10× fee.
+5. **Dynamic Swap Fee:** Swap fees are applied dynamically to protect vault liquidity and ensure fair trading:
+   - Base Fee: Applied when tokens are swapped from a balanced or surplus vault.
+   - Increased Fee: Applied when tokens are withdrawn from a low-liquidity (deficit) vault.
+   - Maximum Fee (x10): If the swap amount exceeds the vault’s liquidity threshold, the fee is multiplied by 10×.
+   - Oracle Uncertainty Fee: An extra fee proportional to the Pyth confidence interval (`conf/price` in bps per oracle) is added on every swap. It is higher during volatile market conditions and is paid directly to liquidity providers to compensate for oracle-latency risk.
 
 > Join the existing flow of liquidity on Solana and extract yield from it effortlessly.
 

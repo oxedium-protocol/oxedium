@@ -1,12 +1,14 @@
-use crate::{components::check_admin, states::Treasury, utils::{TREASURY_SEED, OXEDIUM_SEED}};
+use crate::{components::check_admin, states::Treasury, utils::{OxediumError, TREASURY_SEED, OXEDIUM_SEED}};
 use anchor_lang::prelude::*;
 
-/// Update treasury settings: admin, stop-tap flag, and protocol fee
+/// Update treasury settings: admin, stop-tap flag, protocol fee, and deviation
 ///
 /// # Arguments
 /// * `ctx` - context containing all accounts required for this instruction
 /// * `stoptap` - boolean flag to pause or resume treasury operations
 /// * `protocol_fee_bps` - protocol fee in basis points (bps), taken from total swap fees
+/// * `deviation` - liquidity threshold divisor (e.g., 10 → 10% of current liquidity);
+///   must be > 0; swaps exceeding this fraction of the vault get a 10x fee penalty
 #[inline(never)]
 pub fn update_treasury(
     ctx: Context<UpdateTreasuryInstructionAccounts>,
@@ -18,7 +20,9 @@ pub fn update_treasury(
 
     // Ensure the signer is the treasury admin
     check_admin(treasury, &ctx.accounts.signer)?;
-    
+
+    require!(deviation > 0, OxediumError::InvalidDeviation);
+
     // Update the treasury fields
     treasury.admin = ctx.accounts.new_admin.key(); // set new admin
     treasury.stoptap = stoptap;                    // enable/disable operations

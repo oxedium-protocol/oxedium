@@ -70,15 +70,12 @@ pub struct InitVaultInstructionAccounts<'info> {
     /// - `vault_mint` key
     /// Space:
     /// - 8 bytes: Anchor discriminator
-    /// - 8 bytes: create_at_ts (timestamp)
-    /// - 1 byte: is_active (bool)
     /// - 32 bytes: token_mint
     /// - 32 bytes: pyth_price_account
     /// - 8 bytes: max_age_price
     /// - 32 bytes: lp_mint
     /// - 8 bytes: initial_liquidity
     /// - 8 bytes: current_liquidity
-    /// - 8 bytes: max_liquidity
     /// - 16 bytes: cumulative_yield_per_lp
     /// - 8 bytes: protocol_yield
     #[account(
